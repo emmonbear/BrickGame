@@ -1,13 +1,16 @@
 PROJECT_NAME = brick_game
+EXE_FILENAME = game
 
 # COMPILER 
 CC = gcc
 
 # FLAGS
-CFLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
+CFLAGS = -Wall -Wextra -std=c11 -pedantic
 LDFLAGS = -lcheck -lsubuinit -lm
-LDGUI = -lncurses
-DEBUG = -g
+LDGUI = -lncursesw
+DEBUG = -g -fanalyzer -fsanitize=memory -fsanitize=undefined \
+        -fsanitize=leak -fsanitize=addres
+VALGRIND = --tool=memcheck --leak-check=yes
 
 # TARGET NAMES
 LIB = $(PROJECT_NAME).a
@@ -25,7 +28,6 @@ MODULES_DIR = ./brick_game/tetris
 
 # MAIN
 MAIN_C = $(PROJECT_NAME).c
-MAIN_H = $(PROJECT_NAME).h
 
 # LIST OF FILES AND DIRECTORIES IN MODULES_DIR
 MODULES_DIRS = $(shell find $(MODULES_DIR) -type d)
@@ -51,23 +53,18 @@ vpath %.c $(MODULES_DIRS) : $(GUI_DIRS)
 vpath %.o $(OBJ_DIR)
 
 # TARGETS
-.PHONY: m
-m:
-	clear
-	$(MAKE) install
-
 .PHONY: install
 install: $(LIB) $(GUI_LIB)
-	$(CC) $(CFLAGS) $(MAIN_C) $(LIB) $(GUI_LIB) $(LDGUI) -o $(PROJECT_NAME)
-	./$(PROJECT_NAME)
+	$(CC) $(CFLAGS) $(MAIN_C) $(LIB) $(GUI_LIB) $(LDGUI) -o $(EXE_FILENAME)
+	./$(EXE_FILENAME)
 
 .PHONY: $(LIB)
-$(LIB): $(OBJ_DIR) $(MODULES_O) $(MODULES_H) $(MAIN_H)
+$(LIB): $(OBJ_DIR) $(MODULES_O) $(MODULES_H)
 	ar rcs $@ $(MODULES_OBJ_PATH)
 	ranlib $@
 
 .PHONY: $(GUI_LIB)
-$(GUI_LIB): $(OBJ_DIR) $(GUI_O) $(GUI_H) $(MAIN_H)
+$(GUI_LIB): $(OBJ_DIR) $(GUI_O) $(GUI_H)
 	ar rcs $@ $(GUI_OBJ_PATH)
 	ranlib $@
 
@@ -84,12 +81,25 @@ clean:
 	rm -rf $(DOCS_DIR)
 	rm -f $(LIB)
 	rm -f $(GUI_LIB)
-	rm -f $(PROJECT_NAME)
+	rm -f $(EXE_FILENAME)
+	rm -f ./val.txt
 
 # OBJECTIVE TARGETS
 %.o: %.c ${MODULES_H}
 	$(CC) $(CFLAGS) -c -o $(addprefix $(OBJ_DIR)/, $@) $<
- 
+
+%_gui.o: gui_%.c $(GUI_H)
+	$(CC) $(CFLAGS) -c -o $(addprefix $(OBJ_DIR)/, $@) $<
+
+# CHECKS
+valgrind: $(EXE_FILENAME)
+	@$@ $(VALGRIND) ./$(EXE_FILENAME) > val.txt 2>&1 
+# { \
+# 	Valgrind test results:\n"; \
+# 	Passed tests $$(grep "ERROR SUMMARY: 0" -c val.txt) \
+# 	from $$(grep "ERROR SUMMARY:" -c val.txt)\n\n"; \
+# }
+
 # CREATE DIRECTORIES
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
