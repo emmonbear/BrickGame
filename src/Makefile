@@ -100,6 +100,12 @@ valgrind: $(EXE_FILENAME)
 # 	from $$(grep "ERROR SUMMARY:" -c val.txt)\n\n"; \
 # }
 
+clang_fix:
+	clang-format -style=Google -i $(ALL_FILES)
+
+clang_check:
+	clang-format -style=Google -n $(ALL_FILES)
+
 # CREATE DIRECTORIES
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
