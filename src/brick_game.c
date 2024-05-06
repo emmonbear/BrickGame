@@ -10,11 +10,17 @@
  */
 
 #include "./gui/cli/include/frontend.h"
+#include <stdio.h>
 
 int main() {
+  init_game();
   init_screen();
+  
+  game_loop();
 
+  wclear(stdscr);
   endwin();
-
+  destroy_game();
+  
   return 0;
 }
