@@ -42,7 +42,7 @@ void init_game() {
   }
 
   for (int i = 0; i < F_ROWS; i++) {
-    s->game_info->field[i] = (int *)calloc(F_COLS, sizeof(int));
+    s->game_info->field[i] = (int *)calloc((F_COLS * C_SIZE), sizeof(int));
     if(!s->game_info->field[i]) {
       destroy_game(s);
       MEM_ALLOC_ERROR
