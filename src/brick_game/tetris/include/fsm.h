@@ -34,49 +34,49 @@ typedef enum {
 } stage_t;
 
 /**
- * @brief Realization of "START" state of finite state automaton
+ * @brief Realization of "START" state of finite state machine
  *
  * @param[out] s Main structure
  */
 void start_stage(singleton *s);
 
 /**
- * @brief Realization of "SPAWN" state of finite state automaton
+ * @brief Realization of "SPAWN" state of finite state machine
  *
  * @param[out] s Main structure
  */
 void spawn_stage(singleton *s);
 
 /**
- * @brief Realization of "SHIFTING" state of finite state automaton
+ * @brief Realization of "SHIFTING" state of finite state machine
  *
  * @param[out] s Main structure
  */
 void shifting_stage(singleton *s);
 
 /**
- * @brief Realization of "MOVING" state of finite state automaton
+ * @brief Realization of "MOVING" state of finite state machine
  *
  * @param[out] s Main structure
  */
 void moving_stage(singleton *s);
 
 /**
- * @brief Realization of "PAUSE" state of finite state automaton
+ * @brief Realization of "PAUSE" state of finite state machine
  *
  * @param[out] s Main structure
  */
 void pause_stage(singleton *s);
 
 /**
- * @brief Realization of "ATTACHING" state of finite state automaton
+ * @brief Realization of "ATTACHING" state of finite state machine
  *
  * @param[out] s Main structure
  */
 void attaching_stage(singleton *s);
 
 /**
- * @brief Realization of "GAME_OVER" state of finite state automaton
+ * @brief Realization of "GAME_OVER" state of finite state machine
  *
  * @param[out] s Main structure
  */
