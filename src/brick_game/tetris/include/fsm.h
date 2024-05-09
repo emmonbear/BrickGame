@@ -12,6 +12,9 @@
 #ifndef MODULES_FSM_H
 #define MODULES_FSM_H
 
+#include "./backend.h"
+
+/// @brief Enumeration of states of a Finite-state machine
 typedef enum {
   START,  ///< the state in which the game waits for the player to press the
           ///< ready to play button
@@ -28,8 +31,55 @@ typedef enum {
               ///< down. If a block is stopped in the topmost row, the game goes
               ///< to the state "game over"
   GAME_OVER,  ///< the state that characterizes the end of the game
-} stage;
+} stage_t;
 
+/**
+ * @brief Realization of "START" state of finite state automaton
+ *
+ * @param[out] s Main structure
+ */
+void start_stage(singleton *s);
 
+/**
+ * @brief Realization of "SPAWN" state of finite state automaton
+ *
+ * @param[out] s Main structure
+ */
+void spawn_stage(singleton *s);
+
+/**
+ * @brief Realization of "SHIFTING" state of finite state automaton
+ *
+ * @param[out] s Main structure
+ */
+void shifting_stage(singleton *s);
+
+/**
+ * @brief Realization of "MOVING" state of finite state automaton
+ *
+ * @param[out] s Main structure
+ */
+void moving_stage(singleton *s);
+
+/**
+ * @brief Realization of "PAUSE" state of finite state automaton
+ *
+ * @param[out] s Main structure
+ */
+void pause_stage(singleton *s);
+
+/**
+ * @brief Realization of "ATTACHING" state of finite state automaton
+ *
+ * @param[out] s Main structure
+ */
+void attaching_stage(singleton *s);
+
+/**
+ * @brief Realization of "GAME_OVER" state of finite state automaton
+ *
+ * @param[out] s Main structure
+ */
+void game_over_stage(singleton *s);
 
 #endif  // MODULES_FSM_H
