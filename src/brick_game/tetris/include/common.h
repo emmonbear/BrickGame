@@ -1,12 +1,12 @@
 /**
  * @file common.h
  * @author emmonbea (moskaleviluak@icloud.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-05-10
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #ifndef MODULES_COMMON_H
@@ -80,12 +80,6 @@ typedef enum {
           ///< 2x2 square.
 } type_t;
 
-/// @brief Figure coordinates
-typedef struct {
-  int x;  ///< X-coordinate
-  int y;  ///< Y-coordinate
-} cell_t;
-
 /**
  * @brief Struct representing a tetromino figure in the game.
  *
@@ -98,15 +92,10 @@ typedef struct {
  * up the figure).
  */
 typedef struct {
-  type_t type;  ///< The type of the tetromino figure (one of the seven possible
-                ///< shapes)
-  int color;    ///< The color of the blocks that make up the figure (an integer
-                ///< value)
-  cell_t cells[TETROMINO_SIZE *
-               TETROMINO_SIZE];  ///< An array of cells representing the blocks
-                                 ///< that make up the figure. Each cell is a
-                                 ///< struct containing the coordinates of the
-                                 ///< block.
+  type_t type;
+  int x, y;
+  int rotation;
+  int color;
 } figure_t;
 
 typedef struct {
@@ -149,5 +138,4 @@ typedef enum {
   Action      ///< rotate the current tetromino
 } UserAction_t;
 
-
-#endif // MODULES_COMMON_H
+#endif  // MODULES_COMMON_H
