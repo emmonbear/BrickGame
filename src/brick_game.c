@@ -9,18 +9,25 @@
  * 
  */
 
-#include "./gui/cli/include/frontend.h"
+// #include "./gui/cli/include/frontend.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#include "./brick_game/tetris/include/fsm.h"
+
+static singleton *get_instance() {
+  static singleton instance;
+  return &instance;
+}
 
 int main() {
-  init_game();
-  init_screen();
-  
-  game_loop();
+  singleton *s = get_instance();
+  start_stage(s);
 
-  wclear(stdscr);
-  endwin();
-  destroy_game();
-  
+  while(s->stage != GAME_OVER) {
+    run_state(s);
+  }
+  game_over_stage(s);
   return 0;
 }
