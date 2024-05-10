@@ -12,8 +12,17 @@
 #ifndef MODULES_FIGURE_GENERATOR
 #define MODULES_FIGURE_GENERATOR
 
+/// @brief Amount of tetrominoes
+#define NUM_TETROMINOS 7
+
+/// @brief Number of positions
+#define NUM_POSITIONS 5
+
+/// @brief The size of the tetromino
+#define TETROMINO_SIZE 4
+
 /// @brief Enumeration representing the different types of tetrominoes in the
-/// game
+/// game.
 typedef enum {
   TET_I,  ///< The "I" shaped tetromino, consisting of four blocks in a straight
           ///< line.
@@ -32,19 +41,35 @@ typedef enum {
           ///< 2x2 square.
 } type_t;
 
-/// @brief Struct representing a tetromino figure in the game
+/// @brief Figure coordinates
 typedef struct {
-  type_t current_type;  ///< The current type of the figure (one of the seven
-                        ///< types defined in the `type_t` enumeration).
-  type_t next_type;     ///< The type of the next figure that will appear
-                        /// in the game.
-  int rotation;  ///< The current rotation of the figure (an integer value
-                 ///< between 0 and 3, representing the four possible rotations
-                 ///< of the figure).
-  int x;  ///< The x-coordinate of the top-left corner of the figure on the game
-          ///< board.
-  int y;  ///< The y-coordinate of the top-left corner of the figure on the game
-          ///< board.
-} Figure_t;
+  int x;  ///< X-coordinate
+  int y;  ///< Y-coordinate
+} cell_t;
+
+/**
+ * @brief Struct representing a tetromino figure in the game.
+ *
+ * @details
+ *
+ * This struct represents a tetromino figure, which consists of a type (one of
+ * the seven possible tetromino shapes), a color (an integer value representing
+ * the color of the blocks that make up the figure), and an array of cells
+ * (where each cell is a struct containing the coordinates of a block that makes
+ * up the figure).
+ */
+typedef struct {
+  type_t type;  ///< The type of the tetromino figure (one of the seven possible
+                ///< shapes)
+  int color;    ///< The color of the blocks that make up the figure (an integer
+                ///< value)
+  cell_t cells[TETROMINO_SIZE *
+               TETROMINO_SIZE];  ///< An array of cells representing the blocks
+                                 ///< that make up the figure. Each cell is a
+                                 ///< struct containing the coordinates of the
+                                 ///< block.
+} figure_t;
+
+// void generate_new_figure(Figure_t *figure);
 
 #endif  // MODULES_FIGURE_GENERATOR
