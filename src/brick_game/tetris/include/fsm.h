@@ -12,10 +12,20 @@
 #ifndef MODULES_FSM_H
 #define MODULES_FSM_H
 
-#include "./backend.h"
+// #include "./backend.h"
+#include "./init.h"
 
 /// @brief Number of states of a finite state machine
 #define NUM_STAGES 7
+
+/// @brief number of lines on Field
+#define HEIGHT 20
+
+/// @brief number of columns on Field
+#define WIDTH 10
+
+/// @brief Tetromino size
+#define TETROMINO_SIZE 4
 
 /// @brief Enumeration of states of a Finite-state machine
 typedef enum {
@@ -36,9 +46,39 @@ typedef enum {
   GAME_OVER,  ///< the state that characterizes the end of the game
 } stage_t;
 
+typedef struct {
+  int **field;
+  int **next;
+  int score;
+  int high_score;
+  int level;
+  int speed;
+  int pause;
+} GameInfo_t;
+
+typedef enum {
+  Start,
+  Pause,
+  Terminate,
+  Left,
+  Right,
+  Up,
+  Down,
+  Action
+} UserAction_t;
+
+typedef struct {
+  GameInfo_t *game_info;
+  stage_t stage;
+} singleton;
+
+singleton *get_instance();
+
 /**
  * @brief Type definition for a pointer to a function that takes a singleton
  * structure as an argument and returns nothing.
+ *
+ * @details
  *
  * This type definition is used to declare an array of function pointers for
  * the state machine's states. Each function pointer points to a function that
@@ -50,6 +90,8 @@ typedef void (*func_ptr)(singleton *s);
 
 /**
  * @brief Handles the start state of the game's state machine.
+ *
+ * @details
  *
  * This function initializes the game's data structures and sets the game's
  * state to the spawn state. It is called by the run_state function when the
@@ -63,6 +105,8 @@ void start_stage(singleton *s);
 /**
  * @brief Handles the spawn state of the game's state machine.
  *
+ * @details
+ *
  * This function creates a new block and selects the next block to be spawned.
  * It is called by the run_state function when the game's state machine is in
  * the spawn state.
@@ -74,6 +118,8 @@ void spawn_stage(singleton *s);
 
 /**
  * @brief Handles the shifting state of the game's state machine.
+ *
+ * @details
  *
  * This function moves the current block down one level after the timer expires.
  * It is called by the run_state function when the game's state machine is in
@@ -87,9 +133,11 @@ void shifting_stage(singleton *s);
 /**
  * @brief Handles the moving state of the game's state machine.
  *
- * This function processes user input to rotate blocks and move blocks horizontally.
- * It is called by the run_state function when the game's state machine is in
- * the moving state.
+ * @details
+ *
+ * This function processes user input to rotate blocks and move blocks
+ * horizontally. It is called by the run_state function when the game's state
+ * machine is in the moving state.
  *
  * @param[in,out] s The singleton structure containing the game's state and
  * data.
@@ -98,6 +146,8 @@ void moving_stage(singleton *s);
 
 /**
  * @brief Handles the pause state of the game's state machine.
+ *
+ * @details
  *
  * This function pauses the game and waits for the user to resume or quit.
  * It is called by the run_state function when the game's state machine is in
@@ -110,6 +160,8 @@ void pause_stage(singleton *s);
 
 /**
  * @brief Handles the attaching state of the game's state machine.
+ *
+ * @details
  *
  * This function is called by the run_state function when the game's state
  * machine is in the attaching state. In this state, the current block is
@@ -125,6 +177,8 @@ void attaching_stage(singleton *s);
 /**
  * @brief Handles the game over state of the game's state machine.
  *
+ * @details
+ *
  * This function is called by the run_state function when the game's state
  * machine is in the game over state. In this state, the game is ended and
  * the player is shown the final score and game statistics.
@@ -137,6 +191,8 @@ void game_over_stage(singleton *s);
 /**
  * @brief Runs the current state of the game's state machine.
  *
+ * @details
+ *
  * This function uses an array of function pointers to call the appropriate
  * function for the current state of the game. The function takes a singleton
  * structure as an argument and invokes the function corresponding to the
@@ -145,17 +201,6 @@ void game_over_stage(singleton *s);
  * @param[in,out] s The singleton structure containing the game's state and
  * data.
  */
-void run_state(singleton *s) {
-  static func_ptr state_funcs[NUM_STAGES] = {
-    start_stage,
-    spawn_stage,
-    shifting_stage,
-    moving_stage,
-    pause_stage,
-    attaching_stage,
-    game_over_stage
-  };
+void run_state(singleton *s);
 
-  state_funcs[s->stage](s);
-}
 #endif  // MODULES_FSM_H
