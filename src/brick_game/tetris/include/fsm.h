@@ -46,25 +46,54 @@ typedef enum {
   GAME_OVER,  ///< the state that characterizes the end of the game
 } stage_t;
 
+/**
+ * @brief Struct containing game information.
+ *
+ * @details
+ *
+ * This struct contains all the necessary information about the game, such as
+ * the game field, the next block to be spawned, the current score, the high
+ * score, the current level, the speed of the game, and whether the game is
+ * paused or not.
+ */
 typedef struct {
-  int **field;
-  int **next;
-  int score;
-  int high_score;
-  int level;
-  int speed;
-  int pause;
+  int **field;  ///< 2D array representing the game field, where each element
+                ///< corresponds to a cell on the field. The value of an element
+                ///< is either 0 (empty cell) or a positive integer (cell
+                ///< occupied by a block, with the value indicating the color of
+                ///< the block).
+  int **next;   ///< 2D array representing the next block to be spawned.
+  int score;    ///< The current score of the player.
+  int high_score;  ///< The highest score achieved by any player.
+  int level;  ///< The current level of the game, which determines the speed at
+              ///< which blocks fall.
+  int speed;  ///< The speed at which blocks fall, measured in milliseconds
+              ///< between each downward movement.
+  int pause;  ///< A flag indicating whether the game is currently paused (1) or
+              ///< not (0).
 } GameInfo_t;
 
+/**
+ * @brief Enumeration of user actions
+ *
+ * @details
+ *
+ * This enumeration represents all possible actions that a user can take while
+ * playing the game. These actions include starting the game, pausing the game,
+ * terminating the game, moving the current block left, moving the current block
+ * right, rotating the current block clockwise, moving the current block down,
+ * and performing an "action" (such as triggering a hard drop or activating a
+ * special ability).
+ */
 typedef enum {
-  Start,
-  Pause,
-  Terminate,
-  Left,
-  Right,
-  Up,
-  Down,
-  Action
+  Start,      ///< Start the game
+  Pause,      ///< Pause the game
+  Terminate,  ///< Terminate the game
+  Left,       ///< Move the current tetromino to the left
+  Right,      ///< Move the current tetromino to the right
+  Up,         ///< is not used in this project
+  Down,       ///< Move the current tetromino down
+  Action      ///< rotate the current tetromino
 } UserAction_t;
 
 typedef struct {
