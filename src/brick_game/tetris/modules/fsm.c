@@ -11,11 +11,6 @@
 
 #include "../include/fsm.h"
 
-// #include <locale.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <time.h>
-
 void run_state(singleton *s) {
   static func_ptr state_funcs[NUM_STAGES] = {
       start_stage, spawn_stage,     shifting_stage, moving_stage,
@@ -24,13 +19,32 @@ void run_state(singleton *s) {
   state_funcs[s->stage](s);
 }
 
-void start_stage(singleton *s) { init_game(s); }
+static void test_field(singleton *s) {
+  for (size_t i = 0; i < HEIGHT; i++) {
+    for (size_t j = 0; j < WIDTH; j++) {
+      printf("%d ", s->game_info->field[i][j]);
+    }
+    putchar('\n');
+  }
+}
+
+void start_stage(singleton *s) {
+  init_game(s);
+  generate_new_figure(s);
+}
 
 void game_over_stage(singleton *s) { destroy_game(s); }
 
 void spawn_stage(singleton *s) {
-  s->figure = generate_new_figure();
-  s->game_info->next = s->figure.cells;
+  put_figure_on_field(s);
+  test_field(s);
+  putchar('\n');
+
+  generate_new_figure(s);
+  put_figure_on_field(s);
+  test_field(s);
+  // test(s);
+  s->stage = GAME_OVER;
 }
 
 void shifting_stage(singleton *s) {}
