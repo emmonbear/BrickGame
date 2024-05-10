@@ -30,7 +30,7 @@
  * @note In case of unsuccessful memory allocation, the function terminates the
  * program with an error message.
  */
-void allocate_2d_array(int **array, size_t rows, size_t cols);
+void allocate_2d_array(int ***array, size_t rows, size_t cols);
 
 /**
  * @brief Frees the memory allocated for a 2D array of integers.
@@ -40,6 +40,6 @@ void allocate_2d_array(int **array, size_t rows, size_t cols);
  * @param[in] rows number of rows in the array.
  * @param[in] cols number of columns in the array.
  */
-void destroy_2d_array(int **array, size_t rows, size_t cols);
+void destroy_2d_array(int ***array, size_t rows);
 
 #endif  // MODULES_INIT_H

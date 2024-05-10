@@ -11,32 +11,31 @@
 
 #include "../include/init.h"
 
-void allocate_2d_array(int **array, size_t rows, size_t cols) {
-  array = (int **)calloc(rows, sizeof(int *));
+void allocate_2d_array(int ***array, size_t rows, size_t cols) {
+  *array = (int **)calloc(rows, sizeof(int *));
 
-  if (!array) {
-    destroy_2d_array(array, rows, cols);
+  if (!(*array)) {
     MEM_ALLOC_ERROR
   }
 
   for (size_t i = 0; i < rows; i++) {
-    array[i] = (int *)calloc(cols, sizeof(int));
-    if (!array[i]) {
-      destroy_2d_array(array, rows, cols);
+    (*array)[i] = (int *)calloc(cols, sizeof(int));
+    if (!(*array)[i]) {
+      destroy_2d_array(array, rows);
       MEM_ALLOC_ERROR
     }
   }
 }
 
-void destroy_2d_array(int **array, size_t rows, size_t cols) {
-  if (array) {
+void destroy_2d_array(int ***array, size_t rows) {
+  if (*array) {
     for (size_t i = 0; i < rows; i++) {
-      if (array[i]) {
-        free(array[i]);
-        array[i] = NULL;
+      if ((*array)[i]) {
+        free((*array)[i]);
+        (*array)[i] = NULL;
       }
     }
-    free(array);
-    array = NULL;
+    free(*array);
+    *array = NULL;
   }
 }
