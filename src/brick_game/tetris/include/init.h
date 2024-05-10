@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "./common.h"
 
 #define MEM_ALLOC_ERROR                         \
   fprintf(stderr, "Memory allocation error\n"); \
