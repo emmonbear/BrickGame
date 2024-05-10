@@ -11,74 +11,71 @@
 
 #include "../include/figure_generator.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <stdio.h>
 
-
-
-figure_t generate_new_figure(void) {
-  figure_t figure;
+void generate_new_figure(singleton *s) {
+  clear_next(s);
   int tmp = rand() % NUM_TETROMINOS;
+  s->figure.color = tmp + 1;
+  s->figure.type = tmp;
+  s->figure.rotation = 0;
+  s->figure.x = 3;
+  s->figure.y = 0;
 
-  figure.color = tmp;
-  figure.type = tmp;
-
-  int cells[TETROMINO_SIZE][TETROMINO_SIZE] = {0};
-
-  switch(figure.type) {
+  switch (s->figure.type) {
     case TET_I:
-      cells[0][0] = 1;
-      cells[0][1] = 1;
-      cells[0][2] = 1;
-      cells[0][3] = 1;
+      s->game_info->next[0][0] = s->game_info->next[0][1] =
+          s->game_info->next[0][2] = s->game_info->next[0][3] = 1;
       break;
+
     case TET_Z:
-      cells[0][0] = 1;
-      cells[0][1] = 1;
-      cells[1][1] = 1;
-      cells[1][2] = 1;
+      s->game_info->next[0][0] = s->game_info->next[0][1] =
+          s->game_info->next[1][1] = s->game_info->next[1][2] = 1;
       break;
+
     case TET_S:
-      cells[0][1] = 1;
-      cells[0][2] = 1;
-      cells[1][0] = 1;
-      cells[1][1] = 1;
+      s->game_info->next[0][1] = s->game_info->next[0][2] =
+          s->game_info->next[1][0] = s->game_info->next[1][1] = 1;
       break;
+
     case TET_T:
-      cells[0][1] = 1;
-      cells[1][0] = 1;
-      cells[1][1] = 1;
-      cells[1][2] = 1;
+      s->game_info->next[0][1] = s->game_info->next[1][0] =
+          s->game_info->next[1][1] = s->game_info->next[1][2] = 1;
       break;
+
     case TET_L:
-      cells[0][2] = 1;
-      cells[1][0] = 1;
-      cells[1][1] = 1;
-      cells[1][2] = 1;
+      s->game_info->next[0][0] = s->game_info->next[0][1] =
+          s->game_info->next[0][2] = s->game_info->next[1][2] = 1;
       break;
+
     case TET_J:
-      cells[0][0] = 1;
-      cells[1][0] = 1;
-      cells[1][1] = 1;
-      cells[1][2] = 1;
+      s->game_info->next[0][0] = s->game_info->next[0][1] =
+          s->game_info->next[0][2] = s->game_info->next[1][0] = 1;
       break;
+
     case TET_O:
-      cells[0][0] = 1;
-      cells[0][1] = 1;
-      cells[1][0] = 1;
-      cells[1][1] = 1;
+      s->game_info->next[0][0] = s->game_info->next[0][1] =
+          s->game_info->next[1][0] = s->game_info->next[1][1] = 1;
       break;
   }
+}
 
+void clear_next(singleton *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for(size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (cells[i][j] == 1) {
-        figure.cells[i].y = 1;
-        figure.cells[j].x = 1;
+    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
+      s->game_info->next[i][j] = 0;
+    }
+  }
+}
+void put_figure_on_field(singleton *s) {
+  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
+    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
+      if (s->game_info->next[i][j]) {
+        s->game_info->field[s->figure.y + i][s->figure.x + j] = s->figure.color;
       }
     }
   }
-  return figure;
 }
