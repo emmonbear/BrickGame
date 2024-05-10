@@ -23,6 +23,8 @@
 /// @brief The size of the tetromino
 #define TETROMINO_SIZE 4
 
-figure_t generate_new_figure(void);
+void generate_new_figure(singleton *s);
+void clear_next(singleton *s);
+void put_figure_on_field(singleton *s);
 
 #endif  // MODULES_FIGURE_GENERATOR
