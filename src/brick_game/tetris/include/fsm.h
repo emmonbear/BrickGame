@@ -12,9 +12,10 @@
 #ifndef MODULES_FSM_H
 #define MODULES_FSM_H
 
-#include "./figure_generator.h"
-#include "./init.h"
 #include "./common.h"
+#include "./figures.h"
+#include "./init.h"
+#include "./operations.h"
 
 // singleton *get_instance();
 
