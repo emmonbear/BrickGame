@@ -12,16 +12,13 @@
 #ifndef MODULES_FIGURE_GENERATOR
 #define MODULES_FIGURE_GENERATOR
 
-#include "../include/common.h"
+#include "../include/common_module.h"
 
 /// @brief Amount of tetrominoes
 #define NUM_TETROMINOS 7
 
 /// @brief Number of positions
 #define NUM_POSITIONS 5
-
-/// @brief The size of the tetromino
-#define TETROMINO_SIZE 4
 
 void generate_new_figure(singleton *s);
 
