@@ -19,15 +19,6 @@ void run_state(singleton *s) {
   state_funcs[s->stage](s);
 }
 
-static void test_field(singleton *s) {
-  for (size_t i = 0; i < HEIGHT; i++) {
-    for (size_t j = 0; j < WIDTH; j++) {
-      printf("%d ", s->game_info->field[i][j]);
-    }
-    putchar('\n');
-  }
-}
-
 void start_stage(singleton *s) {
   init_game(s);
   generate_new_figure(s);
@@ -36,20 +27,17 @@ void start_stage(singleton *s) {
 void game_over_stage(singleton *s) { destroy_game(s); }
 
 void spawn_stage(singleton *s) {
-  put_figure_on_field(s);
-  test_field(s);
-  putchar('\n');
-
+  put_figure(s);
   generate_new_figure(s);
-  put_figure_on_field(s);
-  test_field(s);
-  // test(s);
-  s->stage = GAME_OVER;
+  s->stage = SHIFTING;
 }
 
-void shifting_stage(singleton *s) {}
+void shifting_stage(singleton *s) {
+  printf("SHIFTING_STAGE\n");
+  move_down(s);
+}
 
-void moving_stage(singleton *s) {}
+void moving_stage(singleton *s) { move_right(s); }
 
 void pause_stage(singleton *s) {}
 
