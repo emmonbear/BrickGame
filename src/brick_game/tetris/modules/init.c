@@ -10,6 +10,7 @@
  */
 
 #include "../include/init.h"
+
 #include <locale.h>
 #include <time.h>
 
@@ -19,13 +20,14 @@ static void reset_game_info(singleton *s) {
   s->game_info->level = 1;
   s->game_info->speed = 1;
   s->game_info->pause = 0;
-  s->stage = GAME_OVER;
+  s->stage = SPAWN;
 }
 
 void destroy_game(singleton *s) {
   if (s->game_info) {
     destroy_2d_array(&(s->game_info->field), HEIGHT);
     destroy_2d_array(&(s->game_info->next), TETROMINO_SIZE);
+    destroy_2d_array(&(s->figure.current_figure), TETROMINO_SIZE);
     free(s->game_info);
   }
 }
@@ -49,10 +51,11 @@ void init_game(singleton *s) {
 
   allocate_2d_array(&(s->game_info->field), HEIGHT, WIDTH);
   allocate_2d_array(&(s->game_info->next), TETROMINO_SIZE, TETROMINO_SIZE);
+  allocate_2d_array(&(s->figure.current_figure), TETROMINO_SIZE, TETROMINO_SIZE);
 
   reset_game_info(s);
+  generate_new_figure(s);
 }
-
 
 void allocate_2d_array(int ***array, size_t rows, size_t cols) {
   *array = (int **)calloc(rows, sizeof(int *));
@@ -82,4 +85,3 @@ void destroy_2d_array(int ***array, size_t rows) {
     *array = NULL;
   }
 }
-
