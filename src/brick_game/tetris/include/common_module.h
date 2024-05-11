@@ -12,14 +12,10 @@
 #ifndef MODULES_COMMON_H
 #define MODULES_COMMON_H
 
+#include "../../../common.h"
+
 /// @brief Number of states of a finite state machine
 #define NUM_STAGES 7
-
-/// @brief number of lines on Field
-#define HEIGHT 20
-
-/// @brief number of columns on Field
-#define WIDTH 10
 
 /// @brief Tetromino size
 #define TETROMINO_SIZE 4
@@ -105,39 +101,5 @@ typedef struct {
   stage_t stage;
   figure_t figure;
 } singleton;
-
-/**
- * @brief Struct containing game information.
- *
- * @details
- *
- * This struct contains all the necessary information about the game, such as
- * the game field, the next block to be spawned, the current score, the high
- * score, the current level, the speed of the game, and whether the game is
- * paused or not.
- */
-
-/**
- * @brief Enumeration of user actions
- *
- * @details
- *
- * This enumeration represents all possible actions that a user can take while
- * playing the game. These actions include starting the game, pausing the game,
- * terminating the game, moving the current block left, moving the current block
- * right, rotating the current block clockwise, moving the current block down,
- * and performing an "action" (such as triggering a hard drop or activating a
- * special ability).
- */
-typedef enum {
-  Start,      ///< Start the game
-  Pause,      ///< Pause the game
-  Terminate,  ///< Terminate the game
-  Left,       ///< Move the current tetromino to the left
-  Right,      ///< Move the current tetromino to the right
-  Up,         ///< is not used in this project
-  Down,       ///< Move the current tetromino down
-  Action      ///< rotate the current tetromino
-} UserAction_t;
 
 #endif  // MODULES_COMMON_H
