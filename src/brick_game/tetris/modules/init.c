@@ -51,10 +51,10 @@ void init_game(singleton *s) {
 
   allocate_2d_array(&(s->game_info->field), HEIGHT, WIDTH);
   allocate_2d_array(&(s->game_info->next), TETROMINO_SIZE, TETROMINO_SIZE);
-  allocate_2d_array(&(s->figure.current_figure), TETROMINO_SIZE, TETROMINO_SIZE);
+  allocate_2d_array(&(s->figure.current_figure), TETROMINO_SIZE,
+                    TETROMINO_SIZE);
 
   reset_game_info(s);
-  generate_new_figure(s);
 }
 
 void allocate_2d_array(int ***array, size_t rows, size_t cols) {
