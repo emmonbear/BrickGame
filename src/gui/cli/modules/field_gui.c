@@ -13,7 +13,34 @@
 
 #include <string.h>
 
-#include "../include/init_gui.h"
+static void set_color_figure(WINDOW *w, int color_index) {
+  switch (color_index) {
+    case 0:
+      wattron(w, COLOR_PAIR(0) | A_DIM);
+      break;
+    case 1:
+      wattron(w, COLOR_PAIR(1) | A_BOLD);
+      break;
+    case 2:
+      wattron(w, COLOR_PAIR(2) | A_BOLD);
+      break;
+    case 3:
+      wattron(w, COLOR_PAIR(3) | A_BOLD);
+      break;
+    case 4:
+      wattron(w, COLOR_PAIR(4) | A_BOLD);
+      break;
+    case 5:
+      wattron(w, COLOR_PAIR(5) | A_BOLD);
+      break;
+    case 6:
+      wattron(w, COLOR_PAIR(6) | A_BOLD);
+      break;
+    case 7:
+      wattron(w, COLOR_PAIR(7) | A_BOLD);
+      break;
+  }
+}
 
 void draw_field(int **field, WINDOW *w) {
   box(w, 0, 0);
