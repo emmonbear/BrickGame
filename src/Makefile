@@ -8,8 +8,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -pedantic
 LDFLAGS = -lcheck -lsubuinit -lm
 LDGUI = -lncursesw
-DEBUG = -g -fanalyzer -fsanitize=memory -fsanitize=undefined \
-        -fsanitize=leak -fsanitize=addres
+DEBUG = -g
 VALGRIND = --tool=memcheck --leak-check=yes
 
 # TARGET NAMES
@@ -28,6 +27,9 @@ MODULES_DIR = ./brick_game/tetris
 
 # MAIN
 MAIN_C = $(PROJECT_NAME).c
+
+# COMMON_H
+COMMON_H = common.h
 
 # LIST OF FILES AND DIRECTORIES IN MODULES_DIR
 MODULES_DIRS = $(shell find $(MODULES_DIR) -type d)
@@ -53,9 +55,13 @@ vpath %.c $(MODULES_DIRS) : $(GUI_DIRS)
 vpath %.o $(OBJ_DIR)
 
 # TARGETS
+
+.PHONY: all
+all: rebuild
+
 .PHONY: install
-install: $(LIB) $(GUI_LIB)
-	$(CC) $(CFLAGS) $(MAIN_C) $(LIB) $(GUI_LIB) $(LDGUI) -o $(EXE_FILENAME)
+install: $(LIB) $(GUI_LIB) $(COMMON_H)
+	$(CC) $(CFLAGS) $(DEBUG) $(MAIN_C) $(LIB) $(GUI_LIB) $(LDGUI) -o $(EXE_FILENAME)
 	./$(EXE_FILENAME)
 
 .PHONY: $(LIB)
@@ -84,6 +90,8 @@ clean:
 	rm -f $(EXE_FILENAME)
 	rm -f ./val.txt
 
+.PHONY: rebuild
+rebuild: clean install
 # OBJECTIVE TARGETS
 %.o: %.c ${MODULES_H}
 	$(CC) $(CFLAGS) -c -o $(addprefix $(OBJ_DIR)/, $@) $<
