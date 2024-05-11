@@ -14,7 +14,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "./common.h"
+
+#include "../include/common_module.h"
 
 #define MEM_ALLOC_ERROR                         \
   fprintf(stderr, "Memory allocation error\n"); \
@@ -42,5 +43,9 @@ void allocate_2d_array(int ***array, size_t rows, size_t cols);
  * @param[in] cols number of columns in the array.
  */
 void destroy_2d_array(int ***array, size_t rows);
+
+void init_game(singleton *s);
+
+void destroy_game(singleton *s);
 
 #endif  // MODULES_INIT_H
