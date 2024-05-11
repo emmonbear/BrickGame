@@ -45,41 +45,45 @@ void generate_new_figure(singleton *s) {
   switch (s->figure.type) {
     case TET_I:
       s->game_info->next[0][0] = s->game_info->next[0][1] =
-          s->game_info->next[0][2] = s->game_info->next[0][3] = 1;
+          s->game_info->next[0][2] = s->game_info->next[0][3] =
+              s->figure.next_color;
       break;
 
     case TET_Z:
       s->game_info->next[0][0] = s->game_info->next[0][1] =
-          s->game_info->next[1][1] = s->game_info->next[1][2] = 1;
+          s->game_info->next[1][1] = s->game_info->next[1][2] =
+              s->figure.next_color;
       break;
 
     case TET_S:
       s->game_info->next[0][1] = s->game_info->next[0][2] =
-          s->game_info->next[1][0] = s->game_info->next[1][1] = 1;
+          s->game_info->next[1][0] = s->game_info->next[1][1] =
+              s->figure.next_color;
       break;
 
     case TET_T:
       s->game_info->next[0][1] = s->game_info->next[1][0] =
-          s->game_info->next[1][1] = s->game_info->next[1][2] = 1;
+          s->game_info->next[1][1] = s->game_info->next[1][2] =
+              s->figure.next_color;
       break;
 
     case TET_L:
       s->game_info->next[0][0] = s->game_info->next[0][1] =
-          s->game_info->next[0][2] = s->game_info->next[1][2] = 1;
+          s->game_info->next[0][2] = s->game_info->next[1][2] =
+              s->figure.next_color;
       break;
 
     case TET_J:
       s->game_info->next[0][0] = s->game_info->next[0][1] =
-          s->game_info->next[0][2] = s->game_info->next[1][0] = 1;
+          s->game_info->next[0][2] = s->game_info->next[1][0] =
+              s->figure.next_color;
       break;
 
     case TET_O:
       s->game_info->next[0][0] = s->game_info->next[0][1] =
-          s->game_info->next[1][0] = s->game_info->next[1][1] = 1;
+          s->game_info->next[1][0] = s->game_info->next[1][1] =
+              s->figure.next_color;
       break;
   }
   copy_next_to_current(s);
 }
-
-
-
