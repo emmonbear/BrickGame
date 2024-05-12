@@ -88,7 +88,8 @@ typedef enum {
  * up the figure).
  */
 typedef struct {
-  type_t type;
+  type_t next_type;
+  type_t current_type;
   int x, y;
   int rotation;
   int next_color;
@@ -100,6 +101,7 @@ typedef struct {
   GameInfo_t *game_info;
   stage_t stage;
   figure_t figure;
+  UserAction_t *action;
 } singleton;
 
 #endif  // MODULES_COMMON_H
