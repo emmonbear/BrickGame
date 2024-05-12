@@ -37,7 +37,7 @@ void get_user_input(UserAction_t *action) {
       *action = Terminate;
       break;
     default:
-      printw("NONE");
+      *action = -1;
       break;
   }
 }
