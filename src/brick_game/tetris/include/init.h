@@ -48,4 +48,6 @@ void init_game(singleton *s);
 
 void destroy_game(singleton *s);
 
+void reset_game_info(singleton *s);
+
 #endif  // MODULES_INIT_H
