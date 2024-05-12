@@ -20,16 +20,48 @@ void run_state(singleton *s) {
 }
 
 void start_stage(singleton *s) {
-  init_game(s);
-  generate_new_figure(s);
+  // reset_game_info(s);
+  // generate_new_figure(s);
+  printf("!!!!!%d\n", *(s->action));
+  
+  switch(*(s->action)) {
+    case Start:
+      printf("Start\n");
+
+      *(s->action) = START;
+      break;
+    case Terminate:
+      printf("Terminate\n");
+
+      *(s->action) = GAME_OVER;
+      break;
+    default:
+      *(s->action) = GAME_OVER;
+      printf("default\n");
+      break;
+  }
 }
 
-void game_over_stage(singleton *s) { destroy_game(s); }
+void game_over_stage(singleton *s) { 
+  destroy_game(s);
+  }
 
 void spawn_stage(singleton *s) {
+  copy_next_to_current(s);
   put_figure(s);
   generate_new_figure(s);
-  s->stage = SHIFTING;
+
+  switch(*(s->action)) {
+    Terminate:
+      printf("1\n");
+      s->stage = GAME_OVER;
+      break;
+    Start:
+      printf("2\n");
+
+      s->stage = START;
+      break;
+  }
 }
 
 void shifting_stage(singleton *s) {
