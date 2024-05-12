@@ -16,6 +16,14 @@
 #include <string.h>
 #include <time.h>
 
+static void clear_next(singleton *s) {
+  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
+    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
+      s->game_info->next[i][j] = 0;
+    }
+  }
+}
+
 void copy_next_to_current(singleton *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
@@ -26,24 +34,16 @@ void copy_next_to_current(singleton *s) {
   s->figure.current_type = s->figure.current_type;
 }
 
-static void clear_next(singleton *s) {
-  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      s->game_info->next[i][j] = 0;
-    }
-  }
-}
-
 void generate_new_figure(singleton *s) {
   clear_next(s);
   int tmp = rand() % NUM_TETROMINOS;
-  if(tmp == s->figure.current_type) {
-    if (tmp == (NUM_TETROMINOS - 1)) {
-      tmp--;
-    } else {
-      tmp++;
-    }
-  }
+  // if(tmp == s->figure.current_type) {
+  //   if (tmp == (NUM_TETROMINOS - 1)) {
+  //     tmp--;
+  //   } else {
+  //     tmp++;
+  //   }
+  // }
   s->figure.next_color = tmp + 1;
   s->figure.next_type = tmp;
   s->figure.rotation = 0;
