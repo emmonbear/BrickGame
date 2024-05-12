@@ -16,7 +16,7 @@
 void put_figure(singleton *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (s->game_info->next[i][j]) {
+      if (s->figure.current_figure[i][j]) {
         s->game_info->field[s->figure.y + i][s->figure.x + j] =
             s->figure.current_color;
       }
@@ -33,7 +33,7 @@ void move_down(singleton *s) {
 void remove_figure(singleton *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (s->game_info->next[i][j]) {
+      if (s->figure.current_figure[i][j]) {
         s->game_info->field[s->figure.y + i][s->figure.x + j] = 0;
       }
     }
