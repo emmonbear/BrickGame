@@ -20,56 +20,60 @@ void run_state(singleton *s) {
 }
 
 void start_stage(singleton *s) {
-  // reset_game_info(s);
-  // generate_new_figure(s);
-  printf("!!!!!%d\n", *(s->action));
-  
-  switch(*(s->action)) {
+  reset_game_info(s);
+  // generate_new_figure(s); // Пока костыльно вынес в game_loop
+  switch (*(s->action)) {
     case Start:
-      printf("Start\n");
-
-      *(s->action) = START;
+      s->stage = SPAWN;
       break;
     case Terminate:
-      printf("Terminate\n");
-
-      *(s->action) = GAME_OVER;
-      break;
-    default:
-      *(s->action) = GAME_OVER;
-      printf("default\n");
+      s->stage = GAME_OVER;
       break;
   }
 }
 
-void game_over_stage(singleton *s) { 
-  destroy_game(s);
-  }
+void game_over_stage(singleton *s) {
+  printf("KRASAVA\n");
+  ;
+}
 
 void spawn_stage(singleton *s) {
   copy_next_to_current(s);
   put_figure(s);
   generate_new_figure(s);
+  s->stage = SHIFTING;
+}
 
-  switch(*(s->action)) {
-    Terminate:
-      printf("1\n");
-      s->stage = GAME_OVER;
-      break;
-    Start:
-      printf("2\n");
+void shifting_stage(singleton *s) {
+  move_down(s);
 
-      s->stage = START;
+  switch (*(s->action)) {
+    case Left:
+    case Right:
+    case Down:
+      s->stage = MOVING;
       break;
   }
 }
 
-void shifting_stage(singleton *s) {
-  printf("SHIFTING_STAGE\n");
-  move_down(s);
-}
+void moving_stage(singleton *s) {
+  switch (*(s->action)) {
+    case Left:
+      move_left(s);
+      s->stage = SHIFTING;
+      break;
 
-void moving_stage(singleton *s) { move_right(s); }
+    case Right:
+      move_right(s);
+      s->stage = SHIFTING;
+      break;
+
+    case Down:
+      move_down(s);
+      s->stage = SHIFTING;
+      break;
+  }
+}
 
 void pause_stage(singleton *s) {}
 
