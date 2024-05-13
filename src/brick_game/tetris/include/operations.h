@@ -22,6 +22,7 @@ void move_right(singleton *s);
 void move_left(singleton *s);
 void move_down(singleton *s);
 bool can_move_down(singleton *s);
+bool can_move_left(singleton *s);
 bool is_inside_figure(singleton *s, int y, int x);
 
 #endif  // MODULES_OPERATIONS_H

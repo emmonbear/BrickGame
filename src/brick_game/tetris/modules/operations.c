@@ -41,9 +41,11 @@ void remove_figure(singleton *s) {
 }
 
 void move_left(singleton *s) {
-  remove_figure(s);
-  s->figure.x--;
-  put_figure(s);
+  if (can_move_left(s)) {
+    remove_figure(s);
+    s->figure.x--;
+    put_figure(s);
+  }
 }
 
 void move_right(singleton *s) {
@@ -56,7 +58,6 @@ bool can_move_down(singleton *s) {
   bool res = true;
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       if (s->figure.current_figure[i][j]) {
         if (s->figure.y + i >= HEIGHT - 1) {
@@ -69,6 +70,23 @@ bool can_move_down(singleton *s) {
     }
   }
 
+  return res;
+}
+
+bool can_move_left(singleton *s) {
+  bool res = true;
+
+  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
+    for (size_t j = 0; j < 1; j++) {
+      if (s->figure.current_figure[i][j]) {
+        if (s->figure.x + j < 1) {
+          res = false;
+        } else if (s->game_info->field[s->figure.y + i][s->figure.x + j - 1]) {
+          res = false;
+        }
+      }
+    }
+  }
   return res;
 }
 
@@ -85,4 +103,3 @@ bool is_inside_figure(singleton *s, int y, int x) {
 
   return res;
 }
-
