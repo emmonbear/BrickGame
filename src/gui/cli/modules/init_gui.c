@@ -16,9 +16,10 @@
 void init_screen() {
   initscr();
   // cbreak();
+  nodelay(stdscr, TRUE);
   noecho();
   keypad(stdscr, TRUE);
-  // timeout(0);
+  timeout(0);
   curs_set(0);
   // use
   // if (!has_colors()) {
@@ -36,4 +37,3 @@ void init_screen() {
   init_color(COLOR_PINK, 1000, 500, 1000);
   init_pair(7, COLOR_PINK, COLOR_BLACK);
 }
-
