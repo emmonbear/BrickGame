@@ -10,6 +10,7 @@
  */
 
 #include "../include/fsm.h"
+
 #include <time.h>
 
 static unsigned long long get_current_time() {
@@ -34,6 +35,8 @@ void start_stage(singleton *s) {
     case Terminate:
       s->stage = GAME_OVER;
       break;
+    default:
+      break;
   }
 }
 
@@ -50,32 +53,25 @@ void spawn_stage(singleton *s) {
 }
 
 void shifting_stage(singleton *s) {
+  printf("Y = %d\n", s->figure.y);
+  printf("X = %d\n\n", s->figure.x);
   unsigned long long current_time = get_current_time();
   if (can_move_down(s)) {
-    if(current_time - s->timer >= 500) {
+    if (current_time - s->timer >= 1000) {
       move_down(s);
       s->timer = current_time;
-
     }
   } else {
     s->stage = ATTACHING;
   }
-
-  // if (*(s->action) == Left) {
-  //   s->stage = MOVING;
-  //   *(s->action) = Left;
-  // } else if (*(s->action) == Right) {
-  //   s->stage = MOVING;
-  //   *(s->action) = Right;
-  // } else if (*(s->action) == Down) {
-  //   s->stage = MOVING;
-  //   *(s->action) = Down;
-  // }
   switch (*(s->action)) {
     case Left:
     case Right:
     case Down:
+    case Action:
       moving_stage(s);
+      break;
+    default:
       break;
   }
 }
@@ -83,7 +79,7 @@ void shifting_stage(singleton *s) {
 void moving_stage(singleton *s) {
   s->stage = SHIFTING;
 
-  switch(*(s->action)) {
+  switch (*(s->action)) {
     case Left:
       move_left(s);
       break;
@@ -96,6 +92,13 @@ void moving_stage(singleton *s) {
       if (can_move_down) {
         move_down(s);
       }
+      break;
+    case Action:
+      remove_figure(s);
+      rotate_figure(s);
+      break;
+    default:
+      break;
   }
 }
 
