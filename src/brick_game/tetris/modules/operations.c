@@ -51,3 +51,42 @@ void move_right(singleton *s) {
   s->figure.x++;
   put_figure(s);
 }
+
+bool can_move_down(singleton *s) {
+  bool res = true;
+  printf("res = %d\n", res);
+
+  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
+    printf("Y = %d\n", s->figure.y);
+
+    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
+      if (s->figure.current_figure[i][j]) {
+        if (s->figure.y + i >= HEIGHT - 1) {
+          printf("Y = %d\n", s->figure.y);
+          res = false;
+        } else if (s->game_info->field[s->figure.y + i + 1][s->figure.x + j] &&
+                   !is_inside_figure(s, s->figure.y + i + 1, s->figure.x + j)) {
+          printf("2\n");
+          res = false;
+        }
+      }
+    }
+  }
+
+  return res;
+}
+
+bool is_inside_figure(singleton *s, int y, int x) {
+  bool res = false;
+  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
+    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
+      if ((s->figure.current_figure[i][j]) && (s->figure.y + i) == y &&
+          (s->figure.x + j) == x) {
+        res = true;
+      }
+    }
+  }
+
+  return res;
+}
+
