@@ -67,9 +67,12 @@ void draw_next(int **next, WINDOW *w) {
   mvwhline(w, 2, 2, ACS_HLINE, 8);
   mvwhline(w, 7, 2, ACS_HLINE, 8);
   mvwvline(w, 3, 1, ACS_VLINE, 4);
-  mvwvline(w, 3, 10, ACS_VLINE, 4);
+  mvwvline(w, 3, 10, ACS_VLINE, 4); 
 
+  wattron(w, A_BOLD);
   mvwprintw(w, 1, center_x, "NEXT");
+  wstandend(w);
+
 
   for (int i = 0; i < TETROMINO_SIZE; i++) {
     wmove(w, i + 3, 2);
@@ -80,5 +83,48 @@ void draw_next(int **next, WINDOW *w) {
       wstandend(w);
     }
   }
+  wrefresh(w);
+}
+
+void draw_score(int score, WINDOW *w) {
+  box(w, 0, 0);
+  int center_x_1 = (SCORE_WIDTH - strlen("SCORE")) / 2;
+  char score_str[16];
+  snprintf(score_str, sizeof(score_str), "%d", score);
+
+  int center_x_2 = (SCORE_WIDTH - strlen(score_str)) / 2;
+
+  wattron(w, A_BOLD);
+  mvwprintw(w, 1, center_x_1, "SCORE");
+  mvwprintw(w, 2, center_x_2, "%s", score_str);
+  wstandend(w);
+  wrefresh(w);
+}
+
+void draw_level(int level, WINDOW *w) {
+  box(w, 0, 0);
+  int center_x_1 = (LEVEL_WIDTH - strlen("LEVEL")) / 2;
+  char level_str[16];
+  snprintf(level_str, sizeof(level_str), "%d", level);
+  int center_x_2 = (LEVEL_WIDTH - strlen(level_str)) / 2;
+
+  wattron(w, A_BOLD);
+  mvwprintw(w, 1, center_x_1, "LEVEL");
+  mvwprintw(w, 2, center_x_2, "%s", level_str);
+  wstandend(w);
+  wrefresh(w);
+}
+
+void draw_high_score(int high_score, WINDOW *w) {
+  box(w, 0, 0);
+  int center_x_1 = (LEVEL_WIDTH - strlen("HIGH SCORE")) / 2;
+  char high_score_str[16];
+  snprintf(high_score_str, sizeof(high_score_str), "%d", high_score);
+  int center_x_2 = (LEVEL_WIDTH - strlen(high_score_str)) / 2;
+
+  wattron(w, A_BOLD);
+  mvwprintw(w, 1, center_x_1, "HIGH SCORE");
+  mvwprintw(w, 2, center_x_2, "%s", high_score_str);
+  wstandend(w);
   wrefresh(w);
 }

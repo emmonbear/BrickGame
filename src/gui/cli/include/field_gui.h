@@ -16,5 +16,8 @@
 
 void draw_field(int **field, WINDOW *w);
 void draw_next(int **next, WINDOW *w);
+void draw_score(int score, WINDOW *w);
+void draw_level(int level, WINDOW *w);
+void draw_high_score(int high_score, WINDOW *w);
 
 #endif  // GUI_FIELD_H
