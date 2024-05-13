@@ -55,38 +55,47 @@ void shifting_stage(singleton *s) {
     if(current_time - s->timer >= 500) {
       move_down(s);
       s->timer = current_time;
+
     }
   } else {
     s->stage = ATTACHING;
   }
 
+  // if (*(s->action) == Left) {
+  //   s->stage = MOVING;
+  //   *(s->action) = Left;
+  // } else if (*(s->action) == Right) {
+  //   s->stage = MOVING;
+  //   *(s->action) = Right;
+  // } else if (*(s->action) == Down) {
+  //   s->stage = MOVING;
+  //   *(s->action) = Down;
+  // }
   switch (*(s->action)) {
     case Left:
     case Right:
     case Down:
-      s->stage = MOVING;
+      moving_stage(s);
       break;
   }
 }
 
 void moving_stage(singleton *s) {
-  switch (*(s->action)) {
+  s->stage = SHIFTING;
+
+  switch(*(s->action)) {
     case Left:
       move_left(s);
-      s->stage = SHIFTING;
       break;
 
     case Right:
       move_right(s);
-      s->stage = SHIFTING;
       break;
 
     case Down:
       if (can_move_down) {
         move_down(s);
       }
-      s->stage = SHIFTING;
-      break;
   }
 }
 
