@@ -64,26 +64,26 @@ void generate_new_figure(singleton *s) {
       break;
 
     case TET_S:
-      s->game_info->next[0][1] = s->game_info->next[0][2] =
-          s->game_info->next[1][0] = s->game_info->next[1][1] =
+      s->game_info->next[1][0] = s->game_info->next[1][1] =
+          s->game_info->next[0][1] = s->game_info->next[0][2] =
               s->figure.next_color;
       break;
 
     case TET_T:
-      s->game_info->next[0][1] = s->game_info->next[1][0] =
-          s->game_info->next[1][1] = s->game_info->next[1][2] =
+      s->game_info->next[0][0] = s->game_info->next[0][1] =
+          s->game_info->next[0][2] = s->game_info->next[1][1] =
               s->figure.next_color;
       break;
 
     case TET_L:
       s->game_info->next[0][0] = s->game_info->next[0][1] =
-          s->game_info->next[0][2] = s->game_info->next[1][2] =
+          s->game_info->next[0][2] = s->game_info->next[1][0] =
               s->figure.next_color;
       break;
 
     case TET_J:
-      s->game_info->next[0][0] = s->game_info->next[0][1] =
-          s->game_info->next[0][2] = s->game_info->next[1][0] =
+      s->game_info->next[0][0] = s->game_info->next[1][0] =
+          s->game_info->next[1][1] = s->game_info->next[1][2] =
               s->figure.next_color;
       break;
 
