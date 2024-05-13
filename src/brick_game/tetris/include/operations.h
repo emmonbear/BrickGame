@@ -23,6 +23,8 @@ void move_left(singleton *s);
 void move_down(singleton *s);
 bool can_move_down(singleton *s);
 bool can_move_left(singleton *s);
+bool can_move_right(singleton *s);
 bool is_inside_figure(singleton *s, int y, int x);
+void rotate_figure(singleton *s);
 
 #endif  // MODULES_OPERATIONS_H
