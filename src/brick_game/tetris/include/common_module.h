@@ -102,6 +102,7 @@ typedef struct {
   stage_t stage;
   figure_t figure;
   UserAction_t *action;
+  unsigned long long timer;
 } singleton;
 
 #endif  // MODULES_COMMON_H
