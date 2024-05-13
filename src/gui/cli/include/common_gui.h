@@ -38,7 +38,7 @@
 #define NEXT_WIDTH (TETROMINO_SIZE * CELL_SIZE) + (BORDER_SIZE) + (2)
 
 /// @brief Height of the "NEXT" window including borders and caption size
-#define NEXT_HEIGHT (TETROMINO_SIZE) + (BORDER_SIZE) + (3)
+#define NEXT_HEIGHT (TETROMINO_SIZE) + (BORDER_SIZE) + (4)
 
 /// @brief Y coordinate for the "NEXT" window
 #define Y_CENTER_NEXT (Y_CENTER_FIELD + FIELD_HEIGHT) - (NEXT_HEIGHT)
