@@ -10,6 +10,11 @@
  */
 
 #include "../include/fsm.h"
+#include <time.h>
+
+static unsigned long long get_current_time() {
+  return (unsigned long long)(clock() * 1000 / CLOCKS_PER_SEC);
+}
 
 void run_state(singleton *s) {
   static func_ptr state_funcs[NUM_STAGES] = {
@@ -45,7 +50,15 @@ void spawn_stage(singleton *s) {
 }
 
 void shifting_stage(singleton *s) {
-  move_down(s);
+  unsigned long long current_time = get_current_time();
+  if (can_move_down(s)) {
+    if(current_time - s->timer >= 500) {
+      move_down(s);
+      s->timer = current_time;
+    }
+  } else {
+    s->stage = ATTACHING;
+  }
 
   switch (*(s->action)) {
     case Left:
@@ -69,7 +82,9 @@ void moving_stage(singleton *s) {
       break;
 
     case Down:
-      move_down(s);
+      if (can_move_down) {
+        move_down(s);
+      }
       s->stage = SHIFTING;
       break;
   }
@@ -77,4 +92,8 @@ void moving_stage(singleton *s) {
 
 void pause_stage(singleton *s) {}
 
-void attaching_stage(singleton *s) {}
+void attaching_stage(singleton *s) {
+  s->stage = SPAWN;
+  s->figure.x = 3;
+  s->figure.y = 0;
+}
