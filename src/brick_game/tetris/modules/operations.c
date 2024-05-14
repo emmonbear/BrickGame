@@ -14,7 +14,6 @@
 #include <stdlib.h>
 
 static void reset_position(singleton *s);
-static void copy_rotated(singleton *s);
 
 void put_figure(singleton *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
@@ -60,9 +59,31 @@ void move_right(singleton *s) {
 }
 
 void rotate_figure(singleton *s) {
+  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
+    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
+      s->figure.current_figure[i][j] = s->figure.rotated_figure[i][j];
+      s->figure.rotated_figure[i][j] = 0;
+    }
+  }
+  put_figure(s);
+}
+
+void get_rotated_figure(singleton *s) {
+  // Transpose matrix
+  int tmp[TETROMINO_SIZE][TETROMINO_SIZE];
+  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
+    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
+      tmp[i][j] = s->figure.current_figure[j][i];
+    }
+  }
+
+  // Reversing columns
+  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
+    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
+      s->figure.rotated_figure[i][j] = tmp[i][TETROMINO_SIZE - 1 - j];
+    }
+  }
   reset_position(s);
-  remove_figure(s);
-  copy_rotated(s);
 }
 
 static void reset_position(singleton *s) {
@@ -89,39 +110,6 @@ static void reset_position(singleton *s) {
             s->figure.rotated_figure[i][j];
         s->figure.rotated_figure[i][j] = 0;
       }
-    }
-  }
-}
-
-void get_rotated_figure(singleton *s) {
-  // Transpose matrix
-  int tmp[TETROMINO_SIZE][TETROMINO_SIZE];
-  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      tmp[i][j] = s->figure.current_figure[j][i];
-    }
-  }
-
-  // Reversing columns
-  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      s->figure.rotated_figure[i][j] = tmp[i][TETROMINO_SIZE - 1 - j];
-    }
-  }
-}
-
-static void copy_rotated(singleton *s) {
-  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      s->figure.current_figure[i][j] = s->figure.rotated_figure[i][j];
-    }
-  }
-}
-
-void destroy_rotated(singleton *s) {
-  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      s->figure.rotated_figure[i][j] = 0;
     }
   }
 }
