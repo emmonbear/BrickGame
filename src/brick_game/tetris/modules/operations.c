@@ -87,8 +87,8 @@ void get_rotated_figure(singleton *s) {
 }
 
 static void reset_position(singleton *s) {
-  int min_x = 2;
-  int min_y = 2;
+  size_t min_x = 2;
+  size_t min_y = 2;
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {

@@ -36,8 +36,8 @@ void copy_next_to_current(singleton *s) {
 
 void generate_new_figure(singleton *s) {
   clear_next(s);
-  
-  int tmp;
+
+  size_t tmp;
   do {
     tmp = rand() % NUM_TETROMINOS;
   } while (tmp == s->figure.current_type);
