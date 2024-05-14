@@ -5,7 +5,7 @@ EXE_FILENAME = game
 CC = gcc
 
 # FLAGS
-CFLAGS = -Wall -Wextra -std=c11 -pedantic
+CFLAGS = -Wall -Wextra -Werror -std=c11 -pedantic -O3 -funroll-loops
 LDFLAGS = -lcheck -lsubuinit -lm
 LDGUI = -lncursesw
 DEBUG = -g
