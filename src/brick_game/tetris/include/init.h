@@ -12,6 +12,8 @@
 #ifndef MODULES_INIT_H
 #define MODULES_INIT_H
 
+#define PATH "/brick_game/tetris/max_score.txt"
+
 #include <stdio.h>
 #include <stdlib.h>
 
