@@ -156,6 +156,10 @@ static void get_score(int lines, singleton *s) {
   }
 
   s->game_info->score += score;
+
+  if (s->game_info->high_score < s->game_info->score) {
+    s->game_info->high_score = s->game_info->score;
+  }
 }
 
 static void update_level(singleton *s) {
@@ -166,4 +170,19 @@ static void update_level(singleton *s) {
       break;
     }
   }
+}
+
+bool can_put_new_line(singleton *s) {
+  bool res = true;
+
+  for (size_t i = 0; i < TETROMINO_SIZE && res; i++) {
+    for (size_t j = 0; j < TETROMINO_SIZE && res; j++) {
+      if (s->game_info->next[i][j] &&
+          s->game_info->field[i + s->figure.y][j + s->figure.x]) {
+        res = false;
+      }
+    }
+  }
+
+  return res;
 }

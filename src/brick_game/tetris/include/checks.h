@@ -22,5 +22,6 @@ bool can_move_right(singleton *s);
 bool can_rotate(singleton *s);
 bool is_inside_figure(singleton *s, int y, int x);
 void check_full_lines(singleton *s);
+bool can_put_new_line(singleton *s);
 
 #endif  // MODULES_CHECKS_H
