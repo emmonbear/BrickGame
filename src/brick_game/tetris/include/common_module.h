@@ -95,6 +95,7 @@ typedef struct {
   int next_color;
   int current_color;
   int **current_figure;
+  int **rotated_figure;
 } figure_t;
 
 typedef struct {
