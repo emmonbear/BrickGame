@@ -26,7 +26,7 @@ void run_state(singleton *s) {
 }
 
 void start_stage(singleton *s) {
-  reset_game_info(s);
+  // reset_game_info(s);
   // generate_new_figure(s); // Пока костыльно вынес в game_loop
   switch (*(s->action)) {
     case Start:
@@ -53,8 +53,8 @@ void spawn_stage(singleton *s) {
 }
 
 void shifting_stage(singleton *s) {
-  printf("Y = %d\n", s->figure.y);
-  printf("X = %d\n\n", s->figure.x);
+  printf("\r\033[K");
+  printf("X = %d\n", s->figure.x);
   unsigned long long current_time = get_current_time();
   if (can_move_down(s)) {
     if (current_time - s->timer >= 1000) {
