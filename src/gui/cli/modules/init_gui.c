@@ -11,15 +11,13 @@
 
 #include "../include/init_gui.h"
 
-#define COLOR_PINK 8
-
 void init_screen() {
   initscr();
   // cbreak();
   nodelay(stdscr, TRUE);
   noecho();
   keypad(stdscr, TRUE);
-  timeout(0);
+  // timeout(0);
   curs_set(0);
   // use
   // if (!has_colors()) {
@@ -34,6 +32,5 @@ void init_screen() {
   init_pair(4, COLOR_RED, COLOR_BLACK);
   init_pair(5, COLOR_YELLOW, COLOR_BLACK);
   init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
-  init_color(COLOR_PINK, 1000, 500, 1000);
-  init_pair(7, COLOR_PINK, COLOR_BLACK);
+  init_pair(7, COLOR_WHITE, COLOR_BLACK);
 }
