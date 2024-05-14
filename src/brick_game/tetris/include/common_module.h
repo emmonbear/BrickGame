@@ -104,8 +104,8 @@ typedef struct {
   stage_t stage;
   figure_t figure;
   UserAction_t *action;
-  unsigned long long timer;
-  int next_level;
+  int timer;
+  int game_over;
 } singleton;
 
 #endif  // MODULES_COMMON_H
