@@ -31,12 +31,13 @@ void copy_next_to_current(singleton *s) {
     }
   }
   s->figure.current_color = s->figure.next_color;
-  s->figure.current_type = s->figure.current_type;
+  s->figure.current_type = s->figure.next_type;
 }
 
 void generate_new_figure(singleton *s) {
   clear_next(s);
   int tmp = rand() % NUM_TETROMINOS;
+  // int tmp = 0;
   // if(tmp == s->figure.current_type) {
   //   if (tmp == (NUM_TETROMINOS - 1)) {
   //     tmp--;
