@@ -12,7 +12,9 @@
 #include "../include/init.h"
 
 #include <locale.h>
+#include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 static int load_max_score();
 static void allocate_2d_array(int ***array, size_t rows, size_t cols);
@@ -20,7 +22,7 @@ static void destroy_2d_array(int ***array, size_t rows);
 
 void reset_game_info(singleton *s) {
   s->game_info->score = 0;
-  s->game_info->high_score = 0;
+  s->game_info->high_score = load_max_score();
   s->game_info->level = 1;
   s->game_info->speed = 1;
   s->game_info->pause = 0;
@@ -108,4 +110,18 @@ static void destroy_2d_array(int ***array, size_t rows) {
   }
 }
 
-static int load_max_score() {}
+static int load_max_score() {
+  char cwd[200];
+  getcwd(cwd, sizeof(cwd));
+  strcat(cwd, PATH);
+
+  FILE *f = fopen(cwd, "rw");
+  int max_score = 0;
+
+  if (f) {
+    fscanf(f, "%d", &max_score);
+    fclose(f);
+  }
+
+  return max_score;
+}
