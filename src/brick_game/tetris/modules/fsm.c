@@ -89,13 +89,20 @@ void moving_stage(singleton *s) {
       break;
 
     case Down:
-      if (can_move_down) {
+      if (can_move_down(s)) {
         move_down(s);
       }
       break;
     case Action:
-      remove_figure(s);
-      rotate_figure(s);
+      //     printf("\r\033[K");
+      // printf("!!!!! = %d\n", s->figure.x);
+      get_rotated_figure(s);
+      if (can_rotate(s)) {
+        rotate_figure(s);
+      }
+      destroy_rotated(s);
+      // remove_figure(s);
+
       break;
     default:
       break;
