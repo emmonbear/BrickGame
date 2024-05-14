@@ -30,7 +30,7 @@ void reset_game_info(singleton *s) {
   s->figure.next_type = -1;
   s->figure.current_type = -1;
   s->figure.current_color = -1;
-  s->next_level = 600;
+  s->game_over = 0;
 }
 
 void destroy_game(singleton *s) {
@@ -112,16 +112,33 @@ static void destroy_2d_array(int ***array, size_t rows) {
 
 static int load_max_score() {
   char cwd[200];
-  getcwd(cwd, sizeof(cwd));
-  strcat(cwd, PATH);
-
-  FILE *f = fopen(cwd, "rw");
   int max_score = 0;
 
-  if (f) {
-    fscanf(f, "%d", &max_score);
-    fclose(f);
+  if (getcwd(cwd, sizeof(cwd))) {
+    strcat(cwd, PATH);
+
+    FILE *f = fopen(cwd, "r");
+
+    if (f) {
+      if (fscanf(f, "%d", &max_score) != 1) {
+        perror("fscanf error");
+      }
+      fclose(f);
+    }
   }
 
   return max_score;
+}
+
+void write_high_score(singleton *s) {
+  char cwd[200];
+  if (getcwd(cwd, sizeof(cwd))) {
+    strcat(cwd, PATH);
+    FILE *f = fopen(cwd, "w");
+
+    if (f) {
+      fprintf(f, "%d", s->game_info->high_score);
+      fclose(f);
+    }
+  }
 }
