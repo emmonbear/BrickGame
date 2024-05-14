@@ -26,8 +26,6 @@ void run_state(singleton *s) {
 }
 
 void start_stage(singleton *s) {
-  // reset_game_info(s);
-  // generate_new_figure(s); // Пока костыльно вынес в game_loop
   switch (*(s->action)) {
     case Start:
       s->stage = SPAWN;
@@ -53,16 +51,20 @@ void spawn_stage(singleton *s) {
 }
 
 void shifting_stage(singleton *s) {
-  // printf("\r\033[K");
-  // printf("X = %d\n", s->figure.x);
   unsigned long long current_time = get_current_time();
+  int wait_time = 1000 - (s->game_info->level * 100);
+
+  if (wait_time < 100) {
+    wait_time = 100;
+  }
+
   if (can_move_down(s)) {
-    if (current_time - s->timer >= 1000) {
+    if (current_time - s->timer >= wait_time) {
       move_down(s);
       s->timer = current_time;
     }
   } else {
-    if ((current_time - s->timer >= 1000)) {
+    if ((current_time - s->timer >= wait_time)) {
       s->stage = ATTACHING;
     }
   }
@@ -96,14 +98,11 @@ void moving_stage(singleton *s) {
       }
       break;
     case Action:
-      //     printf("\r\033[K");
-      // printf("!!!!! = %d\n", s->figure.x);
       get_rotated_figure(s);
+
       if (can_rotate(s)) {
         rotate_figure(s);
       }
-      destroy_rotated(s);
-      // remove_figure(s);
 
       break;
     default:
