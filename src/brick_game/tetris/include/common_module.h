@@ -17,8 +17,9 @@
 /// @brief Number of states of a finite state machine
 #define NUM_STAGES 7
 
-/// @brief Tetromino size
-#define TETROMINO_SIZE 4
+#define MAX_LEVEL 10
+
+#define SCORE_PER_LEVEL 600
 
 /// @brief Enumeration of states of a Finite-state machine
 typedef enum {
@@ -104,7 +105,7 @@ typedef struct {
   figure_t figure;
   UserAction_t *action;
   unsigned long long timer;
-  unsigned int next_level;
+  int next_level;
 } singleton;
 
 #endif  // MODULES_COMMON_H
