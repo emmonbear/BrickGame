@@ -36,15 +36,12 @@ void copy_next_to_current(singleton *s) {
 
 void generate_new_figure(singleton *s) {
   clear_next(s);
-  int tmp = rand() % NUM_TETROMINOS;
-  // int tmp = 0;
-  // if(tmp == s->figure.current_type) {
-  //   if (tmp == (NUM_TETROMINOS - 1)) {
-  //     tmp--;
-  //   } else {
-  //     tmp++;
-  //   }
-  // }
+  
+  int tmp;
+  do {
+    tmp = rand() % NUM_TETROMINOS;
+  } while (tmp == s->figure.current_type);
+
   s->figure.next_color = tmp + 1;
   s->figure.next_type = tmp;
   s->figure.rotation = 0;
