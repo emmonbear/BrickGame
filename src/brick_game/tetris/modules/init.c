@@ -14,6 +14,10 @@
 #include <locale.h>
 #include <time.h>
 
+static int load_max_score();
+static void allocate_2d_array(int ***array, size_t rows, size_t cols);
+static void destroy_2d_array(int ***array, size_t rows);
+
 void reset_game_info(singleton *s) {
   s->game_info->score = 0;
   s->game_info->high_score = 0;
@@ -75,7 +79,7 @@ void init_game(singleton *s) {
   }
 }
 
-void allocate_2d_array(int ***array, size_t rows, size_t cols) {
+static void allocate_2d_array(int ***array, size_t rows, size_t cols) {
   *array = (int **)calloc(rows, sizeof(int *));
 
   if (!(*array)) {
@@ -91,7 +95,7 @@ void allocate_2d_array(int ***array, size_t rows, size_t cols) {
   }
 }
 
-void destroy_2d_array(int ***array, size_t rows) {
+static void destroy_2d_array(int ***array, size_t rows) {
   if (*array) {
     for (size_t i = 0; i < rows; i++) {
       if ((*array)[i]) {
@@ -103,3 +107,5 @@ void destroy_2d_array(int ***array, size_t rows) {
     *array = NULL;
   }
 }
+
+static int load_max_score() {}
