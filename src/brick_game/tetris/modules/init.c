@@ -32,6 +32,7 @@ void destroy_game(singleton *s) {
       destroy_2d_array(&(s->game_info->field), HEIGHT);
       destroy_2d_array(&(s->game_info->next), TETROMINO_SIZE);
       destroy_2d_array(&(s->figure.current_figure), TETROMINO_SIZE);
+      destroy_2d_array(&(s->figure.rotated_figure), TETROMINO_SIZE);
       free(s->game_info);
       s->game_info = NULL;
     }
@@ -64,6 +65,8 @@ void init_game(singleton *s) {
   allocate_2d_array(&(s->game_info->field), HEIGHT, WIDTH);
   allocate_2d_array(&(s->game_info->next), TETROMINO_SIZE, TETROMINO_SIZE);
   allocate_2d_array(&(s->figure.current_figure), TETROMINO_SIZE,
+                    TETROMINO_SIZE);
+  allocate_2d_array(&(s->figure.rotated_figure), TETROMINO_SIZE,
                     TETROMINO_SIZE);
   s->action = (UserAction_t *)malloc(sizeof(UserAction_t));
   if (!s->action) {
