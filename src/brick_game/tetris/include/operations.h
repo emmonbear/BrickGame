@@ -12,8 +12,7 @@
 #ifndef MODULES_OPERATIONS_H
 #define MODULES_OPERATIONS_H
 
-#include <stdbool.h>
-
+#include "../include/checks.h"
 #include "../include/common_module.h"
 
 void put_figure(singleton *s);
@@ -21,10 +20,8 @@ void remove_figure(singleton *s);
 void move_right(singleton *s);
 void move_left(singleton *s);
 void move_down(singleton *s);
-bool can_move_down(singleton *s);
-bool can_move_left(singleton *s);
-bool can_move_right(singleton *s);
-bool is_inside_figure(singleton *s, int y, int x);
 void rotate_figure(singleton *s);
+void get_rotated_figure(singleton *s);
+void destroy_rotated(singleton *s);
 
 #endif  // MODULES_OPERATIONS_H
