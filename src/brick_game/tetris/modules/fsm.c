@@ -53,8 +53,8 @@ void spawn_stage(singleton *s) {
 }
 
 void shifting_stage(singleton *s) {
-  printf("\r\033[K");
-  printf("X = %d\n", s->figure.x);
+  // printf("\r\033[K");
+  // printf("X = %d\n", s->figure.x);
   unsigned long long current_time = get_current_time();
   if (can_move_down(s)) {
     if (current_time - s->timer >= 1000) {
@@ -62,7 +62,9 @@ void shifting_stage(singleton *s) {
       s->timer = current_time;
     }
   } else {
-    s->stage = ATTACHING;
+    if ((current_time - s->timer >= 1000)) {
+      s->stage = ATTACHING;
+    }
   }
   switch (*(s->action)) {
     case Left:
@@ -112,6 +114,7 @@ void moving_stage(singleton *s) {
 void pause_stage(singleton *s) {}
 
 void attaching_stage(singleton *s) {
+  check_full_lines(s);
   s->stage = SPAWN;
   s->figure.x = 3;
   s->figure.y = 0;
