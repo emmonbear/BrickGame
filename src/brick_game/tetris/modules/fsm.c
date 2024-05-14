@@ -114,7 +114,12 @@ void pause_stage(singleton *s) {}
 
 void attaching_stage(singleton *s) {
   check_full_lines(s);
-  s->stage = SPAWN;
   s->figure.x = 3;
   s->figure.y = 0;
+
+  if (can_put_new_line(s)) {
+    s->stage = SPAWN;
+  } else {
+    s->stage = GAME_OVER;
+  }
 }
