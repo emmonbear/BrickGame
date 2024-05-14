@@ -11,10 +11,12 @@
 
 #include "../include/checks.h"
 
+#include "../include/operations.h"
 #include "stdlib.h"
 
 static void get_score(int lines, singleton *s);
 static void update_level(singleton *s);
+
 bool is_inside_figure(singleton *s, int y, int x) {
   bool res = false;
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
@@ -51,14 +53,17 @@ bool can_move_right(singleton *s) {
 bool can_rotate(singleton *s) {
   bool res = true;
 
-  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
+  remove_figure(s);
+  for (size_t i = 0; i < TETROMINO_SIZE && res; i++) {
+    for (size_t j = 0; j < TETROMINO_SIZE & res; j++) {
       if (s->figure.rotated_figure[i][j]) {
         int new_x = s->figure.x + j;
         int new_y = s->figure.y + i;
 
-        if (new_x < 0 || new_x >= WIDTH || s->game_info->field[new_x][new_y]) {
+        if ((new_x < 0 || new_x >= WIDTH ||
+             s->game_info->field[new_y][new_x])) {
           res = false;
+          put_figure(s);
         }
       }
     }
@@ -154,12 +159,11 @@ static void get_score(int lines, singleton *s) {
 }
 
 static void update_level(singleton *s) {
-  if (s->game_info->score - s->next_level >= 600) {
-    s->game_info->level++;
-    s->next_level += 600;
-
-    if (s->game_info->level > 10) {
-      s->game_info->level = 10;
+  while (s->game_info->score >= SCORE_PER_LEVEL * (s->game_info->level)) {
+    if (s->game_info->level < MAX_LEVEL) {
+      s->game_info->level++;
+    } else {
+      break;
     }
   }
 }
