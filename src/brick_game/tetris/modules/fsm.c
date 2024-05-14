@@ -13,9 +13,7 @@
 
 #include <time.h>
 
-static unsigned long long get_current_time() {
-  return (unsigned long long)(clock() * 1000 / CLOCKS_PER_SEC);
-}
+static int get_current_time() { return (int)(clock() * 1000 / CLOCKS_PER_SEC); }
 
 void run_state(singleton *s) {
   static func_ptr state_funcs[NUM_STAGES] = {
@@ -39,8 +37,18 @@ void start_stage(singleton *s) {
 }
 
 void game_over_stage(singleton *s) {
-  printf("KRASAVA\n");
-  ;
+  write_high_score(s);
+
+  switch (*(s->action)) {
+    case Start:
+      s->stage = SPAWN;
+      break;
+    case Terminate:
+      s->game_over = 1;
+      break;
+    default:
+      break;
+  }
 }
 
 void spawn_stage(singleton *s) {
@@ -51,7 +59,7 @@ void spawn_stage(singleton *s) {
 }
 
 void shifting_stage(singleton *s) {
-  unsigned long long current_time = get_current_time();
+  int current_time = get_current_time();
   int wait_time = 1000 - (s->game_info->level * 100);
 
   if (wait_time < 100) {
@@ -110,7 +118,15 @@ void moving_stage(singleton *s) {
   }
 }
 
-void pause_stage(singleton *s) {}
+void pause_stage(singleton *s) {
+  switch (*(s->action)) {
+    case Pause:
+      s->stage = SHIFTING;
+      break;
+    default:
+      break;
+  }
+}
 
 void attaching_stage(singleton *s) {
   check_full_lines(s);
