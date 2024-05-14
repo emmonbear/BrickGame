@@ -13,10 +13,10 @@
 #define MODULES_FSM_H
 
 #include "../include/common_module.h"
+#include "./checks.h"
 #include "./figures.h"
 #include "./init.h"
 #include "./operations.h"
-#include "./checks.h"
 
 // singleton *get_instance();
 
