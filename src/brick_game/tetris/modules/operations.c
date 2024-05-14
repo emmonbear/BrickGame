@@ -81,7 +81,7 @@ bool can_move_left(singleton *s) {
   bool res = true;
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = 0; j < 1; j++) {
+    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       if (s->figure.current_figure[i][j]) {
         if (s->figure.x + j < 1) {
           res = false;
@@ -144,12 +144,13 @@ void rotate_figure(singleton *s) {
       s->figure.current_figure[i][j] = tmp[i][TETROMINO_SIZE - 1 - j];
     }
   }
+
   reset_position(s);
 }
 
 static void reset_position(singleton *s) {
-  int min_x = TETROMINO_SIZE / 2;
-  int min_y = TETROMINO_SIZE / 2;
+  int min_x = 2;
+  int min_y = 2;
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
