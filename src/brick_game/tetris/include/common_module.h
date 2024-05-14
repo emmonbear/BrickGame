@@ -104,6 +104,7 @@ typedef struct {
   figure_t figure;
   UserAction_t *action;
   unsigned long long timer;
+  unsigned int next_level;
 } singleton;
 
 #endif  // MODULES_COMMON_H
