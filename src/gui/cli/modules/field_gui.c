@@ -67,12 +67,11 @@ void draw_next(int **next, WINDOW *w) {
   mvwhline(w, 2, 2, ACS_HLINE, 8);
   mvwhline(w, 7, 2, ACS_HLINE, 8);
   mvwvline(w, 3, 1, ACS_VLINE, 4);
-  mvwvline(w, 3, 10, ACS_VLINE, 4); 
+  mvwvline(w, 3, 10, ACS_VLINE, 4);
 
   wattron(w, A_BOLD);
   mvwprintw(w, 1, center_x, "NEXT");
   wstandend(w);
-
 
   for (int i = 0; i < TETROMINO_SIZE; i++) {
     wmove(w, i + 3, 2);
@@ -128,3 +127,14 @@ void draw_high_score(int high_score, WINDOW *w) {
   wstandend(w);
   wrefresh(w);
 }
+
+// void draw_start_screen(WINDOW *w) {
+//   box(w, 0, 0);
+//   int start_x = (COLS - strlen("Press any key to start")) / 2;
+//   int start_y = (LINES - 1) / 2;
+
+//   wmove(w, 1, 2);
+//   wprintw(w, " Press any key to start");
+
+//   wrefresh(w);
+// }
