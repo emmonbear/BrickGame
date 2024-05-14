@@ -24,6 +24,7 @@ void reset_game_info(singleton *s) {
   s->figure.next_type = -1;
   s->figure.current_type = -1;
   s->figure.current_color = -1;
+  s->next_level = 600;
 }
 
 void destroy_game(singleton *s) {
