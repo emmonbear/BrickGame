@@ -16,6 +16,7 @@
 #include "./figures.h"
 #include "./init.h"
 #include "./operations.h"
+#include "./checks.h"
 
 // singleton *get_instance();
 
