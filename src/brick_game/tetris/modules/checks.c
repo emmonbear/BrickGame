@@ -13,6 +13,8 @@
 
 #include "stdlib.h"
 
+static void get_score(int lines, singleton *s);
+static void update_level(singleton *s);
 bool is_inside_figure(singleton *s, int y, int x) {
   bool res = false;
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
@@ -101,4 +103,63 @@ bool can_move_down(singleton *s) {
   }
 
   return res;
+}
+
+void check_full_lines(singleton *s) {
+  int full_lines = 0;
+
+  for (size_t i = 0; i < HEIGHT; i++) {
+    int filled = 1;
+    for (size_t j = 0; (j < WIDTH) && (filled != 0); j++) {
+      if (!s->game_info->field[i][j]) {
+        filled = 0;
+      }
+    }
+    if (filled) {
+      for (size_t k = i; k > 0; k--) {
+        for (size_t l = 0; l < WIDTH; l++) {
+          s->game_info->field[k][l] = s->game_info->field[k - 1][l];
+        }
+      }
+      full_lines++;
+      i--;
+    }
+  }
+  get_score(full_lines, s);
+  update_level(s);
+}
+
+static void get_score(int lines, singleton *s) {
+  int score = 0;
+
+  switch (lines) {
+    case 1:
+      score = 100;
+      break;
+
+    case 2:
+      score = 300;
+      break;
+
+    case 3:
+      score = 700;
+      break;
+
+    case 4:
+      score = 1500;
+      break;
+  }
+
+  s->game_info->score += score;
+}
+
+static void update_level(singleton *s) {
+  if (s->game_info->score - s->next_level >= 600) {
+    s->game_info->level++;
+    s->next_level += 600;
+
+    if (s->game_info->level > 10) {
+      s->game_info->level = 10;
+    }
+  }
 }
