@@ -148,10 +148,10 @@ void draw_start_screen(WINDOW *w) {
   mvwprintw(w, 11, 31, "ENTER");
   wstandend(w);
 
-  mvwprintw(w, 20, 17, "powered by ");
+  mvwprintw(w, 20, 17, "designed by ");
   wattron(w, A_BOLD | COLOR_PAIR(2));
 
-  mvwprintw(w, 20, 28, "emmonbea");
+  mvwprintw(w, 20, 29, "emmonbea");
   wstandend(w);
 
   wrefresh(w);
