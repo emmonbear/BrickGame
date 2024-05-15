@@ -30,6 +30,8 @@ typedef struct {
   window_t score;
   window_t high_score;
   window_t level;
+  window_t start;
+  window_t info;
 } windows;
 
 /// @brief Size of border
@@ -48,7 +50,7 @@ typedef struct {
 #define Y_CENTER_FIELD (LINES - HEIGHT) / 2
 
 /// @brief X coordinate of the playing field
-#define X_CENTER_FIELD (COLS - WIDTH) / 2
+#define X_CENTER_FIELD ((COLS - WIDTH) / 2)
 
 /// @brief WIDTH of the "NEXT" window including borders and cell size
 #define NEXT_WIDTH (TETROMINO_SIZE * CELL_SIZE) + (BORDER_SIZE) + (2)
@@ -88,10 +90,18 @@ typedef struct {
 
 #define START_HEIGHT FIELD_HEIGHT
 
-#define START_WIDTH (FIELD_WIDTH) + (NEXT_WIDTH)
+#define START_WIDTH (FIELD_WIDTH) + (NEXT_WIDTH) + (INFO_WIDTH)
 
 #define Y_CENTER_START Y_CENTER_FIELD
 
-#define X_CENTER_START X_CENTER_FIELD
+#define X_CENTER_START (X_CENTER_FIELD) - (INFO_WIDTH)
+
+#define INFO_HEIGHT (FIELD_HEIGHT)
+
+#define INFO_WIDTH (NEXT_WIDTH) * 1.5
+
+#define Y_CENTER_INFO (Y_CENTER_FIELD)
+
+#define X_CENTER_INFO (X_CENTER_FIELD) - (INFO_WIDTH)
 
 #endif  // GUI_COMMON_H
