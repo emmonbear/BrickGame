@@ -154,8 +154,6 @@ void draw_start_screen(WINDOW *w) {
   mvwprintw(w, 20, 28, "emmonbea");
   wstandend(w);
 
-  // int start_y = (LINES - 1) / 2;
-
   wrefresh(w);
 }
 
@@ -177,6 +175,52 @@ void draw_info(WINDOW *w) {
   mvwprintw(w, 13, 3, "Exit");
   mvwaddch(w, 13, 12, 'q');
 
+  wstandend(w);
+
+  wrefresh(w);
+}
+
+void draw_pause() {
+  attron(A_BOLD | A_BLINK | COLOR_PAIR(5));
+
+  mvprintw((Y_CENTER_PAUSE) + 7, (X_CENTER_PAUSE) + 8,
+           "  _____       _    _  _____ ______ ");
+  mvprintw((Y_CENTER_PAUSE) + 8, (X_CENTER_PAUSE) + 8,
+           " |  __ \\ /\\  | |  | |/ ____|  ____|");
+  mvprintw((Y_CENTER_PAUSE) + 9, (X_CENTER_PAUSE) + 8,
+           " | |__) /  \\ | |  | | (___ | |__   ");
+  mvprintw((Y_CENTER_PAUSE) + 10, (X_CENTER_PAUSE) + 8,
+           " |  ___/ /\\ \\| |  | |\\___ \\|  __| ");
+  mvprintw((Y_CENTER_PAUSE) + 11, (X_CENTER_PAUSE) + 8,
+           " | |  / ____ \\ |__| |____) | |____ ");
+  mvprintw((Y_CENTER_PAUSE) + 12, (X_CENTER_PAUSE) + 8,
+           " |_| /_/    \\_\\____/|_____/|______|");
+
+  standend();
+}
+
+void draw_game_over(WINDOW *w, int score, int high_score) {
+  box(w, 0, 0);
+  wattron(w, A_BOLD | COLOR_PAIR(4));
+
+  mvwprintw(w, 1, 9, "   _____          __  __ ______ ");
+  mvwprintw(w, 2, 9, "  / ____|   /\\   |  \\/  |  ____|");
+  mvwprintw(w, 3, 9, " | |  __   /  \\  | \\  / | |__  ");
+  mvwprintw(w, 4, 9, " | | |_ | / /\\ \\ | |\\/| |  __|");
+  mvwprintw(w, 5, 9, " | |__| |/ ____ \\| |  | | |____ ");
+  mvwprintw(w, 6, 9, "  \\_____/_/    \\_\\_|  |_|______|");
+
+  mvwprintw(w, 7, 10, "   ______      ________ _____");
+  mvwprintw(w, 8, 10, "  / __ \\ \\    / /  ____|  __ \\");
+  mvwprintw(w, 9, 10, " | |  | \\ \\  / /| |__  | |__) |");
+  mvwprintw(w, 10, 10, " | |  | |\\ \\/ / |  __| |  _  / ");
+  mvwprintw(w, 11, 10, " | |__| | \\  /  | |____| | \\ \\ ");
+  mvwprintw(w, 12, 10, "  \\____/   \\/   |______|_|  \\_\\");
+  wstandend(w);
+
+  wattron(w, A_BOLD);
+  mvwprintw(w, 15, 17, "     SCORE = %d", score);
+  mvwprintw(w, 16, 17, "HIGH_SCORE = %d", high_score);
   wstandend(w);
 
   wrefresh(w);

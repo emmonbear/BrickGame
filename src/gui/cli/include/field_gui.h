@@ -21,4 +21,7 @@ void draw_level(int level, WINDOW *w);
 void draw_high_score(int high_score, WINDOW *w);
 void draw_start_screen(WINDOW *w);
 void draw_info(WINDOW *w);
+void draw_pause();
+void draw_game_over(WINDOW *w, int score, int high_score);
+
 #endif  // GUI_FIELD_H
