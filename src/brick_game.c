@@ -29,7 +29,11 @@ static void game_loop() {
   reset_game_info(s);
   generate_new_figure(s);
 
+  int lines = LINES;
+  int cols = COLS;
+
   while(!s->game_over) {
+    update_windows(&wins, &lines, &cols);
     refresh();
     run_state(s);
     get_user_input(s->action); 
