@@ -22,5 +22,6 @@ void move_left(singleton *s);
 void move_down(singleton *s);
 void rotate_figure(singleton *s);
 void get_rotated_figure(singleton *s);
+void reset_field(singleton *s);
 
 #endif  // MODULES_OPERATIONS_H

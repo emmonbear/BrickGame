@@ -41,7 +41,11 @@ void game_over_stage(singleton *s) {
 
   switch (*(s->action)) {
     case Start:
+      reset_field(s);
+      reset_game_info(s);
+      generate_new_figure(s);
       s->stage = SPAWN;
+      s->game_over = 0;
       break;
     case Terminate:
       s->game_over = 1;

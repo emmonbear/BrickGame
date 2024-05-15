@@ -113,3 +113,11 @@ static void reset_position(singleton *s) {
     }
   }
 }
+
+void reset_field(singleton *s) {
+  for (size_t i = 0; i < HEIGHT; i++) {
+    for (size_t j = 0; j < WIDTH; j++) {
+      s->game_info->field[i][j] = 0;
+    }
+  }
+}
