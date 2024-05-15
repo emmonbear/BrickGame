@@ -29,6 +29,7 @@ typedef struct {
   window_t next;
   window_t score;
   window_t high_score;
+  window_t level;
 } windows;
 
 /// @brief Size of border

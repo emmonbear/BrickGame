@@ -46,6 +46,8 @@ windows *init_windows() {
                 X_CENTER_SCORE);
     init_window(&wins->high_score, HIGH_SCORE_HEIGHT, HIGH_SCORE_WIDTH,
                 Y_CENTER_HIGH_SCORE, X_CENTER_HIGH_SCORE);
+    init_window(&wins->level, LEVEL_HEIGHT, LEVEL_WIDTH, Y_CENTER_LEVEL,
+                X_CENTER_LEVEL);
   }
 
   return wins;
@@ -57,6 +59,7 @@ void destroy_windows(windows *wins) {
     delwin(wins->next.w);
     delwin(wins->score.w);
     delwin(wins->high_score.w);
+    delwin(wins->level.w);
     free(wins);
   }
 }
