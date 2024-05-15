@@ -17,5 +17,6 @@
 void init_screen();
 windows *init_windows();
 void destroy_windows(windows *wins);
+void update_windows(windows **wins, int *lines, int *cols);
 
 #endif  // GUI_INIT_H

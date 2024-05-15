@@ -71,3 +71,13 @@ static void init_window(window_t *w, int height, int width, int y, int x) {
   w->x = x;
   w->w = newwin(w->height, w->width, w->y, w->x);
 }
+
+void update_windows(windows **wins, int *lines, int *cols) {
+  if (*lines != LINES || *cols != COLS) {
+    destroy_windows(*wins);
+    clear();
+    *wins = init_windows();
+    *lines = LINES;
+    *cols = COLS;
+  }
+}
