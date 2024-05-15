@@ -40,7 +40,7 @@ static void game_loop() {
 
     switch (s->stage) {
       case START:
-      // draw_start_screen(start_screen);
+      draw_start_screen(wins->start.w);
         break;
       default:
         draw_field(s->game_info->field, wins->field.w);
@@ -48,6 +48,7 @@ static void game_loop() {
         draw_score(s->game_info->score, wins->score.w);
         draw_level(s->game_info->level, wins->level.w);
         draw_high_score(s->game_info->high_score, wins->high_score.w);
+        draw_info(wins->info.w);
     }
   }
   destroy_windows(wins);
