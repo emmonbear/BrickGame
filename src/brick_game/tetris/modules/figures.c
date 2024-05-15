@@ -44,7 +44,6 @@ void generate_new_figure(singleton *s) {
 
   s->figure.next_color = tmp + 1;
   s->figure.next_type = tmp;
-  s->figure.rotation = 0;
   s->figure.x = 3;
   s->figure.y = 0;
 
