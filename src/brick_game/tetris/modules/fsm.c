@@ -83,6 +83,12 @@ void shifting_stage(singleton *s) {
     case Action:
       moving_stage(s);
       break;
+    case Terminate:
+      s->stage = GAME_OVER;
+      break;
+    case Pause:
+      s->stage = PAUSE;
+      break;
     default:
       break;
   }
@@ -122,6 +128,9 @@ void pause_stage(singleton *s) {
   switch (*(s->action)) {
     case Pause:
       s->stage = SHIFTING;
+      break;
+    case Terminate:
+      s->stage = GAME_OVER;
       break;
     default:
       break;
