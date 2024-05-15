@@ -128,13 +128,56 @@ void draw_high_score(int high_score, WINDOW *w) {
   wrefresh(w);
 }
 
-// void draw_start_screen(WINDOW *w) {
-//   box(w, 0, 0);
-//   int start_x = (COLS - strlen("Press any key to start")) / 2;
-//   int start_y = (LINES - 1) / 2;
+void draw_start_screen(WINDOW *w) {
+  box(w, 0, 0);
+  wattron(w, A_BOLD | COLOR_PAIR(4));
+  mvwprintw(w, 1, 3, "  _______ ______ _______ _____  _____  _____ ");
+  mvwprintw(w, 2, 3, " |__   __|  ____|__   __|  __ \\|_   _|/ ____|");
+  mvwprintw(w, 3, 3, "    | |  | |__     | |  | |__) | | | | (___  ");
+  mvwprintw(w, 4, 3, "    | |  |  __|    | |  |  _  /  | |  \\___ \\ ");
+  mvwprintw(w, 5, 3, "    | |  | |____   | |  | | \\ \\ _| |_ ____) |");
+  mvwprintw(w, 6, 3, "    |_|  |______|  |_|  |_|  \\_\\_____|_____/ ");
 
-//   wmove(w, 1, 2);
-//   wprintw(w, " Press any key to start");
+  wstandend(w);
 
-//   wrefresh(w);
-// }
+  wattron(w, A_BOLD | A_BLINK);
+  mvwprintw(w, 11, 17, "please, press");
+  wstandend(w);
+
+  wattron(w, A_BOLD | A_BLINK | COLOR_PAIR(5));
+  mvwprintw(w, 11, 31, "ENTER");
+  wstandend(w);
+
+  mvwprintw(w, 20, 17, "powered by ");
+  wattron(w, A_BOLD | COLOR_PAIR(2));
+
+  mvwprintw(w, 20, 28, "emmonbea");
+  wstandend(w);
+
+  // int start_y = (LINES - 1) / 2;
+
+  wrefresh(w);
+}
+
+void draw_info(WINDOW *w) {
+  box(w, 0, 0);
+  int center_x_1 = (INFO_WIDTH - strlen("INFO")) / 2;
+  wattron(w, A_BOLD);
+  mvwprintw(w, 1, center_x_1, "INFO");
+  mvwprintw(w, 3, 3, "Left");
+  mvwaddch(w, 3, 12, ACS_LARROW);
+  mvwprintw(w, 5, 3, "Right");
+  mvwaddch(w, 5, 12, ACS_RARROW);
+  mvwprintw(w, 7, 3, "Down");
+  mvwaddch(w, 7, 12, ACS_DARROW);
+  mvwprintw(w, 9, 3, "Pause");
+  mvwaddch(w, 9, 12, 'p');
+  mvwprintw(w, 11, 3, "Action");
+  mvwprintw(w, 11, 10, "Space");
+  mvwprintw(w, 13, 3, "Exit");
+  mvwaddch(w, 13, 12, 'q');
+
+  wstandend(w);
+
+  wrefresh(w);
+}
