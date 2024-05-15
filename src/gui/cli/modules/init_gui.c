@@ -52,6 +52,8 @@ windows *init_windows() {
                 X_CENTER_START);
     init_window(&(wins->info), INFO_HEIGHT, INFO_WIDTH, Y_CENTER_INFO,
                 X_CENTER_INFO);
+    init_window(&(wins->game_over), START_HEIGHT, START_WIDTH, Y_CENTER_START,
+                X_CENTER_START);
   }
 
   return wins;
@@ -65,6 +67,8 @@ void destroy_windows(windows *wins) {
     delwin(wins->high_score.w);
     delwin(wins->level.w);
     delwin(wins->start.w);
+    delwin(wins->info.w);
+    delwin(wins->game_over.w);
     free(wins);
   }
 }
