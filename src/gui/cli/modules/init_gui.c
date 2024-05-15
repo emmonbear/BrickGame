@@ -17,7 +17,7 @@ static void init_window(window_t *w, int height, int width, int y, int x);
 
 void init_screen() {
   initscr();
-  // cbreak();
+  raw();
   nodelay(stdscr, TRUE);
   noecho();
   keypad(stdscr, TRUE);
@@ -48,6 +48,10 @@ windows *init_windows() {
                 Y_CENTER_HIGH_SCORE, X_CENTER_HIGH_SCORE);
     init_window(&wins->level, LEVEL_HEIGHT, LEVEL_WIDTH, Y_CENTER_LEVEL,
                 X_CENTER_LEVEL);
+    init_window(&wins->start, START_HEIGHT, START_WIDTH, Y_CENTER_START,
+                X_CENTER_START);
+    init_window(&(wins->info), INFO_HEIGHT, INFO_WIDTH, Y_CENTER_INFO,
+                X_CENTER_INFO);
   }
 
   return wins;
@@ -60,6 +64,7 @@ void destroy_windows(windows *wins) {
     delwin(wins->score.w);
     delwin(wins->high_score.w);
     delwin(wins->level.w);
+    delwin(wins->start.w);
     free(wins);
   }
 }
