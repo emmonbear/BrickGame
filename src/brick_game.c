@@ -21,14 +21,7 @@ static singleton *get_instance() {
 
 static void game_loop() {
   singleton *s = get_instance();
-  WINDOW *field, *next, *score, *level, *high_score, *start_screen;
-
-  field = newwin(FIELD_HEIGHT, FIELD_WIDTH, Y_CENTER_FIELD, X_CENTER_FIELD);
-  next = newwin(NEXT_HEIGHT, NEXT_WIDTH, Y_CENTER_NEXT, X_CENTER_NEXT);
-  score = newwin(SCORE_HEIGHT, SCORE_WIDTH, Y_CENTER_SCORE, X_CENTER_SCORE);
-  level = newwin(LEVEL_HEIGHT, LEVEL_WIDTH, Y_CENTER_LEVEL, X_CENTER_LEVEL);
-  high_score = newwin(HIGH_SCORE_HEIGHT, HIGH_SCORE_WIDTH, Y_CENTER_HIGH_SCORE, X_CENTER_HIGH_SCORE);
-  start_screen = newwin(START_HEIGHT, START_WIDTH, Y_CENTER_START, X_CENTER_START);
+  windows *wins = init_windows();
 
   s->stage = START;
   *(s->action) = -1;
@@ -46,19 +39,14 @@ static void game_loop() {
       // draw_start_screen(start_screen);
         break;
       default:
-        draw_field(s->game_info->field, field);
-        draw_next(s->game_info->next, next);
-        draw_score(s->game_info->score, score);
-        draw_level(s->game_info->level, level);
-        draw_high_score(s->game_info->high_score, high_score);
+        draw_field(s->game_info->field, wins->field.w);
+        draw_next(s->game_info->next, wins->next.w);
+        draw_score(s->game_info->score, wins->score.w);
+        draw_level(s->game_info->level, wins->level.w);
+        draw_high_score(s->game_info->high_score, wins->high_score.w);
     }
   }
-
-  delwin(field);
-  delwin(next);
-  delwin(score);
-  delwin(high_score);
-  delwin(start_screen);
+  destroy_windows(wins);
 }
 
 int main() {
