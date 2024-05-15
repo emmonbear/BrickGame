@@ -11,6 +11,10 @@
 
 #include "../include/init_gui.h"
 
+#include <stdlib.h>
+
+static void init_window(window_t *w, int height, int width, int y, int x);
+
 void init_screen() {
   initscr();
   // cbreak();
@@ -19,11 +23,6 @@ void init_screen() {
   keypad(stdscr, TRUE);
   // timeout(0);
   curs_set(0);
-  // use
-  // if (!has_colors()) {
-  //   printw("Your terminal does not support colors.");
-  //   getch();
-  // }
   start_color();
   init_pair(0, COLOR_WHITE, COLOR_BLACK);
   init_pair(1, COLOR_BLUE, COLOR_BLACK);
@@ -33,4 +32,39 @@ void init_screen() {
   init_pair(5, COLOR_YELLOW, COLOR_BLACK);
   init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
   init_pair(7, COLOR_WHITE, COLOR_BLACK);
+}
+
+windows *init_windows() {
+  windows *wins = (windows *)malloc(sizeof(windows));
+
+  if (wins) {
+    init_window(&wins->field, FIELD_HEIGHT, FIELD_WIDTH, Y_CENTER_FIELD,
+                X_CENTER_FIELD);
+    init_window(&wins->next, NEXT_HEIGHT, NEXT_WIDTH, Y_CENTER_NEXT,
+                X_CENTER_NEXT);
+    init_window(&wins->score, SCORE_HEIGHT, SCORE_WIDTH, Y_CENTER_SCORE,
+                X_CENTER_SCORE);
+    init_window(&wins->high_score, HIGH_SCORE_HEIGHT, HIGH_SCORE_WIDTH,
+                Y_CENTER_HIGH_SCORE, X_CENTER_HIGH_SCORE);
+  }
+
+  return wins;
+}
+
+void destroy_windows(windows *wins) {
+  if (wins) {
+    delwin(wins->field.w);
+    delwin(wins->next.w);
+    delwin(wins->score.w);
+    delwin(wins->high_score.w);
+    free(wins);
+  }
+}
+
+static void init_window(window_t *w, int height, int width, int y, int x) {
+  w->height = height;
+  w->width = width;
+  w->y = y;
+  w->x = x;
+  w->w = newwin(w->height, w->width, w->y, w->x);
 }

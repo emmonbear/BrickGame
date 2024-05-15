@@ -15,5 +15,7 @@
 #include "./common_gui.h"
 
 void init_screen();
+windows *init_windows();
+void destroy_windows(windows *wins);
 
 #endif  // GUI_INIT_H
