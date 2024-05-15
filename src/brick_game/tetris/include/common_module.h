@@ -80,23 +80,23 @@ typedef enum {
 /**
  * @brief Struct representing a tetromino figure in the game.
  *
- * @details
- *
- * This struct represents a tetromino figure, which consists of a type (one of
- * the seven possible tetromino shapes), a color (an integer value representing
- * the color of the blocks that make up the figure), and an array of cells
- * (where each cell is a struct containing the coordinates of a block that makes
- * up the figure).
+ * This structure contains information about the current and next tetromino
+ * shapes, their types, colors, coordinates of the current figure and
+ * two-dimensional arrays representing the inverted figure and the current
+ * figure
  */
 typedef struct {
-  type_t next_type;
-  type_t current_type;
-  int x, y;
-  int rotation;
-  int next_color;
-  int current_color;
-  int **current_figure;
-  int **rotated_figure;
+  type_t next_type;     ///< The type of the next tetromino figure.
+  type_t current_type;  ///< The type of the current tetromino figure.
+  int x, y;             ///< The x and y coordinates of the top left corner of
+                        ///< the current tetromino figure on the game board.
+  int rotation;         ///< The rotation index of the current tetromino figure.
+  int next_color;       ///< The color index of the next tetromino figure.
+  int current_color;    ///< The color index of the current tetromino figure.
+  int **current_figure;  ///< A 2D array representing the shape of the current
+                         ///< tetromino figure.
+  int **rotated_figure;  ///< A 2D array representing the shape of the current
+                         ///< tetromino figure after rotation.
 } figure_t;
 
 typedef struct {
