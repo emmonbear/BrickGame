@@ -16,6 +16,21 @@
 
 #include "../../../common.h"
 
+typedef struct {
+  int height;
+  int width;
+  int y;
+  int x;
+  WINDOW *w;
+} window_t;
+
+typedef struct {
+  window_t field;
+  window_t next;
+  window_t score;
+  window_t high_score;
+} windows;
+
 /// @brief Size of border
 #define BORDER_SIZE 2
 
