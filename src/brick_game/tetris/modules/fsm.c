@@ -111,7 +111,7 @@ void moving_stage(singleton *s) {
       break;
 
     case Down:
-      if (can_move_down(s)) {
+      while (can_move_down(s)) {
         move_down(s);
       }
       break;
