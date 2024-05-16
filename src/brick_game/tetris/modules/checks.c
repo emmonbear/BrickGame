@@ -34,36 +34,15 @@ bool is_inside_figure(singleton *s, int y, int x) {
 bool can_move_right(singleton *s) {
   bool res = true;
 
-  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = TETROMINO_SIZE; j > 0; j--) {
+  for (int i = 0; i < TETROMINO_SIZE; i++) {
+    for (int j = TETROMINO_SIZE - 1; j > 0; j--) {
       if (s->figure.current_figure[i][j]) {
         if (s->figure.x + j > WIDTH - 2) {
           res = false;
+          break;
         } else if (s->game_info->field[s->figure.y + i][s->figure.x + j + 1] &&
                    !is_inside_figure(s, s->figure.y + i, s->figure.x + j + 1)) {
           res = false;
-        }
-      }
-    }
-  }
-
-  return res;
-}
-
-bool can_rotate(singleton *s) {
-  bool res = true;
-
-  remove_figure(s);
-  for (size_t i = 0; i < TETROMINO_SIZE && res; i++) {
-    for (size_t j = 0; j < TETROMINO_SIZE && res; j++) {
-      if (s->figure.rotated_figure[i][j]) {
-        int new_x = s->figure.x + j;
-        int new_y = s->figure.y + i;
-
-        if ((new_x < 0 || new_x >= WIDTH ||
-             s->game_info->field[new_y][new_x])) {
-          res = false;
-          put_figure(s);
         }
       }
     }
@@ -88,6 +67,28 @@ bool can_move_left(singleton *s) {
       }
     }
   }
+  return res;
+}
+
+bool can_rotate(singleton *s) {
+  bool res = true;
+
+  remove_figure(s);
+  for (size_t i = 0; i < TETROMINO_SIZE && res; i++) {
+    for (size_t j = 0; j < TETROMINO_SIZE && res; j++) {
+      if (s->figure.rotated_figure[i][j]) {
+        int new_x = s->figure.x + j;
+        int new_y = s->figure.y + i;
+
+        if ((new_x < 0 || new_x >= WIDTH ||
+             s->game_info->field[new_y][new_x])) {
+          res = false;
+          put_figure(s);
+        }
+      }
+    }
+  }
+
   return res;
 }
 
