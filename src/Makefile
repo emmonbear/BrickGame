@@ -109,6 +109,7 @@ clean:
 	rm -f $(GUI_LIB)
 	rm -f $(EXE_FILENAME)
 	rm -f ./val.txt
+	rm -f $(TARGET)
 
 .PHONY: rebuild
 rebuild: clean install
