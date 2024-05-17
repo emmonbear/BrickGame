@@ -18,7 +18,7 @@
 #include "./init.h"
 #include "./operations.h"
 
-// singleton *get_instance();
+singleton *get_instance();
 
 /**
  * @brief Type definition for a pointer to a function that takes a singleton

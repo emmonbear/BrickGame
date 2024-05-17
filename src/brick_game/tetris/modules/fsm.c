@@ -152,3 +152,8 @@ void attaching_stage(singleton *s) {
     s->stage = GAME_OVER;
   }
 }
+
+singleton *get_instance() {
+  static singleton instance;
+  return &instance;
+}
