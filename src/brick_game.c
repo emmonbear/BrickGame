@@ -14,10 +14,7 @@
 #include "./gui/cli/include/input_gui.h"
 #include "./gui/cli/include/init_gui.h"
 
-static singleton *get_instance() {
-  static singleton instance;
-  return &instance;
-}
+
 
 static void game_loop() {
   singleton *s = get_instance();
@@ -65,10 +62,13 @@ int main() {
   singleton *s = get_instance();
 
   init_game(s);
+  // free(s->game_info);
+  // init_game(s);
+  
 
-  init_screen();
-  game_loop();
-  endwin();
+  // init_screen();
+  // game_loop();
+  // endwin();
 
   destroy_game(s);
 

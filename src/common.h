@@ -12,10 +12,10 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-/// @brief number of lines on Field
+/// @brief Number of lines on Field
 #define HEIGHT 20
 
-/// @brief number of columns on Field
+/// @brief Number of columns on Field
 #define WIDTH 10
 
 /// @brief The size of the tetromino

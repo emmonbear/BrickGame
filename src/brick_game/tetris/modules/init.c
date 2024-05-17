@@ -43,12 +43,10 @@ void destroy_game(singleton *s) {
       free(s->game_info);
       s->game_info = NULL;
     }
-
     if (s->action) {
       free(s->action);
       s->action = NULL;
     }
-    s = NULL;
   }
 }
 
