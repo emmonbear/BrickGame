@@ -62,13 +62,13 @@ int main() {
   singleton *s = get_instance();
 
   init_game(s);
-  // free(s->game_info);
-  // init_game(s);
+  free(s->game_info);
+  init_game(s);
   
 
-  // init_screen();
-  // game_loop();
-  // endwin();
+  init_screen();
+  game_loop();
+  endwin();
 
   destroy_game(s);
 
