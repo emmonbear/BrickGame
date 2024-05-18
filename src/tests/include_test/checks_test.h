@@ -1,20 +1,20 @@
 /**
- * @file init_test.h
+ * @file checks_test.h
  * @author emmonbea (moskaleviluak@icloud.com)
  * @brief 
  * @version 1.0
- * @date 2024-05-16
+ * @date 2024-05-18
  * 
  * @copyright Copyright (c) 2024
  * 
  */
 
-#ifndef INIT_TEST_H
-#define INIT_TEST_H
+#ifndef CHECKS_TEST_H
+#define CHECKS_TEST_H
 
 #include "check.h"
 #include "../../brick_game/tetris/include/fsm.h"
 
-Suite *init_test();
+Suite *checks_test();
 
-#endif // INIT_TEST_H
+#endif // CHECKS_TEST_H

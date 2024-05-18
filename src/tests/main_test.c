@@ -34,11 +34,11 @@ int main(void) {
 
   gettimeofday(&start, NULL);
 
-#ifdef BLOCKS
-  Suite *(*blocks[])(void) = {
-      blocks_test,
+#ifdef OPERATIONS
+  Suite *(*operations[])(void) = {
+      operations_test,
   };
-  test_function(blocks, sizeof(blocks) / sizeof(blocks[0]), "BLOCKS",
+  test_function(operations, sizeof(operations) / sizeof(operations[0]), "OPERATIONS",
                 &passed_count, &failed_count);
 #endif
 
@@ -50,28 +50,28 @@ int main(void) {
                 &failed_count);
 #endif
 
-#ifdef FSM_ON
-  Suite *(*fsm[])(void) = {
-      fsm_test,
+#ifdef CHECKS
+  Suite *(*checks[])(void) = {
+      checks_test,
   };
-  test_function(fsm, sizeof(fsm) / sizeof(fsm[0]), "FSM", &passed_count,
+  test_function(checks, sizeof(checks) / sizeof(checks[0]), "CHECKS", &passed_count,
                 &failed_count);
 #endif
 
-#ifdef SHIFTS_ON
-  Suite *(*shifts[])(void) = {
-      shifts_test,
+#ifdef FIGURES
+  Suite *(*figures[])(void) = {
+      figures_test,
   };
-  test_function(shifts, sizeof(shifts) / sizeof(shifts[0]), "SHIFTS",
+  test_function(figures, sizeof(figures) / sizeof(figures[0]), "FIGURES",
                 &passed_count, &failed_count);
 #endif
 
-#ifdef SPACE_CHECKS_ON
-  Suite *(*space_checks[])(void) = {
-      space_checks_test,
+#ifdef FSM
+  Suite *(*fsm[])(void) = {
+      fsm_test,
   };
-  test_function(space_checks, sizeof(space_checks) / sizeof(space_checks[0]),
-                "SPACE_CHECKS", &passed_count, &failed_count);
+  test_function(fsm, sizeof(fsm) / sizeof(fsm[0]),
+                "FSM", &passed_count, &failed_count);
 #endif
 
   gettimeofday(&end, NULL);

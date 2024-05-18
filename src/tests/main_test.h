@@ -13,6 +13,10 @@
 #define MAIN_TEST_H
 
 #include "./include_test/init_test.h"
+#include "./include_test/operations_test.h"
+#include "./include_test/checks_test.h"
+#include "./include_test/figures_test.h"
+#include "./include_test/fsm_test.h"
 
 #define GREEN "\033[0;32m"
 #define ORANGE "\033[1;33m"
