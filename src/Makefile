@@ -7,8 +7,7 @@ CC = gcc
 # FLAGS
 CFLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
 LDFLAGS = -lcheck -lsubunit -lm
-LDGUI = -lncursesw
-DEBUG = -g
+LDGUI = -lncurses
 VALGRIND = --tool=memcheck --leak-check=yes
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 
@@ -25,6 +24,8 @@ TESTS_DIR = ./tests
 GUI_DIR = ./gui/cli
 DOCS_DIR = ../docs
 MODULES_DIR = ./brick_game/tetris
+BIN_DIR = ../bin
+DIST_DIR = ../dist
 
 # MAIN
 MAIN_C = $(PROJECT_NAME).c
@@ -65,12 +66,21 @@ vpath %.o $(OBJ_DIR)
 # TARGETS
 
 .PHONY: all
-all: rebuild
+all: install run
 
 .PHONY: install
-install: $(LIB) $(GUI_LIB) $(COMMON_H)
-	$(CC) $(CFLAGS) $(DEBUG) $(MAIN_C) $(LIB) $(GUI_LIB) $(LDGUI) -o $(EXE_FILENAME)
-	./$(EXE_FILENAME)
+install: $(BIN_DIR) $(LIB) $(GUI_LIB) $(COMMON_H) 
+	$(CC) $(CFLAGS) $(MAIN_C) $(LIB) $(GUI_LIB) $(LDGUI) -o $(BIN_DIR)/$(PROJECT_NAME)
+
+.PHONY: run
+run:
+	$(BIN_DIR)/$(PROJECT_NAME)
+
+.PHONY: uninstall
+uninstall: clean
+	rm -rf $(BIN_DIR)
+	rm -rf $(DOCS_DIR)
+	rm -f ./brick_game/tetris/max_score.txt
 
 .PHONY: $(LIB)
 $(LIB): $(OBJ_DIR) $(MODULES_O) $(MODULES_H)
@@ -98,6 +108,9 @@ $(GCOV): $(OBJ_DIR) $(REPORT_DIR) $(TESTS_O)
 dvi:
 	rm -rf $(DOCS_DIR)
 	doxygen Doxyfile
+
+.PHONY: dvi_open
+dvi_open: dvi
 	xdg-open $(DOCS_DIR)/html/index.html
 
 .PHONY: clean
@@ -107,9 +120,19 @@ clean:
 	rm -rf $(DOCS_DIR)
 	rm -f $(LIB)
 	rm -f $(GUI_LIB)
-	rm -f $(EXE_FILENAME)
+	rm -rf $(BIN_DIR)
 	rm -f ./val.txt
 	rm -f $(TARGET)
+	rm -rf $(DIST_DIR)
+
+.PHONY: dist
+dist: uninstall dvi $(DIST_DIR) $(LIB) $(GUI_LIB) install
+	cp $(LIB) $(GUI_LIB) $(DIST_DIR)
+	cp -r $(DOCS_DIR) $(DIST_DIR)
+	cp -r $(BIN_DIR) $(DIST_DIR)
+	tar -czf $(PROJECT_NAME).tar.gz  $(DIST_DIR)
+	rm -rf $(DIST_DIR)
+
 
 .PHONY: rebuild
 rebuild: clean install
@@ -154,4 +177,10 @@ $(OBJ_DIR):
 
 $(REPORT_DIR):
 	mkdir -p $(REPORT_DIR)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(DIST_DIR):
+	mkdir -p $(DIST_DIR)
 
