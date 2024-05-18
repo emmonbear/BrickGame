@@ -55,7 +55,7 @@ static void game_loop() {
         break;
     }
   }
-  destroy_windows(wins);
+  destroy_windows(&wins);
 }
 
 int main() {
