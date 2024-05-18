@@ -21,7 +21,6 @@ void init_screen() {
   nodelay(stdscr, TRUE);
   noecho();
   keypad(stdscr, TRUE);
-  // timeout(0);
   curs_set(0);
   start_color();
   init_pair(0, COLOR_WHITE, COLOR_BLACK);
@@ -59,17 +58,17 @@ windows *init_windows() {
   return wins;
 }
 
-void destroy_windows(windows *wins) {
-  if (wins) {
-    delwin(wins->field.w);
-    delwin(wins->next.w);
-    delwin(wins->score.w);
-    delwin(wins->high_score.w);
-    delwin(wins->level.w);
-    delwin(wins->start.w);
-    delwin(wins->info.w);
-    delwin(wins->game_over.w);
-    free(wins);
+void destroy_windows(windows **wins) {
+  if (*wins) {
+    delwin((*wins)->field.w);
+    delwin((*wins)->next.w);
+    delwin((*wins)->score.w);
+    delwin((*wins)->high_score.w);
+    delwin((*wins)->level.w);
+    delwin((*wins)->start.w);
+    delwin((*wins)->info.w);
+    delwin((*wins)->game_over.w);
+    free(*wins);
   }
 }
 
@@ -83,7 +82,7 @@ static void init_window(window_t *w, int height, int width, int y, int x) {
 
 void update_windows(windows **wins, int *lines, int *cols) {
   if (*lines != LINES || *cols != COLS) {
-    destroy_windows(*wins);
+    destroy_windows(wins);
     clear();
     *wins = init_windows();
     *lines = LINES;

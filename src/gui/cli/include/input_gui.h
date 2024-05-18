@@ -14,6 +14,17 @@
 
 #include "./common_gui.h"
 
+/**
+ * @brief Gets the user input and sets the corresponding action.
+ *
+ * @details
+ * This function takes a pointer to an `enum UserAction_t` variable and sets the
+ * variable to the corresponding action based on the user input. The function
+ * uses the `getch()` function from the ncurses library to get the user input
+ * and a switch statement to set the action.
+ *
+ * @param[in] action - A pointer to an `enum UserAction_t` variable to be set.
+ */
 void get_user_input(UserAction_t *action);
 
 #endif  // GUI_INPUT_H

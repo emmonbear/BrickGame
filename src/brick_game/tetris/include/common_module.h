@@ -17,8 +17,10 @@
 /// @brief Number of states of a finite state machine
 #define NUM_STAGES 7
 
+/// @brief Number of levels
 #define MAX_LEVEL 10
 
+/// @brief Amount of experience required to increase the level
 #define SCORE_PER_LEVEL 600
 
 /// @brief Enumeration of states of a Finite-state machine
@@ -100,12 +102,12 @@ typedef struct {
 } figure_t;
 
 typedef struct {
-  GameInfo_t *game_info;
-  stage_t stage;
-  figure_t figure;
-  UserAction_t *action;
-  int timer;
-  int game_over;
+  GameInfo_t *game_info;  ///< Pointer to the game's information
+  stage_t stage;          ///< The current state of the game
+  figure_t figure;        ///< Information about figures
+  UserAction_t *action;   ///< Pointer to the user's action
+  int timer;              ///< Timer used to control the game's events
+  int game_over;          ///< Flag that indicates if the game is over
 } singleton;
 
 #endif  // MODULES_COMMON_H
