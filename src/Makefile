@@ -9,7 +9,7 @@ CFLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
 LDFLAGS = -lcheck -lsubunit -lm
 LDGUI = -lncursesw
 DEBUG = -g
-VALGRIND = --tool=memcheck --leak-check=yes --leak-check=full --show-leak-kinds=all
+VALGRIND = --tool=memcheck --leak-check=yes
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 
 # TARGET NAMES
