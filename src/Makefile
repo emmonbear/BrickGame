@@ -110,7 +110,7 @@ dvi:
 	doxygen Doxyfile
 
 .PHONY: dvi_open
-dvi_open: dvi
+dvi_open:
 	xdg-open $(DOCS_DIR)/html/index.html
 
 .PHONY: clean
