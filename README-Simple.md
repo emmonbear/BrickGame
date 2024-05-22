@@ -52,6 +52,32 @@ Add a detailed introduction about the project here, everything you want the read
 - The playing field is ten "pixels" wide and twenty "pixels" high.
 - When a figure reaches the bottom border of the field or touches another figure, it stops. The next figure, shown in the preview, is then generated.
 - The user interface supports rendering of the playing field and additional information.
+
+Figures used:
+
+![Shapes](./misc/images/shapes.jpeg)
+
+The following mechanics are present in the game:
+  - scoring;
+  - storing the maximum number of points.
+
+This information is transmitted and displayed by the user interface in the sidebar. The maximum number of points is stored in a file and saved between runs of the programme.
+
+The maximum number of points is changed during the game if the user exceeds the current maximum number of points during the game.
+
+Points are accrued as follows:
+
+- 1 line - 100 points;
+- 2 lines - 300 points;
+- 3 lines - 700 points;
+- 4 lines - 1500 points.
+
+The game features a level mechanic. Each time a player gains 600 points, the level increases by 1. Increasing the level increases the speed of movement of the pieces. The maximum number of levels is 10.
+
+To formalise the logic of this game, the following variant of a finite automaton is presented:
+
+![FSM](./misc/images/FSM.png)
+
 ## Usage
 Write about how to use this project.
 
@@ -71,8 +97,9 @@ If you want other people to contribute to this project, this is the section, mak
 
 ### Pre-Requisites
 List all the pre-requisites the system needs to develop this project.
-- A tool
-- B tool
+- ncurces
+- make
+- gcc
 
 ### Development Environment
 Write about setting up the working environment for your project.
