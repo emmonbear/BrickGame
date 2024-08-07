@@ -12,7 +12,7 @@
 #ifndef MODULES_FSM_H
 #define MODULES_FSM_H
 
-#include "../include/common_module.h"
+#include "./common.h"
 #include "./checks.h"
 #include "./figures.h"
 #include "./init.h"

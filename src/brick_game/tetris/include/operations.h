@@ -13,7 +13,7 @@
 #define MODULES_OPERATIONS_H
 
 #include "../include/checks.h"
-#include "../include/common_module.h"
+#include "./common.h"
 
 void put_figure(singleton *s);
 void remove_figure(singleton *s);

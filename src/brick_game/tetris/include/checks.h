@@ -14,7 +14,7 @@
 
 #include <stdbool.h>
 
-#include "./common_module.h"
+#include "./common.h"
 
 bool can_move_down(singleton *s);
 bool can_move_left(singleton *s);
