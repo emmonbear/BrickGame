@@ -14,8 +14,6 @@
 #include "./gui/cli/include/input_gui.h"
 #include "./gui/cli/include/init_gui.h"
 
-
-
 static void game_loop() {
   singleton *s = get_instance();
   windows *wins = init_windows();
