@@ -90,7 +90,7 @@ void init_game(Game_t *s) {
   srand(time(NULL));
 
   if (!s) {
-    MEM_ALLOC_ERROR
+    MEM_ALLOC_ERROR;
   }
 
   allocate_2d_array(&(s->game_info.field), HEIGHT, WIDTH);
@@ -105,14 +105,14 @@ static void allocate_2d_array(int ***array, size_t rows, size_t cols) {
   *array = (int **)calloc(rows, sizeof(int *));
 
   if (!(*array)) {
-    MEM_ALLOC_ERROR
+    MEM_ALLOC_ERROR;
   }
 
   for (size_t i = 0; i < rows; i++) {
     (*array)[i] = (int *)calloc(cols, sizeof(int));
     if (!(*array)[i]) {
       destroy_2d_array(array, rows);
-      MEM_ALLOC_ERROR
+      MEM_ALLOC_ERROR;
     }
   }
 }
@@ -164,6 +164,7 @@ static int load_max_score() {
  */
 void write_high_score(Game_t *s) {
   char cwd[200];
+
   if (getcwd(cwd, sizeof(cwd))) {
     strcat(cwd, PATH);
     FILE *f = fopen(cwd, "w");

@@ -33,7 +33,7 @@
  */
 #define MEM_ALLOC_ERROR                         \
   fprintf(stderr, "Memory allocation error\n"); \
-  exit(1);
+  exit(1)
 
 void init_game(Game_t *s);
 void destroy_game(Game_t *s);
