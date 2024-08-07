@@ -48,7 +48,7 @@ void run_state(singleton *s) {
  * data.
  */
 void start_stage(singleton *s) {
-  switch (*(s->action)) {
+  switch (s->action) {
     case Start:
       s->stage = SPAWN;
       break;
@@ -75,7 +75,7 @@ void start_stage(singleton *s) {
 void game_over_stage(singleton *s) {
   write_high_score(s);
 
-  switch (*(s->action)) {
+  switch (s->action) {
     case Start:
       reset_field(s);
       reset_game_info(s);
@@ -124,7 +124,7 @@ void spawn_stage(singleton *s) {
  */
 void shifting_stage(singleton *s) {
   int current_time = get_current_time();
-  int wait_time = 1000 - (s->game_info->level * 100);
+  int wait_time = 1000 - (s->game_info.level * 100);
 
   if (wait_time < 100) {
     wait_time = 100;
@@ -141,7 +141,7 @@ void shifting_stage(singleton *s) {
     }
   }
 
-  switch (*(s->action)) {
+  switch (s->action) {
     case Left:
     case Right:
     case Down:
@@ -174,7 +174,7 @@ void shifting_stage(singleton *s) {
 void moving_stage(singleton *s) {
   s->stage = SHIFTING;
 
-  switch (*(s->action)) {
+  switch (s->action) {
     case Left:
       move_left(s);
       break;
@@ -214,7 +214,7 @@ void moving_stage(singleton *s) {
  * data.
  */
 void pause_stage(singleton *s) {
-  switch (*(s->action)) {
+  switch (s->action) {
     case Pause:
       s->stage = SHIFTING;
       break;

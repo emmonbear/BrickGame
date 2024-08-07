@@ -34,11 +34,11 @@ static void destroy_2d_array(int ***array, size_t rows);
  * and information
  */
 void reset_game_info(singleton *s) {
-  s->game_info->score = 0;
-  s->game_info->high_score = load_max_score();
-  s->game_info->level = 1;
-  s->game_info->speed = 1;
-  s->game_info->pause = 0;
+  s->game_info.score = 0;
+  s->game_info.high_score = load_max_score();
+  s->game_info.level = 1;
+  s->game_info.speed = 1;
+  s->game_info.pause = 0;
   s->figure.next_color = -1;
   s->figure.next_type = -1;
   s->figure.current_type = -1;
@@ -63,18 +63,10 @@ void reset_game_info(singleton *s) {
  */
 void destroy_game(singleton *s) {
   if (s) {
-    if (s->game_info) {
-      destroy_2d_array(&(s->game_info->field), HEIGHT);
-      destroy_2d_array(&(s->game_info->next), TETROMINO_SIZE);
-      destroy_2d_array(&(s->figure.current_figure), TETROMINO_SIZE);
-      destroy_2d_array(&(s->figure.rotated_figure), TETROMINO_SIZE);
-      free(s->game_info);
-      s->game_info = NULL;
-    }
-    if (s->action) {
-      free(s->action);
-      s->action = NULL;
-    }
+    destroy_2d_array(&(s->game_info.field), HEIGHT);
+    destroy_2d_array(&(s->game_info.next), TETROMINO_SIZE);
+    destroy_2d_array(&(s->figure.current_figure), TETROMINO_SIZE);
+    destroy_2d_array(&(s->figure.rotated_figure), TETROMINO_SIZE);
   }
 }
 
@@ -101,22 +93,12 @@ void init_game(singleton *s) {
     MEM_ALLOC_ERROR
   }
 
-  s->game_info = (GameInfo_t *)malloc(sizeof(GameInfo_t));
-  if (!s->game_info) {
-    MEM_ALLOC_ERROR
-  }
-
-  allocate_2d_array(&(s->game_info->field), HEIGHT, WIDTH);
-  allocate_2d_array(&(s->game_info->next), TETROMINO_SIZE, TETROMINO_SIZE);
+  allocate_2d_array(&(s->game_info.field), HEIGHT, WIDTH);
+  allocate_2d_array(&(s->game_info.next), TETROMINO_SIZE, TETROMINO_SIZE);
   allocate_2d_array(&(s->figure.current_figure), TETROMINO_SIZE,
                     TETROMINO_SIZE);
   allocate_2d_array(&(s->figure.rotated_figure), TETROMINO_SIZE,
                     TETROMINO_SIZE);
-  s->action = (UserAction_t *)malloc(sizeof(UserAction_t));
-
-  if (!s->action) {
-    MEM_ALLOC_ERROR
-  }
 }
 
 static void allocate_2d_array(int ***array, size_t rows, size_t cols) {
@@ -187,7 +169,7 @@ void write_high_score(singleton *s) {
     FILE *f = fopen(cwd, "w");
 
     if (f) {
-      fprintf(f, "%d", s->game_info->high_score);
+      fprintf(f, "%d", s->game_info.high_score);
       fclose(f);
     }
   }

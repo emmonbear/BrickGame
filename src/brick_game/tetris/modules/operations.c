@@ -32,7 +32,7 @@ void put_figure(singleton *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       if (s->figure.current_figure[i][j]) {
-        s->game_info->field[s->figure.y + i][s->figure.x + j] =
+        s->game_info.field[s->figure.y + i][s->figure.x + j] =
             s->figure.current_color;
       }
     }
@@ -71,7 +71,7 @@ void remove_figure(singleton *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       if (s->figure.current_figure[i][j]) {
-        s->game_info->field[s->figure.y + i][s->figure.x + j] = 0;
+        s->game_info.field[s->figure.y + i][s->figure.x + j] = 0;
       }
     }
   }
@@ -217,7 +217,7 @@ static void reset_position(singleton *s) {
 void reset_field(singleton *s) {
   for (size_t i = 0; i < HEIGHT; i++) {
     for (size_t j = 0; j < WIDTH; j++) {
-      s->game_info->field[i][j] = 0;
+      s->game_info.field[i][j] = 0;
     }
   }
 }

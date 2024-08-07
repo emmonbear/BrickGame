@@ -101,12 +101,12 @@ typedef struct {
 } figure_t;
 
 typedef struct {
-  GameInfo_t *game_info;  ///< Pointer to the game's information
-  stage_t stage;          ///< The current state of the game
-  figure_t figure;        ///< Information about figures
-  UserAction_t *action;   ///< Pointer to the user's action
-  int timer;              ///< Timer used to control the game's events
-  int game_over;          ///< Flag that indicates if the game is over
+  GameInfo_t game_info;  ///< Pointer to the game's information
+  stage_t stage;         ///< The current state of the game
+  figure_t figure;       ///< Information about figures
+  UserAction_t action;   ///< Pointer to the user's action
+  int timer;             ///< Timer used to control the game's events
+  int game_over;         ///< Flag that indicates if the game is over
 } singleton;
 
 #endif  // MODULES_COMMON_H

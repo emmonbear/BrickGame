@@ -76,7 +76,7 @@ bool can_move_right(singleton *s) {
         if (s->figure.x + j > WIDTH - 2) {
           res = false;
           break;
-        } else if (s->game_info->field[s->figure.y + i][s->figure.x + j + 1] &&
+        } else if (s->game_info.field[s->figure.y + i][s->figure.x + j + 1] &&
                    !is_inside_figure(s, s->figure.y + i, s->figure.x + j + 1)) {
           res = false;
         }
@@ -112,8 +112,7 @@ bool can_move_left(singleton *s) {
       if (s->figure.current_figure[i][j]) {
         if (s->figure.x + j < 1) {
           res = false;
-        } else if ((s->game_info
-                        ->field[s->figure.y + i][s->figure.x + j - 1]) &&
+        } else if ((s->game_info.field[s->figure.y + i][s->figure.x + j - 1]) &&
                    !is_inside_figure(s, s->figure.y + i, s->figure.x + j - 1)) {
           res = false;
         }
@@ -150,8 +149,7 @@ bool can_rotate(singleton *s) {
         int new_x = s->figure.x + j;
         int new_y = s->figure.y + i;
 
-        if ((new_x < 0 || new_x >= WIDTH ||
-             s->game_info->field[new_y][new_x])) {
+        if ((new_x < 0 || new_x >= WIDTH || s->game_info.field[new_y][new_x])) {
           res = false;
           put_figure(s);
         }
@@ -187,7 +185,7 @@ bool can_move_down(singleton *s) {
       if (s->figure.current_figure[i][j]) {
         if (s->figure.y + i >= HEIGHT - 1) {
           res = false;
-        } else if (s->game_info->field[s->figure.y + i + 1][s->figure.x + j] &&
+        } else if (s->game_info.field[s->figure.y + i + 1][s->figure.x + j] &&
                    !is_inside_figure(s, s->figure.y + i + 1, s->figure.x + j)) {
           res = false;
         }
@@ -220,14 +218,14 @@ void check_full_lines(singleton *s) {
   for (size_t i = 0; i < HEIGHT; i++) {
     int filled = 1;
     for (size_t j = 0; (j < WIDTH) && (filled != 0); j++) {
-      if (!s->game_info->field[i][j]) {
+      if (!s->game_info.field[i][j]) {
         filled = 0;
       }
     }
     if (filled) {
       for (size_t k = i; k > 0; k--) {
         for (size_t l = 0; l < WIDTH; l++) {
-          s->game_info->field[k][l] = s->game_info->field[k - 1][l];
+          s->game_info.field[k][l] = s->game_info.field[k - 1][l];
         }
       }
       full_lines++;
@@ -259,17 +257,17 @@ static void get_score(int lines, singleton *s) {
       break;
   }
 
-  s->game_info->score += score;
+  s->game_info.score += score;
 
-  if (s->game_info->high_score < s->game_info->score) {
-    s->game_info->high_score = s->game_info->score;
+  if (s->game_info.high_score < s->game_info.score) {
+    s->game_info.high_score = s->game_info.score;
   }
 }
 
 static void update_level(singleton *s) {
-  while (s->game_info->score >= SCORE_PER_LEVEL * (s->game_info->level)) {
-    if (s->game_info->level < MAX_LEVEL) {
-      s->game_info->level++;
+  while (s->game_info.score >= SCORE_PER_LEVEL * (s->game_info.level)) {
+    if (s->game_info.level < MAX_LEVEL) {
+      s->game_info.level++;
     } else {
       break;
     }
@@ -297,8 +295,8 @@ bool can_put_new_line(singleton *s) {
 
   for (size_t i = 0; i < TETROMINO_SIZE && res; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE && res; j++) {
-      if (s->game_info->next[i][j] &&
-          s->game_info->field[i + s->figure.y][j + s->figure.x]) {
+      if (s->game_info.next[i][j] &&
+          s->game_info.field[i + s->figure.y][j + s->figure.x]) {
         res = false;
       }
     }
