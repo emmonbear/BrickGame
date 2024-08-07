@@ -1,133 +1,228 @@
-# Tetris
+<a id="readme-top"></a>
+<br />
+<div align="center">
+  <a href="https://github.com/othneildrew/Best-README-Template">
+    <img src="docs/images/logo.png" alt="Logo">
+  </a>
 
-Implementation of the game "Tetris" in the C programming language using the structural approach.
+  <h3 align="center">BrickGame</h3>
 
-## Введение
-
-Проект состоят из двух частей: библиотеки, реализующей логику работы игры, которую можно подключать к различным GUI, и терминального интерфейса, разработанного с использованием библиотеки `ncurses`. Логика работы библиотеки реализована с использованием конечных автоматов, одно из возможных описаний которого будет дано ниже.
-
-- Старт — состояние, в котором игра ждет, пока игрок нажмет кнопку готовности к игре.
-- Спавн — состояние, в которое переходит игра при создании очередного блока и выбора следующего блока для спавна.
-- Перемещение — основное игровое состояние с обработкой ввода от пользователя — поворот блоков/перемещение блоков по горизонтали.
-- Сдвиг — состояние, в которое переходит игра после истечения таймера. В нем текущий блок перемещается вниз на один уровень.
-- Соединение — состояние, в которое преходит игра после «соприкосновения» текущего блока с уже упавшими или с землей. Если образуются заполненные линии, то она уничтожается и остальные блоки смещаются вниз. Если блок остановился в самом верхнем ряду, то игра переходит в состояние «игра окончена».
-- Игра окончена — игра окончена.
-![BrickGameConsole](misc/images/brickgame-console.jpg)
-
-
-Конечный автомат (КА) в теории алгоритмов — математическая абстракция, модель дискретного устройства, имеющего один вход, один выход и в каждый момент времени находящегося в одном состоянии из множества возможных.
-
-При работе на вход КА последовательно поступают входные воздействия, а на выходе КА формирует выходные сигналы. Переход из одного внутреннего состояния КА в другое может происходить не только от внешнего воздействия, но и самопроизвольно.
-
-КА можно использовать для описания алгоритмов, позволяющих решать те или иные задачи, а также для моделирования практически любого процесса. Несколько примеров:
-
-- Логика искусственного интеллекта для игр;
-- Синтаксический и лексический анализ;
-- Сложные прикладные сетевые протоколы;
-- Потоковая обработка данных.  
-
-Ниже представлены примеры использования КА для формализации игровой логики нескольких игр из BrickGame.
-
-### Фроггер
-
-![Фроггер](misc/images/frogger-game.png)
-
-«Фроггер» — одна из поздних игр, выходящих на консолях Brickgame. Игра представляет собой игровое поле, по которому движутся бревна, и, перепрыгивая по ним, игроку необходимо перевести лягушку с одного берега на другой. Если игрок попадает в воду или лягушка уходит за пределы игрового поля, то лягушка погибает. Игра завершается, когда игрок доводит лягушку до другого берега или погибает последняя лягушка.
-
-Для формализации логики данной игры можно представить следующий вариант конечного автомата:
-
-![Конечный автомат фроггера](misc/images/frogger.jpg)
-
-Данный КА имеет следующие состояния:
-
-- Старт — состояние, в котором игра ждет, пока игрок нажмет кнопку готовности к игре.
-- Спавн — состояние, в котором создается очередная лягушка.
-- Перемещение — основное игровое состояние с обработкой ввода от пользователя — движение лягушки по полосе влево/право или прыжки вперед/назад.
-- Сдвиг — состояние, которое наступает после истечения таймера, при котором сдвигаются все объекты на полосах вправо, вместе с лягушкой.
-- Столкновение — состояние, которое наступает, если после прыжка лягушка попадает в воду или после смещения бревен лягушка оказывается за пределами игрового поля.
-- Достигнут другой берег — состояние, которое наступает при достижении лягушкой верхней другого берега.
-- Игра окончена — состояние, которое наступает после достижения другого берега или смерти последней лягушки.
-
-Пример реализации фроггера с использованием КА вы можете найти в папке `code-samples`.
-
-### Тетрис
-
-![Тетрис](misc/images/tetris-game.png)
-
-«Тетрис», наверное, одна из самых популярных игр для консоли Brickgame. Нередко и саму консоль называют тетрисом. Цель игры — в наборе очков за построение линий из генерируемых игрой блоков. Очередной блок, сгенерированный игрой, начинает опускаться вниз по игровому полю, пока не достигнет нижней границы или не столкнется с другим блоком. Пользовать может поворачивать фигуры и перемещать их по горизонтали, стараясь составлять ряды. После заполнения ряд уничтожается, игрок получает очки, а блоки, находящиеся выше заполненного ряда опускаются вниз. Игра заканчивается, когда очередная фигура останавливается в самом верхнем ряду.
-
-Для формализации логики данной игры можно представить следующий вариант конечного автомата:
-
-![Конечный автомат тетриса](misc/images/tetris.png)
-
-Данный КА состоит из следующих состояний:
-
-- Старт — состояние, в котором игра ждет, пока игрок нажмет кнопку готовности к игре.
-- Спавн — состояние, в которое переходит игра при создании очередного блока и выбора следующего блока для спавна.
-- Перемещение — основное игровое состояние с обработкой ввода от пользователя — поворот блоков/перемещение блоков по горизонтали.
-- Сдвиг — состояние, в которое переходит игра после истечения таймера. В нем текущий блок перемещается вниз на один уровень.
-- Соединение — состояние, в которое преходит игра после «соприкосновения» текущего блока с уже упавшими или с землей. Если образуются заполненные линии, то она уничтожается и остальные блоки смещаются вниз. Если блок остановился в самом верхнем ряду, то игра переходит в состояние «игра окончена».
-- Игра окончена — игра окончена.
-
-## Chapter II <div id="chapter-ii"></div>
-## Требования к проекту
-
-### Часть 1. Основное задание
+  <p align="center">
+    An open source falling block and snake game, part of the BrickGame family of games.
+    <br />
+  </p>
+</div>
 
 
-- Программа разработана на языке Си стандарта C11 с использованием компилятора gcc.
-- Программа состоят из двух частей: библиотеки, реализующей логику игры тетрис, и терминального интерфейса с использованием библиотеки `ncurses`.
-- Для формализации логики игры использован конечный автомат.
-- Код библиотеки программы находится в папке `src/brick_game/tetris`.
-- Код с интерфейсом программы находится в папке `src/gui/cli`.
-- Сборка программы настроена с помощью Makefile со стандартным набором целей для GNU-программ: all, install, uninstall, clean, dvi, dist, test, gcov_report. Установка ведется в каталог bin корневого каталога.
-- Программа разработана в соответствии с принципами структурного программирования.
-- Код соответствует Google Style.
-- Обеспечено покрытие библиотеки unit-тестами, с помощью библиотеки `check` 
-- В игре присутствуют следующие механики:
-  - Вращение фигур;
-  - Перемещение фигуры по горизонтали;
-  - Ускорение падения фигуры (при нажатии кнопки фигура перемещается до конца вниз);
-  - Показ следующей фигуры;
-  - Уничтожение заполненных линий;
-  - Завершение игры при достижении верхней границы игрового поля;
-- Для управления предусмотрены кнопки:
-  - Начало игры,
-  - Пауза,
-  - Завершение игры,
-  - Стрелка влево — движение фигуры влево,
-  - Стрелка вправо — движение фигуры вправо,
-  - Стрелка вниз — падение фигуры,
-  - Стрелка вверх — ни используется в данной игре,
-  - Действие (вращение фигуры).
-- Игровое поле имеет размеры десять «пикселей» в ширину и двадцать «пикселей» в высоту.
-- Фигура, после достижения нижней границы поля или соприкосновения с другой фигурой останавливается. После этого происходит генерация следующей фигуры, показанной на превью.
-- Пользовательский интерфейс поддерживает отрисовку игрового поля и дополнительной информации.
 
-Используемые фигуры:
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
-![Фигуры](misc/images/tetris-pieces.png)
 
-### Часть 2. Дополнительно. Подсчет очков и рекорд в игре
 
-Добавь в игру следующие механики:
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-- подсчет очков;
-- хранение максимального количества очков.
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Данная информация должна передаваться и выводиться пользовательским интерфейсом в боковой панели. Максимальное количество очков должно храниться в файле или встраиваемой СУБД и сохраняться между запусками программы.
+There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
 
-Максимальное количество очков должно изменяться во время игры, если пользователь во время игры превышает текущий показатель максимального количества набранных очков.
+Here's why:
+* Your time should be focused on creating something amazing. A project that solves a problem and helps others
+* You shouldn't be doing the same tasks over and over like creating a README from scratch
+* You should implement DRY principles to the rest of your life :smile:
 
-Начисление очков будет происходить следующим образом:
+Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
 
-- 1 линия — 100 очков;
-- 2 линии — 300 очков;
-- 3 линии — 700 очков;
-- 4 линии — 1500 очков.
+Use the `BLANK_README.md` to get started.
 
-### Часть 3. Дополнительно. Механика уровней
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-Добавь в игру механику уровней. Каждый раз, когда игрок набирает 600 очков, уровень увеличивается на 1. Повышение уровня увеличивает скорость движения фигур. Максимальное количество уровней — 10.
 
-💡 [Нажми сюда](https://forms.yandex.ru/cloud/65d4a02673cee73bdc52da80/)**, чтобы поделиться с нами обратной связью на этот проект**. Это анонимно и поможет нашей команде сделать твоё обучение лучше.
+
+### Built With
+
+This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+
+* [![Next][Next.js]][Next-url]
+* [![React][React.js]][React-url]
+* [![Vue][Vue.js]][Vue-url]
+* [![Angular][Angular.io]][Angular-url]
+* [![Svelte][Svelte.dev]][Svelte-url]
+* [![Laravel][Laravel.com]][Laravel-url]
+* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
+* [![JQuery][JQuery.com]][JQuery-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+This is an example of how you may give instructions on setting up your project locally.
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+This is an example of how to list things you need to use the software and how to install them.
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+### Installation
+
+_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+
+1. Get a free API Key at [https://example.com](https://example.com)
+2. Clone the repo
+   ```sh
+   git clone https://github.com/your_username_/Project-Name.git
+   ```
+3. Install NPM packages
+   ```sh
+   npm install
+   ```
+4. Enter your API in `config.js`
+   ```js
+   const API_KEY = 'ENTER YOUR API';
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+
+_For more examples, please refer to the [Documentation](https://example.com)_
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- ROADMAP -->
+## Roadmap
+
+- [x] Add console version of Tetris
+- [ ] Add desktop version of tetris
+- [ ] Add Additional Templates w/ Examples
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CONTACT -->
+## Contact
+
+Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+
+Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
+
+* [Choose an Open Source License](https://choosealicense.com)
+* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
+* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
+* [Malven's Grid Cheatsheet](https://grid.malven.co/)
+* [Img Shields](https://shields.io)
+* [GitHub Pages](https://pages.github.com)
+* [Font Awesome](https://fontawesome.com)
+* [React Icons](https://react-icons.github.io/react-icons/search)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
+[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
+[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
+[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
+[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
+[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/othneildrew
+[product-screenshot]: images/screenshot.png
+[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Next-url]: https://nextjs.org/
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
+[Vue-url]: https://vuejs.org/
+[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
+[Angular-url]: https://angular.io/
+[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
+[Svelte-url]: https://svelte.dev/
+[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
+[Laravel-url]: https://laravel.com
+[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com
+[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
+[JQuery-url]: https://jquery.com 
