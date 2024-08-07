@@ -1,12 +1,12 @@
 /**
  * @file common.h
  * @author emmonbea (moskaleviluak@icloud.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-05-11
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #ifndef COMMON_H
@@ -44,4 +44,4 @@ typedef enum {
   Action      ///< rotate the current tetromino
 } UserAction_t;
 
-#endif // COMMON_H
+#endif  // COMMON_H
