@@ -14,8 +14,8 @@
 #include "../include/operations.h"
 #include "stdlib.h"
 
-static void get_score(int lines, singleton *s);
-static void update_level(singleton *s);
+static void get_score(int lines, Game_t *s);
+static void update_level(Game_t *s);
 
 /**
  * @brief Checks if a cell is inside the current tetromino.
@@ -29,14 +29,14 @@ static void update_level(singleton *s);
  * the function has checked all the cells and the res variable is still false,
  * it returns false.
  *
- * @param[in, out] s A pointer to the singleton object that contains the game's
+ * @param[in, out] s A pointer to the Game_t object that contains the game's
  * state and information.
  * @param[in] y The y-coordinate of the cell to check.
  * @param[in] x The x-coordinate of the cell to check.
  * @return bool - true if the cell is inside the current tetromino, false
  * otherwise.
  */
-bool is_inside_figure(singleton *s, int y, int x) {
+bool is_inside_figure(Game_t *s, int y, int x) {
   bool res = false;
   for (int i = 0; i < TETROMINO_SIZE; i++) {
     for (int j = 0; j < TETROMINO_SIZE; j++) {
@@ -62,12 +62,12 @@ bool is_inside_figure(singleton *s, int y, int x) {
  * false and returns it. If the function has checked all the cells and the res
  * variable is still true, it returns true.
  *
- * @param[in, out] s A pointer to the singleton object that contains the game's
+ * @param[in, out] s A pointer to the Game_t object that contains the game's
  * state and information.
  * @return bool - true if the current tetromino can be moved right, false
  * otherwise.
  */
-bool can_move_right(singleton *s) {
+bool can_move_right(Game_t *s) {
   bool res = true;
 
   for (int i = 0; i < TETROMINO_SIZE; i++) {
@@ -99,12 +99,12 @@ bool can_move_right(singleton *s) {
  * and returns it. If the function has checked all the cells and the res
  * variable is still true, it returns true.
  *
- * @param[in, out] s A pointer to the singleton object that contains the game's
+ * @param[in, out] s A pointer to the Game_t object that contains the game's
  * state and information.
  * @return bool - true if the current tetromino can be moved left, false
  * otherwise.
  */
-bool can_move_left(singleton *s) {
+bool can_move_left(Game_t *s) {
   bool res = true;
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
@@ -135,11 +135,11 @@ bool can_move_left(singleton *s) {
  * function sets the res variable to false and returns it. If the function has
  * checked all the cells and the res variable is still true, it returns true.
  *
- * @param[in, out] s A pointer to the singleton object that contains the game's
+ * @param[in, out] s A pointer to the Game_t object that contains the game's
  * state and information.
  * @return bool - true if the current tetromino can be rotated, false otherwise.
  */
-bool can_rotate(singleton *s) {
+bool can_rotate(Game_t *s) {
   bool res = true;
 
   remove_figure(s);
@@ -172,12 +172,12 @@ bool can_rotate(singleton *s) {
  * returns it. If the function has checked all the cells and the res variable is
  * still true, it returns true.
  *
- * @param[in, out] s A pointer to the singleton object that contains the game's
+ * @param[in, out] s A pointer to the Game_t object that contains the game's
  * state and information.
  * @return bool - true if the current tetromino can be moved down, false
  * otherwise.
  */
-bool can_move_down(singleton *s) {
+bool can_move_down(Game_t *s) {
   bool res = true;
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
@@ -209,10 +209,10 @@ bool can_move_down(singleton *s) {
  * full_lines variable is greater than 0, it updates the score and level using
  * the get_score() and update_level() functions.
  *
- * @param[in, out] s A pointer to the singleton object that contains the game's
+ * @param[in, out] s A pointer to the Game_t object that contains the game's
  * state and information.
  */
-void check_full_lines(singleton *s) {
+void check_full_lines(Game_t *s) {
   int full_lines = 0;
 
   for (size_t i = 0; i < HEIGHT; i++) {
@@ -236,7 +236,7 @@ void check_full_lines(singleton *s) {
   update_level(s);
 }
 
-static void get_score(int lines, singleton *s) {
+static void get_score(int lines, Game_t *s) {
   int score = 0;
 
   switch (lines) {
@@ -264,7 +264,7 @@ static void get_score(int lines, singleton *s) {
   }
 }
 
-static void update_level(singleton *s) {
+static void update_level(Game_t *s) {
   while (s->game_info.score >= SCORE_PER_LEVEL * (s->game_info.level)) {
     if (s->game_info.level < MAX_LEVEL) {
       s->game_info.level++;
@@ -285,12 +285,12 @@ static void update_level(singleton *s) {
  * and returns it. If the function has checked all the cells and the res
  * variable is still true, it returns true.
  *
- * @param[in, out] s - A pointer to the singleton object that contains the
+ * @param[in, out] s - A pointer to the Game_t object that contains the
  * game's state and information.
  * @return bool - true if a new tetromino can be placed on the game field, false
  * otherwise.
  */
-bool can_put_new_line(singleton *s) {
+bool can_put_new_line(Game_t *s) {
   bool res = true;
 
   for (size_t i = 0; i < TETROMINO_SIZE && res; i++) {

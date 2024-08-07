@@ -15,7 +15,7 @@
 #include "./gui/cli/include/input_gui.h"
 
 static void game_loop() {
-  singleton *s = get_instance();
+  Game_t *s = get_instance();
   windows *wins = init_windows();
 
   s->stage = START;
@@ -58,12 +58,9 @@ static void game_loop() {
 }
 
 int main() {
-  singleton *s = get_instance();
+  Game_t *s = get_instance();
 
   init_game(s);
-  // free(s->game_info);
-  // init_game(s);
-
   init_screen();
   game_loop();
   endwin();

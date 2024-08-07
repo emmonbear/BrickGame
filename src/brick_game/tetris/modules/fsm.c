@@ -21,14 +21,14 @@ static int get_current_time() { return (int)(clock() * 1000 / CLOCKS_PER_SEC); }
  * @details
  *
  * This function uses an array of function pointers to call the appropriate
- * function for the current state of the game. The function takes a singleton
+ * function for the current state of the game. The function takes a Game_t
  * structure as an argument and invokes the function corresponding to the
  * current state of the game.
  *
- * @param[in,out] s The singleton structure containing the game's state and
+ * @param[in,out] s The Game_t structure containing the game's state and
  * data.
  */
-void run_state(singleton *s) {
+void run_state(Game_t *s) {
   static func_ptr state_funcs[NUM_STAGES] = {
       start_stage, spawn_stage,     shifting_stage, moving_stage,
       pause_stage, attaching_stage, game_over_stage};
@@ -44,10 +44,10 @@ void run_state(singleton *s) {
  * state to the spawn state. It is called by the run_state function when the
  * game's state machine is in the start state.
  *
- * @param[in,out] s The singleton structure containing the game's state and
+ * @param[in,out] s The Game_t structure containing the game's state and
  * data.
  */
-void start_stage(singleton *s) {
+void start_stage(Game_t *s) {
   switch (s->action) {
     case Start:
       s->stage = SPAWN;
@@ -69,10 +69,10 @@ void start_stage(singleton *s) {
  * machine is in the game over state. In this state, the game is ended and
  * the player is shown the final score and game statistics.
  *
- * @param[in,out] s The singleton structure containing the game's state and
+ * @param[in,out] s The Game_t structure containing the game's state and
  * data.
  */
-void game_over_stage(singleton *s) {
+void game_over_stage(Game_t *s) {
   write_high_score(s);
 
   switch (s->action) {
@@ -100,10 +100,10 @@ void game_over_stage(singleton *s) {
  * It is called by the run_state function when the game's state machine is in
  * the spawn state.
  *
- * @param[in,out] s The singleton structure containing the game's state and
+ * @param[in,out] s The Game_t structure containing the game's state and
  * data.
  */
-void spawn_stage(singleton *s) {
+void spawn_stage(Game_t *s) {
   copy_next_to_current(s);
   put_figure(s);
   generate_new_figure(s);
@@ -119,10 +119,10 @@ void spawn_stage(singleton *s) {
  * It is called by the run_state function when the game's state machine is in
  * the shifting state.
  *
- * @param[in,out] s The singleton structure containing the game's state and
+ * @param[in,out] s The Game_t structure containing the game's state and
  * data.
  */
-void shifting_stage(singleton *s) {
+void shifting_stage(Game_t *s) {
   int current_time = get_current_time();
   int wait_time = 1000 - (s->game_info.level * 100);
 
@@ -168,10 +168,10 @@ void shifting_stage(singleton *s) {
  * horizontally. It is called by the run_state function when the game's state
  * machine is in the moving state.
  *
- * @param[in,out] s The singleton structure containing the game's state and
+ * @param[in,out] s The Game_t structure containing the game's state and
  * data.
  */
-void moving_stage(singleton *s) {
+void moving_stage(Game_t *s) {
   s->stage = SHIFTING;
 
   switch (s->action) {
@@ -210,10 +210,10 @@ void moving_stage(singleton *s) {
  * It is called by the run_state function when the game's state machine is in
  * the pause state.
  *
- * @param[in,out] s The singleton structure containing the game's state and
+ * @param[in,out] s The Game_t structure containing the game's state and
  * data.
  */
-void pause_stage(singleton *s) {
+void pause_stage(Game_t *s) {
   switch (s->action) {
     case Pause:
       s->stage = SHIFTING;
@@ -237,10 +237,10 @@ void pause_stage(singleton *s) {
  * formed, it is destroyed and the remaining blocks are shifted down. If a
  * block is stopped in the topmost row, the game goes to the game over state.
  *
- * @param[in,out] s The singleton structure containing the game's state and
+ * @param[in,out] s The Game_t structure containing the game's state and
  * data.
  */
-void attaching_stage(singleton *s) {
+void attaching_stage(Game_t *s) {
   check_full_lines(s);
   s->figure.x = 3;
   s->figure.y = 0;
@@ -252,7 +252,7 @@ void attaching_stage(singleton *s) {
   }
 }
 
-singleton *get_instance() {
-  static singleton instance;
+Game_t *get_instance() {
+  static Game_t instance;
   return &instance;
 }

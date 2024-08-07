@@ -30,10 +30,10 @@ static void destroy_2d_array(int ***array, size_t rows);
  * and the current tetromino's color and type to their initial values. Finally,
  * it sets the game over flag to 0.
  *
- * @param[in,out] s A pointer to the singleton that contains the game's state
+ * @param[in,out] s A pointer to the Game_t that contains the game's state
  * and information
  */
-void reset_game_info(singleton *s) {
+void reset_game_info(Game_t *s) {
   s->game_info.score = 0;
   s->game_info.high_score = load_max_score();
   s->game_info.level = 1;
@@ -55,13 +55,13 @@ void reset_game_info(singleton *s) {
  * This function deallocates memory for the game's data structures, including
  * the game field, the next tetromino, and the current tetromino. It also sets
  * the corresponding pointers to NULL to avoid dangling pointers. If the
- * singleton or any of its data members are not initialized, the function does
+ * Game_t or any of its data members are not initialized, the function does
  * nothing.
  *
- * @param[in,out] s A pointer to the singleton that contains the game's state
+ * @param[in,out] s A pointer to the Game_t that contains the game's state
  * and information
  */
-void destroy_game(singleton *s) {
+void destroy_game(Game_t *s) {
   if (s) {
     destroy_2d_array(&(s->game_info.field), HEIGHT);
     destroy_2d_array(&(s->game_info.next), TETROMINO_SIZE);
@@ -82,10 +82,10 @@ void destroy_game(singleton *s) {
  * the next tetromino, and the current tetromino. If any memory allocation
  * fails, the function prints an error message and exits the program with a
  * non-zero status code.
- * @param[in,out] s A pointer to the singleton that contains the game's state
+ * @param[in,out] s A pointer to the Game_t that contains the game's state
  * and information
  */
-void init_game(singleton *s) {
+void init_game(Game_t *s) {
   setlocale(LC_ALL, "");
   srand(time(NULL));
 
@@ -159,10 +159,10 @@ static int load_max_score() {
  * it. It then opens the file in write mode and writes the high score to it. If
  * the file is not opened, the function does nothing.
  *
- * @param[in,out] s A pointer to the singleton that contains the game's state
+ * @param[in,out] s A pointer to the Game_t that contains the game's state
  * and information
  */
-void write_high_score(singleton *s) {
+void write_high_score(Game_t *s) {
   char cwd[200];
   if (getcwd(cwd, sizeof(cwd))) {
     strcat(cwd, PATH);

@@ -16,7 +16,7 @@
 #include <string.h>
 #include <time.h>
 
-static void clear_next(singleton *s) {
+static void clear_next(Game_t *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       s->game_info.next[i][j] = 0;
@@ -34,10 +34,10 @@ static void clear_next(singleton *s) {
  * Then, it copies the color and type of the next tetromino to the current
  * tetromino.
  *
- * @param[in, out] s - A pointer to the singleton object that contains the
+ * @param[in, out] s - A pointer to the Game_t object that contains the
  * game's state and information.
  */
-void copy_next_to_current(singleton *s) {
+void copy_next_to_current(Game_t *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       s->figure.current_figure[i][j] = s->game_info.next[i][j];
@@ -60,10 +60,10 @@ void copy_next_to_current(singleton *s) {
  * on the generated number, and sets its position on the game field using the x
  * and y coordinates of the "next" position.
  *
- * @param[in, out] s - A pointer to the singleton object that contains the
+ * @param[in, out] s - A pointer to the Game_t object that contains the
  * game's state and information.
  */
-void generate_new_figure(singleton *s) {
+void generate_new_figure(Game_t *s) {
   clear_next(s);
 
   size_t tmp;

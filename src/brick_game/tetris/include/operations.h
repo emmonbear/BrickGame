@@ -15,13 +15,13 @@
 #include "../include/checks.h"
 #include "./common.h"
 
-void put_figure(singleton *s);
-void remove_figure(singleton *s);
-void move_right(singleton *s);
-void move_left(singleton *s);
-void move_down(singleton *s);
-void rotate_figure(singleton *s);
-void get_rotated_figure(singleton *s);
-void reset_field(singleton *s);
+void put_figure(Game_t *s);
+void remove_figure(Game_t *s);
+void move_right(Game_t *s);
+void move_left(Game_t *s);
+void move_down(Game_t *s);
+void rotate_figure(Game_t *s);
+void get_rotated_figure(Game_t *s);
+void reset_field(Game_t *s);
 
 #endif  // MODULES_OPERATIONS_H

@@ -20,7 +20,7 @@
 /// @brief Number of positions
 #define NUM_POSITIONS 5
 
-void generate_new_figure(singleton *s);
-void copy_next_to_current(singleton *s);
+void generate_new_figure(Game_t *s);
+void copy_next_to_current(Game_t *s);
 
 #endif  // MODULES_FIGURE_GENERATOR

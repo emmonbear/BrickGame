@@ -16,12 +16,12 @@
 
 #include "./common.h"
 
-bool can_move_down(singleton *s);
-bool can_move_left(singleton *s);
-bool can_move_right(singleton *s);
-bool can_rotate(singleton *s);
-bool is_inside_figure(singleton *s, int y, int x);
-void check_full_lines(singleton *s);
-bool can_put_new_line(singleton *s);
+bool can_move_down(Game_t *s);
+bool can_move_left(Game_t *s);
+bool can_move_right(Game_t *s);
+bool can_rotate(Game_t *s);
+bool is_inside_figure(Game_t *s, int y, int x);
+void check_full_lines(Game_t *s);
+bool can_put_new_line(Game_t *s);
 
 #endif  // MODULES_CHECKS_H

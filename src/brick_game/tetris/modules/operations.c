@@ -13,7 +13,7 @@
 
 #include <stdlib.h>
 
-static void reset_position(singleton *s);
+static void reset_position(Game_t *s);
 
 /**
  * @brief Puts the current tetromino on the game field.
@@ -25,10 +25,10 @@ static void reset_position(singleton *s);
  * the current tetromino. The function does not check if the current tetromino
  * collides with other tetrominoes or the boundaries of the game field.
  *
- * @param[in, out] s A pointer to the singleton object that contains the
+ * @param[in, out] s A pointer to the Game_t object that contains the
  * game's state and information.
  */
-void put_figure(singleton *s) {
+void put_figure(Game_t *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       if (s->figure.current_figure[i][j]) {
@@ -48,11 +48,11 @@ void put_figure(singleton *s) {
  * vertical coordinate of the figure by one, and then puts the figure back on
  * the game field.
  *
- * @param[in, out] s A pointer to the singleton object that contains the
+ * @param[in, out] s A pointer to the Game_t object that contains the
  game's state and information.
 
  */
-void move_down(singleton *s) {
+void move_down(Game_t *s) {
   remove_figure(s);
   s->figure.y++;
   put_figure(s);
@@ -64,10 +64,10 @@ void move_down(singleton *s) {
  * This function iterates over the cells of the current figure and, if a cell is
  * occupied, sets the corresponding cell in the game field to 0 (empty).
  *
- * @param[in, out] s A pointer to the singleton object that contains the
+ * @param[in, out] s A pointer to the Game_t object that contains the
  * game's state and information.
  */
-void remove_figure(singleton *s) {
+void remove_figure(Game_t *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       if (s->figure.current_figure[i][j]) {
@@ -88,10 +88,10 @@ void remove_figure(singleton *s) {
  * the x-coordinate of the figure by one, and then puts the figure back on the
  * game field using the put_figure() function.
  *
- * @param[in, out] s A pointer to the singleton object that contains the
+ * @param[in, out] s A pointer to the Game_t object that contains the
  * game's state and information.
  */
-void move_left(singleton *s) {
+void move_left(Game_t *s) {
   if (can_move_left(s)) {
     remove_figure(s);
     s->figure.x--;
@@ -110,10 +110,10 @@ void move_left(singleton *s) {
  * the x-coordinate of the figure by one, and then puts the figure back on the
  * game field using the put_figure() function.
  *
- * @param[in, out] s A pointer to the singleton object that contains the
+ * @param[in, out] s A pointer to the Game_t object that contains the
  * game's state and information.
  */
-void move_right(singleton *s) {
+void move_right(Game_t *s) {
   if (can_move_right(s)) {
     remove_figure(s);
     s->figure.x++;
@@ -131,10 +131,10 @@ void move_right(singleton *s) {
  * figure from the game field using the remove_figure() function, and puts the
  * rotated figure back on the game field using the put_figure() function.
  *
- * @param[in, out] s A pointer to the singleton object that contains the
+ * @param[in, out] s A pointer to the Game_t object that contains the
  * game's state and information.
  */
-void rotate_figure(singleton *s) {
+void rotate_figure(Game_t *s) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       s->figure.current_figure[i][j] = s->figure.rotated_figure[i][j];
@@ -155,10 +155,10 @@ void rotate_figure(singleton *s) {
  * figure's rotated matrix. Finally, it shifts the resulting shape relative to
  * the top left block
  *
- * @param[in, out] s A pointer to the singleton object that contains the
+ * @param[in, out] s A pointer to the Game_t object that contains the
  * game's state and information.
  */
-void get_rotated_figure(singleton *s) {
+void get_rotated_figure(Game_t *s) {
   // Transpose matrix
   int tmp[TETROMINO_SIZE][TETROMINO_SIZE];
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
@@ -176,7 +176,7 @@ void get_rotated_figure(singleton *s) {
   reset_position(s);
 }
 
-static void reset_position(singleton *s) {
+static void reset_position(Game_t *s) {
   size_t min_x = 2;
   size_t min_y = 2;
 
@@ -211,10 +211,10 @@ static void reset_position(singleton *s) {
  * This function iterates over the cells of the game field using a nested loop
  * and sets each cell to 0 (empty).
  *
- * @param[in, out] s A pointer to the singleton object that contains the
+ * @param[in, out] s A pointer to the Game_t object that contains the
  * game's state and information
  */
-void reset_field(singleton *s) {
+void reset_field(Game_t *s) {
   for (size_t i = 0; i < HEIGHT; i++) {
     for (size_t j = 0; j < WIDTH; j++) {
       s->game_info.field[i][j] = 0;

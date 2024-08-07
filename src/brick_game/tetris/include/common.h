@@ -107,6 +107,6 @@ typedef struct {
   UserAction_t action;   ///< Pointer to the user's action
   int timer;             ///< Timer used to control the game's events
   int game_over;         ///< Flag that indicates if the game is over
-} singleton;
+} Game_t;
 
 #endif  // MODULES_COMMON_H

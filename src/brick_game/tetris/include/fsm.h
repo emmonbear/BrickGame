@@ -18,29 +18,29 @@
 #include "./init.h"
 #include "./operations.h"
 
-singleton *get_instance();
+Game_t *get_instance();
 
 /**
- * @brief Type definition for a pointer to a function that takes a singleton
+ * @brief Type definition for a pointer to a function that takes a Game_t
  * structure as an argument and returns nothing.
  *
  * @details
  *
  * This type definition is used to declare an array of function pointers for
  * the state machine's states. Each function pointer points to a function that
- * handles a specific state of the game. The function takes a singleton
+ * handles a specific state of the game. The function takes a Game_t
  * structure as an argument and performs actions based on the current state of
  * the game.
  */
-typedef void (*func_ptr)(singleton *s);
+typedef void (*func_ptr)(Game_t *s);
 
-void start_stage(singleton *s);
-void spawn_stage(singleton *s);
-void shifting_stage(singleton *s);
-void moving_stage(singleton *s);
-void pause_stage(singleton *s);
-void attaching_stage(singleton *s);
-void game_over_stage(singleton *s);
-void run_state(singleton *s);
+void start_stage(Game_t *s);
+void spawn_stage(Game_t *s);
+void shifting_stage(Game_t *s);
+void moving_stage(Game_t *s);
+void pause_stage(Game_t *s);
+void attaching_stage(Game_t *s);
+void game_over_stage(Game_t *s);
+void run_state(Game_t *s);
 
 #endif  // MODULES_FSM_H

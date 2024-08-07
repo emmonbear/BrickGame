@@ -35,9 +35,9 @@
   fprintf(stderr, "Memory allocation error\n"); \
   exit(1);
 
-void init_game(singleton *s);
-void destroy_game(singleton *s);
-void reset_game_info(singleton *s);
-void write_high_score(singleton *s);
+void init_game(Game_t *s);
+void destroy_game(Game_t *s);
+void reset_game_info(Game_t *s);
+void write_high_score(Game_t *s);
 
 #endif  // MODULES_INIT_H
