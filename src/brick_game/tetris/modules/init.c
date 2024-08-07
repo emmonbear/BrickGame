@@ -94,7 +94,7 @@ void destroy_game(singleton *s) {
  * and information
  */
 void init_game(singleton *s) {
-  setlocale(LC_ALL, ""); 
+  setlocale(LC_ALL, "");
   srand(time(NULL));
 
   if (!s) {
@@ -113,6 +113,7 @@ void init_game(singleton *s) {
   allocate_2d_array(&(s->figure.rotated_figure), TETROMINO_SIZE,
                     TETROMINO_SIZE);
   s->action = (UserAction_t *)malloc(sizeof(UserAction_t));
+
   if (!s->action) {
     MEM_ALLOC_ERROR
   }

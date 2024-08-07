@@ -12,8 +12,8 @@
 #ifndef MODULES_FSM_H
 #define MODULES_FSM_H
 
-#include "./common.h"
 #include "./checks.h"
+#include "./common.h"
 #include "./figures.h"
 #include "./init.h"
 #include "./operations.h"

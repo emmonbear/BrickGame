@@ -88,13 +88,12 @@ typedef enum {
  * figure
  */
 typedef struct {
-  type_t next_type;     ///< The type of the next tetromino figure.
-  type_t current_type;  ///< The type of the current tetromino figure.
-  int x, y;             ///< The x and y coordinates of the top left corner of
-                        ///< the current tetromino figure on the game board.
-  int rotation;         ///< The rotation index of the current tetromino figure.
-  int next_color;       ///< The color index of the next tetromino figure.
-  int current_color;    ///< The color index of the current tetromino figure.
+  type_t next_type;      ///< The type of the next tetromino figure.
+  type_t current_type;   ///< The type of the current tetromino figure.
+  int x, y;              ///< The x and y coordinates of the top left corner of
+                         ///< the current tetromino figure on the game board.
+  int next_color;        ///< The color index of the next tetromino figure.
+  int current_color;     ///< The color index of the current tetromino figure.
   int **current_figure;  ///< A 2D array representing the shape of the current
                          ///< tetromino figure.
   int **rotated_figure;  ///< A 2D array representing the shape of the current

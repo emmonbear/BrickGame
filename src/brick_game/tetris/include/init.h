@@ -35,7 +35,6 @@
   fprintf(stderr, "Memory allocation error\n"); \
   exit(1);
 
-
 void init_game(singleton *s);
 void destroy_game(singleton *s);
 void reset_game_info(singleton *s);
