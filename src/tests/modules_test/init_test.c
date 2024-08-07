@@ -1,44 +1,41 @@
 /**
  * @file init_test.c
  * @author emmonbea (moskaleviluak@icloud.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-05-16
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #include "../main_test.h"
 
+static Game_t s;
+
 START_TEST(init_game_test) {
-  singleton *s = get_instance();
-  init_game(s);
-  destroy_game(s);
+  init_game(&s);
+  destroy_game(&s);
 }
 
 START_TEST(double_destroy_game_test) {
-  singleton *s = get_instance();
-  init_game(s);
-  destroy_game(s);
-  destroy_game(s);
+  init_game(&s);
+  destroy_game(&s);
+  destroy_game(&s);
 }
 
 START_TEST(reset_game_info_test) {
-  singleton *s = get_instance();
-  init_game(s);
-  reset_game_info(s);
-  destroy_game(s);
+  init_game(&s);
+  reset_game_info(&s);
+  destroy_game(&s);
 }
 
 START_TEST(write_high_score_test) {
-  singleton *s = get_instance();
-  init_game(s);
-  reset_game_info(s);
-  write_high_score(s);
-  destroy_game(s);
+  init_game(&s);
+  reset_game_info(&s);
+  write_high_score(&s);
+  destroy_game(&s);
 }
-
 
 Suite *init_test() {
   Suite *tetris = suite_create("init tests:");

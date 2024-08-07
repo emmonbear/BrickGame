@@ -1,12 +1,12 @@
 /**
  * @file main_test.c
  * @author emmonbea (moskaleviluak@icloud.com)
- * @brief 
+ * @brief
  * @version 1.0
  * @date 2024-05-16
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #include "./main_test.h"
@@ -38,8 +38,8 @@ int main(void) {
   Suite *(*operations[])(void) = {
       operations_test,
   };
-  test_function(operations, sizeof(operations) / sizeof(operations[0]), "OPERATIONS",
-                &passed_count, &failed_count);
+  test_function(operations, sizeof(operations) / sizeof(operations[0]),
+                "OPERATIONS", &passed_count, &failed_count);
 #endif
 
 #ifdef INIT
@@ -54,8 +54,8 @@ int main(void) {
   Suite *(*checks[])(void) = {
       checks_test,
   };
-  test_function(checks, sizeof(checks) / sizeof(checks[0]), "CHECKS", &passed_count,
-                &failed_count);
+  test_function(checks, sizeof(checks) / sizeof(checks[0]), "CHECKS",
+                &passed_count, &failed_count);
 #endif
 
 #ifdef FIGURES
@@ -70,8 +70,8 @@ int main(void) {
   Suite *(*fsm[])(void) = {
       fsm_test,
   };
-  test_function(fsm, sizeof(fsm) / sizeof(fsm[0]),
-                "FSM", &passed_count, &failed_count);
+  test_function(fsm, sizeof(fsm) / sizeof(fsm[0]), "FSM", &passed_count,
+                &failed_count);
 #endif
 
   gettimeofday(&end, NULL);
