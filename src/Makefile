@@ -3,11 +3,9 @@ EXE_FILENAME = game
 
 # COMPILER 
 CC = gcc
-CXX = g++
 
 # FLAGS
 CFLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
-CXXFLAGS = -Wall -Wextra -Werror -std=c++17
 LDFLAGS = -lcheck -lsubunit -lm
 
 LDGUI = -lncurses
@@ -27,7 +25,6 @@ TESTS_DIR = ./tests
 GUI_DIR = ./gui/cli
 DOCS_DIR = ../docs
 TETRIS_DIR = ./brick_game/tetris
-SNAKE_DIR = ./brick_game/snake
 BIN_DIR = ../bin
 DIST_DIR = ../dist
 
@@ -47,13 +44,6 @@ TETRIS_H = $(shell find $(TETRIS_DIR) -type f -name "*.h")
 TETRIS_O = $(notdir $(TETRIS_C:%.c=%.o))
 TETRIS_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(TETRIS_O))
 
-# LIST OF FILES AND DIRECTORIES IN SNAKE DIRECTORY
-SNAKE_DIRS = $(shell find $(SNAKE_DIR) -type d)
-SNAKE_CC = $(shell find $(SNAKE_DIR) -type f -name "*.cc")
-SNAKE_H = $(shell find $(SNAKE_DIR) -type f -name "*.h")
-SNAKE_O = $(notdir $(SNAKE_CC:%.c=%.o))
-SNAKE_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(SNAKE_O))
-
 # LIST OF FILES AND DIRECTORIES IN GUI_DIR
 GUI_DIRS = $(shell find $(GUI_DIR) -type d)
 GUI_C = $(shell find $(GUI_DIR) -type f -name "*.c")
@@ -65,9 +55,6 @@ GUI_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(GUI_O))
 C_FILES = $(TETRIS_C) $(GUI_C) $(TESTS_C)
 H_FILES = $(TETRIS_H) $(GUI_H) $(COMMON_H) $(TESTS_H) $(COMMON_BACKEND_H)
 ALL_FILES = $(C_FILES) $(H_FILES)
-
-# LIST OF FILES TO CPPLINT
-CC_FILES = $(SNAKE_CC) $(SNAKE_H)
 
 # LIST of FILES AND DIRECTORIES IN TESTS
 TESTS_DIRS = $(shell find $(TESTS_DIR) -type d)
@@ -201,9 +188,6 @@ clang_fix:
 
 clang_check:
 	clang-format -style=Google -n $(ALL_FILES)
-
-cpplint:
-	cpplint $(CC_FILES)
 
 # CREATE DIRECTORIES
 $(OBJ_DIR):

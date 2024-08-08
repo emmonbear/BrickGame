@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../../common.h"
+#include "./model.h"
 
 /// @brief Path to the file with high_score
 #define PATH "/brick_game/tetris/max_score.txt"

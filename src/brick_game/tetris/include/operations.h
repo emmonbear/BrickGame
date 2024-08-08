@@ -13,7 +13,7 @@
 #define MODULES_OPERATIONS_H
 
 #include "../include/checks.h"
-#include "../../common.h"
+#include "./model.h"
 
 void put_figure(Game_t *s);
 void remove_figure(Game_t *s);

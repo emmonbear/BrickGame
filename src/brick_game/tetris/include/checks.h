@@ -14,7 +14,7 @@
 
 #include <stdbool.h>
 
-#include "../../common.h"
+#include "./model.h"
 
 bool can_move_down(Game_t *s);
 bool can_move_left(Game_t *s);
