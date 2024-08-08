@@ -14,7 +14,7 @@
 
 #include <ncurses.h>
 
-#include "../../../common.h"
+#include "../../../brick_game.h"
 
 typedef struct {
   int height;

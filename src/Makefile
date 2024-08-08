@@ -3,10 +3,13 @@ EXE_FILENAME = game
 
 # COMPILER 
 CC = gcc
+CXX = g++
 
 # FLAGS
 CFLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
+CXXFLAGS = -Wall -Wextra -Werror -std=c++17
 LDFLAGS = -lcheck -lsubunit -lm
+
 LDGUI = -lncurses
 VALGRIND = --tool=memcheck --leak-check=yes
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
@@ -23,22 +26,25 @@ REPORT_DIR = ./report
 TESTS_DIR = ./tests
 GUI_DIR = ./gui/cli
 DOCS_DIR = ../docs
-MODULES_DIR = ./brick_game/tetris
+TETRIS_DIR = ./brick_game/tetris
 BIN_DIR = ../bin
 DIST_DIR = ../dist
 
 # MAIN
 MAIN_C = $(PROJECT_NAME).c
 
-# COMMON_H
-COMMON_H = common.h
+# COMMON HEADER FOR FRONTEND AND BACKEND 
+COMMON_H = $(PROJECT_NAME).h
 
-# LIST OF FILES AND DIRECTORIES IN MODULES_DIR
-MODULES_DIRS = $(shell find $(MODULES_DIR) -type d)
-MODULES_C = $(shell find $(MODULES_DIR) -type f -name "*.c")
-MODULES_H = $(shell find $(MODULES_DIR) -type f -name "*.h")
-MODULES_O = $(notdir $(MODULES_C:%.c=%.o))
-MODULES_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(MODULES_O))
+# COMMON HEADER FOR BACKEND
+COMMON_BACKEND_H = $(PROJECT_NAME)/common.h
+
+# LIST OF FILES AND DIRECTORIES IN TETRIS_DIR
+TETRIS_DIRS = $(shell find $(TETRIS_DIR) -type d)
+TETRIS_C = $(shell find $(TETRIS_DIR) -type f -name "*.c")
+TETRIS_H = $(shell find $(TETRIS_DIR) -type f -name "*.h")
+TETRIS_O = $(notdir $(TETRIS_C:%.c=%.o))
+TETRIS_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(TETRIS_O))
 
 # LIST OF FILES AND DIRECTORIES IN GUI_DIR
 GUI_DIRS = $(shell find $(GUI_DIR) -type d)
@@ -48,8 +54,8 @@ GUI_O = $(notdir $(GUI_C:%.c=%.o))
 GUI_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(GUI_O))
 
 # LIST OF FILES TO CLANG-FORMAT AND CPPCHECK
-C_FILES = $(MODULES_C) $(GUI_C) $(MAIN_C) $(TESTS_C)
-H_FILES = $(MODULES_H) $(GUI_H) $(COMMON_H) $(TESTS_H)
+C_FILES = $(TETRIS_C) $(GUI_C) $(MAIN_C) $(TESTS_C)
+H_FILES = $(TETRIS_H) $(GUI_H) $(COMMON_H) $(TESTS_H) $(COMMON_BACKEND_H)
 ALL_FILES = $(C_FILES) $(H_FILES)
 
 # LIST of FILES AND DIRECTORIES IN TESTS
@@ -60,7 +66,7 @@ TESTS_O = $(notdir $(TESTS_C:%.c=%.o))
 TESTS_OBJ_PATH = $(OBJ_DIR)/*_test.o
 
 # CONFIGURING PATH TO SEARH FOR UNPREFIXED PATHS
-vpath %.c $(MODULES_DIRS) : $(GUI_DIRS) : $(TESTS_DIRS)
+vpath %.c $(TETRIS_DIRS) : $(GUI_DIRS) : $(TESTS_DIRS)
 vpath %.o $(OBJ_DIR)
 
 # TARGETS
@@ -69,7 +75,7 @@ vpath %.o $(OBJ_DIR)
 all: install run
 
 .PHONY: install
-install: $(BIN_DIR) $(LIB) $(GUI_LIB) $(COMMON_H) 
+install: $(BIN_DIR) $(LIB) $(GUI_LIB) $(COMMON_H) $(COMMON_BACKEND_H)
 	$(CC) $(CFLAGS) $(MAIN_C) $(LIB) $(GUI_LIB) $(LDGUI) -o $(BIN_DIR)/$(PROJECT_NAME)
 
 .PHONY: run
@@ -83,8 +89,8 @@ uninstall: clean
 	rm -f ./brick_game/tetris/max_score.txt
 
 .PHONY: $(LIB)
-$(LIB): $(OBJ_DIR) $(MODULES_O) $(MODULES_H)
-	ar rcs $@ $(MODULES_OBJ_PATH)
+$(LIB): $(OBJ_DIR) $(TETRIS_O) $(TETRIS_H)
+	ar rcs $@ $(TETRIS_OBJ_PATH)
 	ranlib $@
 
 .PHONY: $(GUI_LIB)
@@ -99,7 +105,7 @@ $(TARGET): $(OBJ_DIR) $(TESTS_O) $(LIB)
 
 .PHONE: $(GCOV)
 $(GCOV): $(OBJ_DIR) $(REPORT_DIR) $(TESTS_O)
-	$(CC) $(TESTS_OBJ_PATH) $(MODULES_C) $(LDFLAGS) $(GCOV_FLAGS) -o $(addprefix $(OBJ_DIR)/, $(TARGET))
+	$(CC) $(TESTS_OBJ_PATH) $(TETRIS_C) $(LDFLAGS) $(GCOV_FLAGS) -o $(addprefix $(OBJ_DIR)/, $(TARGET))
 	-./$(addprefix $(OBJ_DIR)/, $(TARGET))
 	gcovr -r . --html --html-details -o $(REPORT_DIR)/coverage.html
 	xdg-open $(REPORT_DIR)/coverage.html
@@ -137,8 +143,15 @@ dist: uninstall dvi $(DIST_DIR) $(LIB) $(GUI_LIB) install
 .PHONY: rebuild
 rebuild: clean install
 
+.PHONY: dependencies
+dependencies:
+	sudo apt install libgtest-dev -y
+	sudo apt install python3-pip
+	pip install cpplint
+
+
 # OBJECTIVE TARGETS
-%.o: %.c ${MODULES_H}
+%.o: %.c ${TETRIS_H}
 	$(CC) $(CFLAGS) -c -o $(addprefix $(OBJ_DIR)/, $@) $<
 
 %_gui.o: gui_%.c $(GUI_H)

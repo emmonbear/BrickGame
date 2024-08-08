@@ -10,8 +10,8 @@
  */
 
 #include "../include/checks.h"
-
 #include "../include/operations.h"
+
 #include "stdlib.h"
 
 static void get_score(int lines, Game_t *s);

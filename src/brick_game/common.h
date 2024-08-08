@@ -12,7 +12,7 @@
 #ifndef MODULES_COMMON_H
 #define MODULES_COMMON_H
 
-#include "../../../common.h"
+#include "../brick_game.h"
 
 /// @brief Number of states of a finite state machine
 #define NUM_STAGES 7

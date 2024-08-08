@@ -12,7 +12,7 @@
 #ifndef MODULES_FIGURE_GENERATOR
 #define MODULES_FIGURE_GENERATOR
 
-#include "./common.h"
+#include "../../common.h"
 
 /// @brief Amount of tetrominoes
 #define NUM_TETROMINOS 7
