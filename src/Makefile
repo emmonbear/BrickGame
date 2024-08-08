@@ -27,11 +27,12 @@ TESTS_DIR = ./tests
 GUI_DIR = ./gui/cli
 DOCS_DIR = ../docs
 TETRIS_DIR = ./brick_game/tetris
+SNAKE_DIR = ./brick_game/snake
 BIN_DIR = ../bin
 DIST_DIR = ../dist
 
 # MAIN
-MAIN_C = $(PROJECT_NAME).c
+MAIN_CC = $(PROJECT_NAME).cc
 
 # COMMON HEADER FOR FRONTEND AND BACKEND 
 COMMON_H = $(PROJECT_NAME).h
@@ -39,12 +40,19 @@ COMMON_H = $(PROJECT_NAME).h
 # COMMON HEADER FOR BACKEND
 COMMON_BACKEND_H = $(PROJECT_NAME)/common.h
 
-# LIST OF FILES AND DIRECTORIES IN TETRIS_DIR
+# LIST OF FILES AND DIRECTORIES IN TETRIS DIRECTORY
 TETRIS_DIRS = $(shell find $(TETRIS_DIR) -type d)
 TETRIS_C = $(shell find $(TETRIS_DIR) -type f -name "*.c")
 TETRIS_H = $(shell find $(TETRIS_DIR) -type f -name "*.h")
 TETRIS_O = $(notdir $(TETRIS_C:%.c=%.o))
 TETRIS_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(TETRIS_O))
+
+# LIST OF FILES AND DIRECTORIES IN SNAKE DIRECTORY
+SNAKE_DIRS = $(shell find $(SNAKE_DIR) -type d)
+SNAKE_CC = $(shell find $(SNAKE_DIR) -type f -name "*.cc")
+SNAKE_H = $(shell find $(SNAKE_DIR) -type f -name "*.h")
+SNAKE_O = $(notdir $(SNAKE_CC:%.c=%.o))
+SNAKE_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(SNAKE_O))
 
 # LIST OF FILES AND DIRECTORIES IN GUI_DIR
 GUI_DIRS = $(shell find $(GUI_DIR) -type d)
@@ -54,9 +62,12 @@ GUI_O = $(notdir $(GUI_C:%.c=%.o))
 GUI_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(GUI_O))
 
 # LIST OF FILES TO CLANG-FORMAT AND CPPCHECK
-C_FILES = $(TETRIS_C) $(GUI_C) $(MAIN_C) $(TESTS_C)
+C_FILES = $(TETRIS_C) $(GUI_C) $(TESTS_C)
 H_FILES = $(TETRIS_H) $(GUI_H) $(COMMON_H) $(TESTS_H) $(COMMON_BACKEND_H)
 ALL_FILES = $(C_FILES) $(H_FILES)
+
+# LIST OF FILES TO CPPLINT
+CC_FILES = $(SNAKE_CC) $(SNAKE_H)
 
 # LIST of FILES AND DIRECTORIES IN TESTS
 TESTS_DIRS = $(shell find $(TESTS_DIR) -type d)
@@ -71,12 +82,19 @@ vpath %.o $(OBJ_DIR)
 
 # TARGETS
 
+m:
+	@echo $(SNAKE_DIRS)
+	@echo $(SNAKE_CC)
+	@echo $(SNAKE_H)
+	@echo $(SNAKE_O)
+	@echo $(SNAKE_OBJ_PATH)
+
 .PHONY: all
 all: install run
 
 .PHONY: install
 install: $(BIN_DIR) $(LIB) $(GUI_LIB) $(COMMON_H) $(COMMON_BACKEND_H)
-	$(CC) $(CFLAGS) $(MAIN_C) $(LIB) $(GUI_LIB) $(LDGUI) -o $(BIN_DIR)/$(PROJECT_NAME)
+	$(CXX) $(CXXFLAGS) $(MAIN_CC) $(LIB) $(GUI_LIB) $(LDGUI) -o $(BIN_DIR)/$(PROJECT_NAME)
 
 .PHONY: run
 run:
@@ -183,6 +201,9 @@ clang_fix:
 
 clang_check:
 	clang-format -style=Google -n $(ALL_FILES)
+
+cpplint:
+	cpplint $(CC_FILES)
 
 # CREATE DIRECTORIES
 $(OBJ_DIR):
