@@ -9,10 +9,12 @@
  *
  */
 
-#include "./brick_game/tetris/include/fsm.h"
-#include "./gui/cli/include/field_gui.h"
-#include "./gui/cli/include/init_gui.h"
-#include "./gui/cli/include/input_gui.h"
+extern "C" {
+  #include "./brick_game/tetris/include/fsm.h"
+  #include "./gui/cli/include/field_gui.h"
+  #include "./gui/cli/include/init_gui.h"
+  #include "./gui/cli/include/input_gui.h"
+}
 
 static Game_t game;
 
@@ -43,7 +45,7 @@ static void draw_game(windows *wins) {
 static void game_loop() {
   windows *wins = init_windows();
   game.stage = START;
-  game.action = -1;
+  game.action = None;
   int lines = LINES;
   int cols = COLS;
 

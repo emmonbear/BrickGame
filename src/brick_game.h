@@ -41,7 +41,8 @@ typedef enum {
   Right,      ///< Move the current tetromino to the right
   Up,         ///< is not used in this project
   Down,       ///< Move the current tetromino down
-  Action      ///< rotate the current tetromino
+  Action,      ///< rotate the current tetromino
+  None
 } UserAction_t;
 
 #endif  // COMMON_H
