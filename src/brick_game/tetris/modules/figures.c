@@ -16,10 +16,10 @@
 #include <string.h>
 #include <time.h>
 
-static void clear_next(Game_t *s) {
+static void clear_next(Model_t *model) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      s->game_info.next[i][j] = 0;
+      model->game_info.next[i][j] = 0;
     }
   }
 }
@@ -34,17 +34,17 @@ static void clear_next(Game_t *s) {
  * Then, it copies the color and type of the next tetromino to the current
  * tetromino.
  *
- * @param[in, out] s - A pointer to the Game_t object that contains the
+ * @param[in, out] s - A pointer to the Model_t object that contains the
  * game's state and information.
  */
-void copy_next_to_current(Game_t *s) {
+void copy_next_to_current(Model_t *model) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      s->figure.current_figure[i][j] = s->game_info.next[i][j];
+      model->figure.current_figure[i][j] = model->game_info.next[i][j];
     }
   }
-  s->figure.current_color = s->figure.next_color;
-  s->figure.current_type = s->figure.next_type;
+  model->figure.current_color = model->figure.next_color;
+  model->figure.current_type = model->figure.next_type;
 }
 
 /**
@@ -60,63 +60,63 @@ void copy_next_to_current(Game_t *s) {
  * on the generated number, and sets its position on the game field using the x
  * and y coordinates of the "next" position.
  *
- * @param[in, out] s - A pointer to the Game_t object that contains the
+ * @param[in, out] s - A pointer to the Model_t object that contains the
  * game's state and information.
  */
-void generate_new_figure(Game_t *s) {
-  clear_next(s);
+void generate_new_figure(Model_t *model) {
+  clear_next(model);
 
   size_t tmp;
   do {
     tmp = rand() % NUM_TETROMINOS;
-  } while (tmp == s->figure.current_type);
+  } while (tmp == model->figure.current_type);
 
-  s->figure.next_color = tmp + 1;
-  s->figure.next_type = tmp;
-  s->figure.x = 3;
-  s->figure.y = 0;
+  model->figure.next_color = tmp + 1;
+  model->figure.next_type = tmp;
+  model->figure.x = 3;
+  model->figure.y = 0;
 
-  switch (s->figure.next_type) {
+  switch (model->figure.next_type) {
     case TET_I:
-      s->game_info.next[0][0] = s->game_info.next[0][1] =
-          s->game_info.next[0][2] = s->game_info.next[0][3] =
-              s->figure.next_color;
+      model->game_info.next[0][0] = model->game_info.next[0][1] =
+          model->game_info.next[0][2] = model->game_info.next[0][3] =
+              model->figure.next_color;
       break;
 
     case TET_Z:
-      s->game_info.next[0][0] = s->game_info.next[0][1] =
-          s->game_info.next[1][1] = s->game_info.next[1][2] =
-              s->figure.next_color;
+      model->game_info.next[0][0] = model->game_info.next[0][1] =
+          model->game_info.next[1][1] = model->game_info.next[1][2] =
+              model->figure.next_color;
       break;
 
     case TET_S:
-      s->game_info.next[1][0] = s->game_info.next[1][1] =
-          s->game_info.next[0][1] = s->game_info.next[0][2] =
-              s->figure.next_color;
+      model->game_info.next[1][0] = model->game_info.next[1][1] =
+          model->game_info.next[0][1] = model->game_info.next[0][2] =
+              model->figure.next_color;
       break;
 
     case TET_T:
-      s->game_info.next[0][0] = s->game_info.next[0][1] =
-          s->game_info.next[0][2] = s->game_info.next[1][1] =
-              s->figure.next_color;
+      model->game_info.next[0][0] = model->game_info.next[0][1] =
+          model->game_info.next[0][2] = model->game_info.next[1][1] =
+              model->figure.next_color;
       break;
 
     case TET_L:
-      s->game_info.next[0][0] = s->game_info.next[0][1] =
-          s->game_info.next[0][2] = s->game_info.next[1][0] =
-              s->figure.next_color;
+      model->game_info.next[0][0] = model->game_info.next[0][1] =
+          model->game_info.next[0][2] = model->game_info.next[1][0] =
+              model->figure.next_color;
       break;
 
     case TET_J:
-      s->game_info.next[0][0] = s->game_info.next[1][0] =
-          s->game_info.next[1][1] = s->game_info.next[1][2] =
-              s->figure.next_color;
+      model->game_info.next[0][0] = model->game_info.next[1][0] =
+          model->game_info.next[1][1] = model->game_info.next[1][2] =
+              model->figure.next_color;
       break;
 
     case TET_O:
-      s->game_info.next[0][0] = s->game_info.next[0][1] =
-          s->game_info.next[1][0] = s->game_info.next[1][1] =
-              s->figure.next_color;
+      model->game_info.next[0][0] = model->game_info.next[0][1] =
+          model->game_info.next[1][0] = model->game_info.next[1][1] =
+              model->figure.next_color;
       break;
   }
 }

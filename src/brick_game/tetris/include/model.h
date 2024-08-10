@@ -4,16 +4,24 @@
  * @brief Tetris game model header file
  * @version 1.0
  * @date 2024-08-08
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #ifndef MODEL_H
 #define MODEL_H
 
 #include "../../common.h"
-#include "../../../brick_game.h"
+
+/// @brief Number of lines on Field
+#define HEIGHT 20
+
+/// @brief Number of columns on Field
+#define WIDTH 10
+
+/// @brief The size of the tetromino
+#define TETROMINO_SIZE 4
 
 /// @brief Number of states of a finite state machine
 #define NUM_STAGES 7
@@ -23,25 +31,6 @@
 
 /// @brief Amount of experience required to increase the level
 #define SCORE_PER_LEVEL 600
-
-/// @brief Enumeration of states of a Finite-state machine
-typedef enum {
-  START,  ///< the state in which the game waits for the player to press the
-          ///< ready to play button
-  SPAWN,  ///< the state the game switches to when creating the next block and
-          ///< selecting the next block to be spawned
-  SHIFTING,   ///< the state to which the game switches after the timer expires.
-              ///< In this state the current block moves down one level
-  MOVING,     ///< basic game state with user input processing - rotating
-              ///< blocks/moving blocks horizontally
-  PAUSE,      ///< the state in which the game is paused
-  ATTACHING,  ///< the state the game goes to after the current block "touches"
-              ///< the already fallen blocks or the ground. If a filled line is
-              ///< formed, it is destroyed and the remaining blocks are shifted
-              ///< down. If a block is stopped in the topmost row, the game goes
-              ///< to the state "game over"
-  GAME_OVER,  ///< the state that characterizes the end of the game
-} stage_t;
 
 /// @brief Enumeration representing the different types of tetrominoes in the
 /// game.
@@ -86,12 +75,7 @@ typedef struct {
 
 typedef struct {
   GameInfo_t game_info;  ///< Pointer to the game's information
-  stage_t stage;         ///< The current state of the game
   figure_t figure;       ///< Information about figures
-  UserAction_t action;   ///< Pointer to the user's action
-  int timer;             ///< Timer used to control the game's events
-  int game_over;         ///< Flag that indicates if the game is over
-} Game_t;
+} Model_t;
 
 #endif  // MODEL_H
-

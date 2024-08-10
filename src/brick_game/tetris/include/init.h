@@ -35,9 +35,9 @@
   fprintf(stderr, "Memory allocation error\n"); \
   exit(1)
 
-void init_game(Game_t *s);
-void destroy_game(Game_t *s);
-void reset_game_info(Game_t *s);
-void write_high_score(Game_t *s);
+void init_model(Model_t *model);
+void destroy_model(Model_t *model);
+void reset_game_info(Model_t *model);
+void write_high_score(Model_t *model);
 
 #endif  // MODULES_INIT_H

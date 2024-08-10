@@ -14,8 +14,6 @@
 
 #include <ncurses.h>
 
-#include "../../../brick_game.h"
-
 typedef struct {
   int height;
   int width;
@@ -33,7 +31,16 @@ typedef struct {
   window_t start;
   window_t info;
   window_t game_over;
-} windows;
+} View_t;
+
+/// @brief Number of lines on Field
+#define HEIGHT 20
+
+/// @brief Number of columns on Field
+#define WIDTH 10
+
+/// @brief The size of the tetromino
+#define TETROMINO_SIZE 4
 
 /// @brief Size of border
 #define BORDER_SIZE 2
@@ -132,7 +139,6 @@ typedef struct {
 /// @brief X coordinate for the "INFO" window
 #define X_CENTER_INFO (X_CENTER_FIELD) - (INFO_WIDTH)
 
-// PAUSE
 /// @brief Y coordinate for the "PAUSE"
 #define Y_CENTER_PAUSE (Y_CENTER_FIELD)
 

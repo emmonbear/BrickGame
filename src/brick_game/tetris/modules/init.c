@@ -30,20 +30,19 @@ static void destroy_2d_array(int ***array, size_t rows);
  * and the current tetromino's color and type to their initial values. Finally,
  * it sets the game over flag to 0.
  *
- * @param[in,out] s A pointer to the Game_t that contains the game's state
+ * @param[in,out] s A pointer to the Model_t that contains the game's state
  * and information
  */
-void reset_game_info(Game_t *s) {
-  s->game_info.score = 0;
-  s->game_info.high_score = load_max_score();
-  s->game_info.level = 1;
-  s->game_info.speed = 1;
-  s->game_info.pause = 0;
-  s->figure.next_color = -1;
-  s->figure.next_type = -1;
-  s->figure.current_type = -1;
-  s->figure.current_color = -1;
-  s->game_over = 0;
+void reset_game_info(Model_t *model) {
+  model->game_info.score = 0;
+  model->game_info.high_score = load_max_score();
+  model->game_info.level = 1;
+  model->game_info.speed = 1;
+  model->game_info.pause = 0;
+  model->figure.next_color = -1;
+  model->figure.next_type = -1;
+  model->figure.current_type = -1;
+  model->figure.current_color = -1;
 }
 
 /**
@@ -55,18 +54,18 @@ void reset_game_info(Game_t *s) {
  * This function deallocates memory for the game's data structures, including
  * the game field, the next tetromino, and the current tetromino. It also sets
  * the corresponding pointers to NULL to avoid dangling pointers. If the
- * Game_t or any of its data members are not initialized, the function does
+ * Model_t or any of its data members are not initialized, the function does
  * nothing.
  *
- * @param[in,out] s A pointer to the Game_t that contains the game's state
+ * @param[in,out] s A pointer to the Model_t that contains the game's state
  * and information
  */
-void destroy_game(Game_t *s) {
-  if (s) {
-    destroy_2d_array(&(s->game_info.field), HEIGHT);
-    destroy_2d_array(&(s->game_info.next), TETROMINO_SIZE);
-    destroy_2d_array(&(s->figure.current_figure), TETROMINO_SIZE);
-    destroy_2d_array(&(s->figure.rotated_figure), TETROMINO_SIZE);
+void destroy_model(Model_t *model) {
+  if (model) {
+    destroy_2d_array(&(model->game_info.field), HEIGHT);
+    destroy_2d_array(&(model->game_info.next), TETROMINO_SIZE);
+    destroy_2d_array(&(model->figure.current_figure), TETROMINO_SIZE);
+    destroy_2d_array(&(model->figure.rotated_figure), TETROMINO_SIZE);
   }
 }
 
@@ -82,22 +81,22 @@ void destroy_game(Game_t *s) {
  * the next tetromino, and the current tetromino. If any memory allocation
  * fails, the function prints an error message and exits the program with a
  * non-zero status code.
- * @param[in,out] s A pointer to the Game_t that contains the game's state
+ * @param[in,out] s A pointer to the Model_t that contains the game's state
  * and information
  */
-void init_game(Game_t *s) {
+void init_model(Model_t *model) {
   setlocale(LC_ALL, "");
   srand(time(NULL));
 
-  if (!s) {
+  if (!model) {
     MEM_ALLOC_ERROR;
   }
 
-  allocate_2d_array(&(s->game_info.field), HEIGHT, WIDTH);
-  allocate_2d_array(&(s->game_info.next), TETROMINO_SIZE, TETROMINO_SIZE);
-  allocate_2d_array(&(s->figure.current_figure), TETROMINO_SIZE,
+  allocate_2d_array(&(model->game_info.field), HEIGHT, WIDTH);
+  allocate_2d_array(&(model->game_info.next), TETROMINO_SIZE, TETROMINO_SIZE);
+  allocate_2d_array(&(model->figure.current_figure), TETROMINO_SIZE,
                     TETROMINO_SIZE);
-  allocate_2d_array(&(s->figure.rotated_figure), TETROMINO_SIZE,
+  allocate_2d_array(&(model->figure.rotated_figure), TETROMINO_SIZE,
                     TETROMINO_SIZE);
 }
 
@@ -159,10 +158,10 @@ static int load_max_score() {
  * it. It then opens the file in write mode and writes the high score to it. If
  * the file is not opened, the function does nothing.
  *
- * @param[in,out] s A pointer to the Game_t that contains the game's state
+ * @param[in,out] s A pointer to the Model_t that contains the game's state
  * and information
  */
-void write_high_score(Game_t *s) {
+void write_high_score(Model_t *model) {
   char cwd[200];
 
   if (getcwd(cwd, sizeof(cwd))) {
@@ -170,7 +169,7 @@ void write_high_score(Game_t *s) {
     FILE *f = fopen(cwd, "w");
 
     if (f) {
-      fprintf(f, "%d", s->game_info.high_score);
+      fprintf(f, "%d", model->game_info.high_score);
       fclose(f);
     }
   }

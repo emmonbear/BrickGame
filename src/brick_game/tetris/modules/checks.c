@@ -10,12 +10,12 @@
  */
 
 #include "../include/checks.h"
-#include "../include/operations.h"
 
+#include "../include/operations.h"
 #include "stdlib.h"
 
-static void get_score(int lines, Game_t *s);
-static void update_level(Game_t *s);
+static void get_score(int lines, Model_t *model);
+static void update_level(Model_t *model);
 
 /**
  * @brief Checks if a cell is inside the current tetromino.
@@ -29,19 +29,19 @@ static void update_level(Game_t *s);
  * the function has checked all the cells and the res variable is still false,
  * it returns false.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the game's
+ * @param[in, out] s A pointer to the Model_t object that contains the game's
  * state and information.
  * @param[in] y The y-coordinate of the cell to check.
  * @param[in] x The x-coordinate of the cell to check.
  * @return bool - true if the cell is inside the current tetromino, false
  * otherwise.
  */
-bool is_inside_figure(Game_t *s, int y, int x) {
+bool is_inside_figure(Model_t *model, int y, int x) {
   bool res = false;
   for (int i = 0; i < TETROMINO_SIZE; i++) {
     for (int j = 0; j < TETROMINO_SIZE; j++) {
-      if ((s->figure.current_figure[i][j]) && ((s->figure.y + i) == y) &&
-          ((s->figure.x + j) == x)) {
+      if ((model->figure.current_figure[i][j]) &&
+          ((model->figure.y + i) == y) && ((model->figure.x + j) == x)) {
         res = true;
       }
     }
@@ -62,22 +62,24 @@ bool is_inside_figure(Game_t *s, int y, int x) {
  * false and returns it. If the function has checked all the cells and the res
  * variable is still true, it returns true.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the game's
+ * @param[in, out] s A pointer to the Model_t object that contains the game's
  * state and information.
  * @return bool - true if the current tetromino can be moved right, false
  * otherwise.
  */
-bool can_move_right(Game_t *s) {
+bool can_move_right(Model_t *model) {
   bool res = true;
 
   for (int i = 0; i < TETROMINO_SIZE; i++) {
     for (int j = TETROMINO_SIZE - 1; j > 0; j--) {
-      if (s->figure.current_figure[i][j]) {
-        if (s->figure.x + j > WIDTH - 2) {
+      if (model->figure.current_figure[i][j]) {
+        if (model->figure.x + j > WIDTH - 2) {
           res = false;
           break;
-        } else if (s->game_info.field[s->figure.y + i][s->figure.x + j + 1] &&
-                   !is_inside_figure(s, s->figure.y + i, s->figure.x + j + 1)) {
+        } else if (model->game_info
+                       .field[model->figure.y + i][model->figure.x + j + 1] &&
+                   !is_inside_figure(model, model->figure.y + i,
+                                     model->figure.x + j + 1)) {
           res = false;
         }
       }
@@ -99,26 +101,29 @@ bool can_move_right(Game_t *s) {
  * and returns it. If the function has checked all the cells and the res
  * variable is still true, it returns true.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the game's
+ * @param[in, out] s A pointer to the Model_t object that contains the game's
  * state and information.
  * @return bool - true if the current tetromino can be moved left, false
  * otherwise.
  */
-bool can_move_left(Game_t *s) {
+bool can_move_left(Model_t *model) {
   bool res = true;
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (s->figure.current_figure[i][j]) {
-        if (s->figure.x + j < 1) {
+      if (model->figure.current_figure[i][j]) {
+        if (model->figure.x + j < 1) {
           res = false;
-        } else if ((s->game_info.field[s->figure.y + i][s->figure.x + j - 1]) &&
-                   !is_inside_figure(s, s->figure.y + i, s->figure.x + j - 1)) {
+        } else if ((model->game_info
+                        .field[model->figure.y + i][model->figure.x + j - 1]) &&
+                   !is_inside_figure(model, model->figure.y + i,
+                                     model->figure.x + j - 1)) {
           res = false;
         }
       }
     }
   }
+
   return res;
 }
 
@@ -135,23 +140,24 @@ bool can_move_left(Game_t *s) {
  * function sets the res variable to false and returns it. If the function has
  * checked all the cells and the res variable is still true, it returns true.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the game's
+ * @param[in, out] s A pointer to the Model_t object that contains the game's
  * state and information.
  * @return bool - true if the current tetromino can be rotated, false otherwise.
  */
-bool can_rotate(Game_t *s) {
+bool can_rotate(Model_t *model) {
   bool res = true;
 
-  remove_figure(s);
+  remove_figure(model);
   for (size_t i = 0; i < TETROMINO_SIZE && res; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE && res; j++) {
-      if (s->figure.rotated_figure[i][j]) {
-        int new_x = s->figure.x + j;
-        int new_y = s->figure.y + i;
+      if (model->figure.rotated_figure[i][j]) {
+        int new_x = model->figure.x + j;
+        int new_y = model->figure.y + i;
 
-        if ((new_x < 0 || new_x >= WIDTH || s->game_info.field[new_y][new_x])) {
+        if ((new_x < 0 || new_x >= WIDTH ||
+             model->game_info.field[new_y][new_x])) {
           res = false;
-          put_figure(s);
+          put_figure(model);
         }
       }
     }
@@ -172,21 +178,23 @@ bool can_rotate(Game_t *s) {
  * returns it. If the function has checked all the cells and the res variable is
  * still true, it returns true.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the game's
+ * @param[in, out] s A pointer to the Model_t object that contains the game's
  * state and information.
  * @return bool - true if the current tetromino can be moved down, false
  * otherwise.
  */
-bool can_move_down(Game_t *s) {
+bool can_move_down(Model_t *model) {
   bool res = true;
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (s->figure.current_figure[i][j]) {
-        if (s->figure.y + i >= HEIGHT - 1) {
+      if (model->figure.current_figure[i][j]) {
+        if (model->figure.y + i >= HEIGHT - 1) {
           res = false;
-        } else if (s->game_info.field[s->figure.y + i + 1][s->figure.x + j] &&
-                   !is_inside_figure(s, s->figure.y + i + 1, s->figure.x + j)) {
+        } else if (model->game_info
+                       .field[model->figure.y + i + 1][model->figure.x + j] &&
+                   !is_inside_figure(model, model->figure.y + i + 1,
+                                     model->figure.x + j)) {
           res = false;
         }
       }
@@ -209,34 +217,34 @@ bool can_move_down(Game_t *s) {
  * full_lines variable is greater than 0, it updates the score and level using
  * the get_score() and update_level() functions.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the game's
+ * @param[in, out] s A pointer to the Model_t object that contains the game's
  * state and information.
  */
-void check_full_lines(Game_t *s) {
+void check_full_lines(Model_t *model) {
   int full_lines = 0;
 
   for (size_t i = 0; i < HEIGHT; i++) {
     int filled = 1;
     for (size_t j = 0; (j < WIDTH) && (filled != 0); j++) {
-      if (!s->game_info.field[i][j]) {
+      if (!model->game_info.field[i][j]) {
         filled = 0;
       }
     }
     if (filled) {
       for (size_t k = i; k > 0; k--) {
         for (size_t l = 0; l < WIDTH; l++) {
-          s->game_info.field[k][l] = s->game_info.field[k - 1][l];
+          model->game_info.field[k][l] = model->game_info.field[k - 1][l];
         }
       }
       full_lines++;
       i--;
     }
   }
-  get_score(full_lines, s);
-  update_level(s);
+  get_score(full_lines, model);
+  update_level(model);
 }
 
-static void get_score(int lines, Game_t *s) {
+static void get_score(int lines, Model_t *model) {
   int score = 0;
 
   switch (lines) {
@@ -257,17 +265,17 @@ static void get_score(int lines, Game_t *s) {
       break;
   }
 
-  s->game_info.score += score;
+  model->game_info.score += score;
 
-  if (s->game_info.high_score < s->game_info.score) {
-    s->game_info.high_score = s->game_info.score;
+  if (model->game_info.high_score < model->game_info.score) {
+    model->game_info.high_score = model->game_info.score;
   }
 }
 
-static void update_level(Game_t *s) {
-  while (s->game_info.score >= SCORE_PER_LEVEL * (s->game_info.level)) {
-    if (s->game_info.level < MAX_LEVEL) {
-      s->game_info.level++;
+static void update_level(Model_t *model) {
+  while (model->game_info.score >= SCORE_PER_LEVEL * (model->game_info.level)) {
+    if (model->game_info.level < MAX_LEVEL) {
+      model->game_info.level++;
     } else {
       break;
     }
@@ -285,18 +293,18 @@ static void update_level(Game_t *s) {
  * and returns it. If the function has checked all the cells and the res
  * variable is still true, it returns true.
  *
- * @param[in, out] s - A pointer to the Game_t object that contains the
+ * @param[in, out] s - A pointer to the Model_t object that contains the
  * game's state and information.
  * @return bool - true if a new tetromino can be placed on the game field, false
  * otherwise.
  */
-bool can_put_new_line(Game_t *s) {
+bool can_put_new_line(Model_t *model) {
   bool res = true;
 
   for (size_t i = 0; i < TETROMINO_SIZE && res; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE && res; j++) {
-      if (s->game_info.next[i][j] &&
-          s->game_info.field[i + s->figure.y][j + s->figure.x]) {
+      if (model->game_info.next[i][j] &&
+          model->game_info.field[i + model->figure.y][j + model->figure.x]) {
         res = false;
       }
     }

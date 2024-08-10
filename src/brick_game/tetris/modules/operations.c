@@ -13,7 +13,7 @@
 
 #include <stdlib.h>
 
-static void reset_position(Game_t *s);
+static void reset_position(Model_t *model);
 
 /**
  * @brief Puts the current tetromino on the game field.
@@ -25,15 +25,15 @@ static void reset_position(Game_t *s);
  * the current tetromino. The function does not check if the current tetromino
  * collides with other tetrominoes or the boundaries of the game field.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the
+ * @param[in, out] s A pointer to the Model_t object that contains the
  * game's state and information.
  */
-void put_figure(Game_t *s) {
+void put_figure(Model_t *model) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (s->figure.current_figure[i][j]) {
-        s->game_info.field[s->figure.y + i][s->figure.x + j] =
-            s->figure.current_color;
+      if (model->figure.current_figure[i][j]) {
+        model->game_info.field[model->figure.y + i][model->figure.x + j] =
+            model->figure.current_color;
       }
     }
   }
@@ -48,14 +48,14 @@ void put_figure(Game_t *s) {
  * vertical coordinate of the figure by one, and then puts the figure back on
  * the game field.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the
+ * @param[in, out] s A pointer to the Model_t object that contains the
  game's state and information.
 
  */
-void move_down(Game_t *s) {
-  remove_figure(s);
-  s->figure.y++;
-  put_figure(s);
+void move_down(Model_t *model) {
+  remove_figure(model);
+  model->figure.y++;
+  put_figure(model);
 }
 
 /**
@@ -64,14 +64,14 @@ void move_down(Game_t *s) {
  * This function iterates over the cells of the current figure and, if a cell is
  * occupied, sets the corresponding cell in the game field to 0 (empty).
  *
- * @param[in, out] s A pointer to the Game_t object that contains the
+ * @param[in, out] s A pointer to the Model_t object that contains the
  * game's state and information.
  */
-void remove_figure(Game_t *s) {
+void remove_figure(Model_t *model) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (s->figure.current_figure[i][j]) {
-        s->game_info.field[s->figure.y + i][s->figure.x + j] = 0;
+      if (model->figure.current_figure[i][j]) {
+        model->game_info.field[model->figure.y + i][model->figure.x + j] = 0;
       }
     }
   }
@@ -88,14 +88,14 @@ void remove_figure(Game_t *s) {
  * the x-coordinate of the figure by one, and then puts the figure back on the
  * game field using the put_figure() function.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the
+ * @param[in, out] s A pointer to the Model_t object that contains the
  * game's state and information.
  */
-void move_left(Game_t *s) {
-  if (can_move_left(s)) {
-    remove_figure(s);
-    s->figure.x--;
-    put_figure(s);
+void move_left(Model_t *model) {
+  if (can_move_left(model)) {
+    remove_figure(model);
+    model->figure.x--;
+    put_figure(model);
   }
 }
 
@@ -110,14 +110,14 @@ void move_left(Game_t *s) {
  * the x-coordinate of the figure by one, and then puts the figure back on the
  * game field using the put_figure() function.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the
+ * @param[in, out] s A pointer to the Model_t object that contains the
  * game's state and information.
  */
-void move_right(Game_t *s) {
-  if (can_move_right(s)) {
-    remove_figure(s);
-    s->figure.x++;
-    put_figure(s);
+void move_right(Model_t *model) {
+  if (can_move_right(model)) {
+    remove_figure(model);
+    model->figure.x++;
+    put_figure(model);
   }
 }
 
@@ -131,17 +131,17 @@ void move_right(Game_t *s) {
  * figure from the game field using the remove_figure() function, and puts the
  * rotated figure back on the game field using the put_figure() function.
  *
- * @param[in, out] s A pointer to the Game_t object that contains the
+ * @param[in, out] s A pointer to the Model_t object that contains the
  * game's state and information.
  */
-void rotate_figure(Game_t *s) {
+void rotate_figure(Model_t *model) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      s->figure.current_figure[i][j] = s->figure.rotated_figure[i][j];
-      s->figure.rotated_figure[i][j] = 0;
+      model->figure.current_figure[i][j] = model->figure.rotated_figure[i][j];
+      model->figure.rotated_figure[i][j] = 0;
     }
   }
-  put_figure(s);
+  put_figure(model);
 }
 
 /**
@@ -155,34 +155,34 @@ void rotate_figure(Game_t *s) {
  * figure's rotated matrix. Finally, it shifts the resulting shape relative to
  * the top left block
  *
- * @param[in, out] s A pointer to the Game_t object that contains the
+ * @param[in, out] s A pointer to the Model_t object that contains the
  * game's state and information.
  */
-void get_rotated_figure(Game_t *s) {
+void get_rotated_figure(Model_t *model) {
   // Transpose matrix
   int tmp[TETROMINO_SIZE][TETROMINO_SIZE];
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      tmp[i][j] = s->figure.current_figure[j][i];
+      tmp[i][j] = model->figure.current_figure[j][i];
     }
   }
 
   // Reversing columns
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      s->figure.rotated_figure[i][j] = tmp[i][TETROMINO_SIZE - 1 - j];
+      model->figure.rotated_figure[i][j] = tmp[i][TETROMINO_SIZE - 1 - j];
     }
   }
-  reset_position(s);
+  reset_position(model);
 }
 
-static void reset_position(Game_t *s) {
+static void reset_position(Model_t *model) {
   size_t min_x = 2;
   size_t min_y = 2;
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (s->figure.rotated_figure[i][j]) {
+      if (model->figure.rotated_figure[i][j]) {
         if (i < min_y) {
           min_y = i;
         }
@@ -195,10 +195,10 @@ static void reset_position(Game_t *s) {
 
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (s->figure.rotated_figure[i][j]) {
-        s->figure.rotated_figure[i - min_y][j - min_x] =
-            s->figure.rotated_figure[i][j];
-        s->figure.rotated_figure[i][j] = 0;
+      if (model->figure.rotated_figure[i][j]) {
+        model->figure.rotated_figure[i - min_y][j - min_x] =
+            model->figure.rotated_figure[i][j];
+        model->figure.rotated_figure[i][j] = 0;
       }
     }
   }
@@ -211,13 +211,13 @@ static void reset_position(Game_t *s) {
  * This function iterates over the cells of the game field using a nested loop
  * and sets each cell to 0 (empty).
  *
- * @param[in, out] s A pointer to the Game_t object that contains the
+ * @param[in, out] s A pointer to the Model_t object that contains the
  * game's state and information
  */
-void reset_field(Game_t *s) {
+void reset_field(Model_t *model) {
   for (size_t i = 0; i < HEIGHT; i++) {
     for (size_t j = 0; j < WIDTH; j++) {
-      s->game_info.field[i][j] = 0;
+      model->game_info.field[i][j] = 0;
     }
   }
 }

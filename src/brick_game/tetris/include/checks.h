@@ -16,12 +16,12 @@
 
 #include "./model.h"
 
-bool can_move_down(Game_t *s);
-bool can_move_left(Game_t *s);
-bool can_move_right(Game_t *s);
-bool can_rotate(Game_t *s);
-bool is_inside_figure(Game_t *s, int y, int x);
-void check_full_lines(Game_t *s);
-bool can_put_new_line(Game_t *s);
+bool can_move_down(Model_t *model);
+bool can_move_left(Model_t *model);
+bool can_move_right(Model_t *model);
+bool can_rotate(Model_t *model);
+bool is_inside_figure(Model_t *model, int y, int x);
+void check_full_lines(Model_t *model);
+bool can_put_new_line(Model_t *model);
 
 #endif  // MODULES_CHECKS_H

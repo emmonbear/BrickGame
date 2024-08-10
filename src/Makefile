@@ -1,197 +1,121 @@
-PROJECT_NAME = brick_game
-EXE_FILENAME = game
+#================================ PROJECT NAME =================================
+PROJECT_NAME          := brick_game
 
-# COMPILER 
-CC = gcc
+#================================== FILENAMES ==================================
+CLI                   := $(PROJECT_NAME)_cli
+MAX_SCORE_FILE        := $(PROJECT_NAME)/tetris/max_score.txt
 
-# FLAGS
-CFLAGS = -Wall -Wextra -Werror -std=c11 -pedantic
-LDFLAGS = -lcheck -lsubunit -lm
+#================================== COMPILER =================================== 
+CC                    := gcc
+CXX                   := g++
 
-LDGUI = -lncurses
-VALGRIND = --tool=memcheck --leak-check=yes
-GCOV_FLAGS = -fprofile-arcs -ftest-coverage
+#==================================== FLAGS ====================================
+CFLAGS                := -Wall -Wextra -std=c11 -pedantic
+CXXFLAGS              := -Wall -Wextra -std=c++17
+LDFLAGS               := -lcheck -lsubunit -lm
+LDGUI                 := -lncurses
+VALGRIND              := --tool=memcheck --leak-check=yes
+GCOV_FLAGS            := -fprofile-arcs -ftest-coverage
 
-# TARGET NAMES
-LIB = $(PROJECT_NAME).a
-GUI_LIB = $(PROJECT_NAME)_gui.a
-TARGET = test
-GCOV = gcov_report
+#=============================== TARGET NAMES =================================
+MODEL_LIB             := model.a
+VIEW_LIB              := view.a
+CONTROLLER_LIB        := controller.a
+TARGET                := test
+GCOV                  := gcov_report
 
-# DIRECTORY NAMES
-OBJ_DIR = ./obj
-REPORT_DIR = ./report
-TESTS_DIR = ./tests
-GUI_DIR = ./gui/cli
-DOCS_DIR = ../docs
-TETRIS_DIR = ./brick_game/tetris
-BIN_DIR = ../bin
-DIST_DIR = ../dist
+#=============================== DIRECTORY NAMES ===============================
+MODEL_DIR             := ./brick_game/tetris
+VIEW_DIR              := ./gui/cli
+CONTROLLER_DIR        := ./controller/tetris
+OBJ_DIR               := ./obj
+REPORT_DIR            := ./report
+TESTS_DIR             := ./tests
+DOCS_DIR              := ../docs
+BIN_DIR               := ../bin
+DIST_DIR              := ../dist
 
-# MAIN
-MAIN_CC = $(PROJECT_NAME).cc
+#================================== MAIN FILE ==================================
+MAIN                  := $(PROJECT_NAME).cc
 
-# COMMON HEADER FOR FRONTEND AND BACKEND 
-COMMON_H = $(PROJECT_NAME).h
+#================================ COMMON MODEL =================================
+COMMON_MODEL_H        := $(PROJECT_NAME)/common.h
 
-# COMMON HEADER FOR BACKEND
-COMMON_BACKEND_H = $(PROJECT_NAME)/common.h
+#================================== FILE LIST ==================================
+#=============================== TETRIS CLI VIEW ===============================
+VIEW_C                := $(shell find $(VIEW_DIR) -type f -name "*.c")
+VIEW_H                := $(shell find $(VIEW_DIR) -type f -name "*.h")
+VIEW_O                := $(VIEW_C:$(VIEW_DIR)/modules/%.c=$(OBJ_DIR)/tetris/view/%.o)
 
-# LIST OF FILES AND DIRECTORIES IN TETRIS DIRECTORY
-TETRIS_DIRS = $(shell find $(TETRIS_DIR) -type d)
-TETRIS_C = $(shell find $(TETRIS_DIR) -type f -name "*.c")
-TETRIS_H = $(shell find $(TETRIS_DIR) -type f -name "*.h")
-TETRIS_O = $(notdir $(TETRIS_C:%.c=%.o))
-TETRIS_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(TETRIS_O))
+#================================ TETRIS MODEL =================================
+MODEL_C               := $(shell find $(MODEL_DIR) -type f -name "*.c")
+MODEL_H               := $(shell find $(MODEL_DIR) -type f -name "*.h")
+MODEL_O               := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR)/tetris/model/%.o)
 
-# LIST OF FILES AND DIRECTORIES IN GUI_DIR
-GUI_DIRS = $(shell find $(GUI_DIR) -type d)
-GUI_C = $(shell find $(GUI_DIR) -type f -name "*.c")
-GUI_H = $(shell find $(GUI_DIR) -type f -name "*.h")
-GUI_O = $(notdir $(GUI_C:%.c=%.o))
-GUI_OBJ_PATH = $(addprefix $(OBJ_DIR)/, $(GUI_O))
+#============================== TETRIS CONTROLLER ==============================
+CONTROLLER_C          := $(shell find $(CONTROLLER_DIR) -type f -name "*.c")
+CONTROLLER_H          := $(shell find $(CONTROLLER_DIR) -type f -name "*.h")
+CONTROLLER_O          := $(CONTROLLER_C:$(CONTROLLER_DIR)/modules/%.c=$(OBJ_DIR)/tetris/controller/%.o)
 
-# LIST OF FILES TO CLANG-FORMAT AND CPPCHECK
-C_FILES = $(TETRIS_C) $(GUI_C) $(TESTS_C)
-H_FILES = $(TETRIS_H) $(GUI_H) $(COMMON_H) $(TESTS_H) $(COMMON_BACKEND_H)
-ALL_FILES = $(C_FILES) $(H_FILES)
+#======================= LIST OF FILES FOR CLANG-FORMAT ========================
+C_FILES               := $(VIEW_C) $(MODEL_C) $(CONTROLLER_C) $(MAIN)
+H_FILES               := $(VIEW_H) $(MODEL_H) $(CONTROLLER_H)
 
-# LIST of FILES AND DIRECTORIES IN TESTS
-TESTS_DIRS = $(shell find $(TESTS_DIR) -type d)
-TESTS_C = $(shell find $(TESTS_DIR) -type f -name "*.c")
-TESTS_H = $(shell find $(TESTS_DIR) -type f -name "*.h")
-TESTS_O = $(notdir $(TESTS_C:%.c=%.o))
-TESTS_OBJ_PATH = $(OBJ_DIR)/*_test.o
-
-# CONFIGURING PATH TO SEARH FOR UNPREFIXED PATHS
-vpath %.c $(TETRIS_DIRS) : $(GUI_DIRS) : $(TESTS_DIRS)
-vpath %.o $(OBJ_DIR)
-
-# TARGETS
-
-m:
-	@echo $(SNAKE_DIRS)
-	@echo $(SNAKE_CC)
-	@echo $(SNAKE_H)
-	@echo $(SNAKE_O)
-	@echo $(SNAKE_OBJ_PATH)
-
-.PHONY: all
-all: install run
-
-.PHONY: install
-install: $(BIN_DIR) $(LIB) $(GUI_LIB) $(COMMON_H) $(COMMON_BACKEND_H)
-	$(CXX) $(CXXFLAGS) $(MAIN_CC) $(LIB) $(GUI_LIB) $(LDGUI) -o $(BIN_DIR)/$(PROJECT_NAME)
-
-.PHONY: run
-run:
-	$(BIN_DIR)/$(PROJECT_NAME)
-
-.PHONY: uninstall
-uninstall: clean
-	rm -rf $(BIN_DIR)
-	rm -rf $(DOCS_DIR)
-	rm -f ./brick_game/tetris/max_score.txt
-
-.PHONY: $(LIB)
-$(LIB): $(OBJ_DIR) $(TETRIS_O) $(TETRIS_H)
-	ar rcs $@ $(TETRIS_OBJ_PATH)
-	ranlib $@
-
-.PHONY: $(GUI_LIB)
-$(GUI_LIB): $(OBJ_DIR) $(GUI_O) $(GUI_H)
-	ar rcs $@ $(GUI_OBJ_PATH)
-	ranlib $@
-
-.PHONY: $(TARGET)
-$(TARGET): $(OBJ_DIR) $(TESTS_O) $(LIB)
-	$(CC) $(TESTS_OBJ_PATH) $(LIB) $(LDFLAGS) -o $@
-	./$@
-
-.PHONE: $(GCOV)
-$(GCOV): $(OBJ_DIR) $(REPORT_DIR) $(TESTS_O)
-	$(CC) $(TESTS_OBJ_PATH) $(TETRIS_C) $(LDFLAGS) $(GCOV_FLAGS) -o $(addprefix $(OBJ_DIR)/, $(TARGET))
-	-./$(addprefix $(OBJ_DIR)/, $(TARGET))
-	gcovr -r . --html --html-details -o $(REPORT_DIR)/coverage.html
-	xdg-open $(REPORT_DIR)/coverage.html
-
-.PHONY: dvi
-dvi:
-	rm -rf $(DOCS_DIR)
-	doxygen Doxyfile
-
-.PHONY: dvi_open
-dvi_open:
-	xdg-open $(DOCS_DIR)/html/index.html
-
-.PHONY: clean
-clean:
-	rm -rf $(REPORT_DIR)
-	rm -rf $(OBJ_DIR)
-	rm -rf $(DOCS_DIR)
-	rm -f $(LIB)
-	rm -f $(GUI_LIB)
-	rm -rf $(BIN_DIR)
-	rm -f ./val.txt
-	rm -f $(TARGET)
-	rm -rf $(DIST_DIR)
-
-.PHONY: dist
-dist: uninstall dvi $(DIST_DIR) $(LIB) $(GUI_LIB) install
-	cp $(LIB) $(GUI_LIB) $(DIST_DIR)
-	cp -r $(DOCS_DIR) $(DIST_DIR)
-	cp -r $(BIN_DIR) $(DIST_DIR)
-	tar -czf $(PROJECT_NAME).tar.gz  $(DIST_DIR)
-	rm -rf $(DIST_DIR)
-
-
-.PHONY: rebuild
-rebuild: clean install
-
-.PHONY: dependencies
-dependencies:
-	sudo apt install libgtest-dev -y
-	sudo apt install python3-pip
-	pip install cpplint
-
-
-# OBJECTIVE TARGETS
-%.o: %.c ${TETRIS_H}
-	$(CC) $(CFLAGS) -c -o $(addprefix $(OBJ_DIR)/, $@) $<
-
-%_gui.o: gui_%.c $(GUI_H)
-	$(CC) $(CFLAGS) -c -o $(addprefix $(OBJ_DIR)/, $@) $<
-
-# CHECKS
-valgrind: $(TARGET)
-	@printf '\033[1;33m\n\t\t\t\t                   _            _           _   _            _   _             \n'
-	@printf '\t\t\t\t                  | |          (_)         | | | |          | | (_)            \n'
-	@printf '\t\t\t\t       __   ____ _| | __ _ _ __ _ _ __   __| | | |_ ___  ___| |_ _ _ __   __ _ \n'
-	@printf '\t\t\t\t       \ \ / / _` | |/ _` | '\''__| | '\''_ \ / _` | | __/ _ \/ __| __| | '\''_ \ / _` |\n'
-	@printf '\t\t\t\t        \ V / (_| | | (_| | |  | | | | | (_| | | ||  __/\__ \ |_| | | | | (_| |\n'
-	@printf '\t\t\t\t         \_/ \__,_|_|\__, |_|  |_|_| |_|\__,_|  \__\___||___/\__|_|_| |_|\__, |\n'
-	@printf '\t\t\t\t                      __/ |                                               __/ |\n'
-	@printf '\t\t\t\t                     |___/                                               |___/ \n\033[0m\n'
-
-	@$@ $(VALGRIND) ./$(TARGET) > val.txt 2>&1 && \
-	{ \
-		printf "\033[1;33m\n"; \
-		printf "###########################################################################################################################################################\n\n"; \
-		printf "                                                                 Valgrind test results:\n"; \
-		printf "                                                                Passed tests $$(grep "ERROR SUMMARY: 0" -c val.txt) from $$(grep "ERROR SUMMARY:" -c val.txt)\n\n"; \
-		printf "###########################################################################################################################################################\n"; \
-		printf "\033[0m\n"; \
-	}
-
+#================================ CLANG-FORMAT =================================
 clang_fix:
-	clang-format -style=Google -i $(ALL_FILES)
+	clang-format -style=Google -i $(C_FILES) $(H_FILES)
 
 clang_check:
-	clang-format -style=Google -n $(ALL_FILES)
+	clang-format -style=Google -n $(C_FILES) $(H_FILES)
 
-# CREATE DIRECTORIES
+#=================================== TARGETS ===================================
+.PHONY: all install run clean $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB)
+
+all: install run
+
+val:
+	valgrind $(BIN_DIR)/$(CLI)
+
+install: $(BIN_DIR) $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB)
+	$(CXX) $(CXXFLAGS) $(MAIN) $(CONTROLLER_LIB) $(MODEL_LIB) $(VIEW_LIB) $(LDGUI) -o $(BIN_DIR)/$(CLI)
+
+run:
+	$(BIN_DIR)/$(CLI)
+
+$(MODEL_LIB): $(OBJ_DIR) $(MODEL_O)
+	ar rcs $@ $(MODEL_O)
+	ranlib $@
+
+$(VIEW_LIB): $(OBJ_DIR) $(VIEW_O)
+	ar rcs $@ $(VIEW_O)
+	ranlib $@
+
+$(CONTROLLER_LIB): $(OBJ_DIR) $(CONTROLLER_O)
+	ar rcs $@ $(CONTROLLER_O)
+	ranlib $@
+
+clean:
+	rm -rf $(OBJ_DIR)
+	rm -f $(VIEW_LIB)
+	rm -f $(MODEL_LIB)
+	rm -f $(CONTROLLER_LIB)
+	rm -rf $(BIN_DIR)
+
+#============================== OBJECTIVE TARGETS ==============================
+$(OBJ_DIR)/tetris/model/%.o: $(MODEL_DIR)/modules/%.c $(MODEL_H) $(COMMON_MODEL_H)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)/tetris/view/%.o: $(VIEW_DIR)/modules/%.c $(VIEW_H)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)/tetris/controller/%.o: $(CONTROLLER_DIR)/modules/%.c $(CONTROLLER_H)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+#============================= CREATE DIRECTORIES ==============================
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)/tetris/model
+	mkdir -p $(OBJ_DIR)/tetris/view
+	mkdir -p $(OBJ_DIR)/tetris/controller
 
 $(REPORT_DIR):
 	mkdir -p $(REPORT_DIR)
@@ -201,4 +125,3 @@ $(BIN_DIR):
 
 $(DIST_DIR):
 	mkdir -p $(DIST_DIR)
-

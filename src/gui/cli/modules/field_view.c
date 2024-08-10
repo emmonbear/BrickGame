@@ -9,9 +9,11 @@
  *
  */
 
-#include "../include/field_gui.h"
+#include "../include/field_view.h"
 
 #include <string.h>
+
+#include "../include/init_view.h"
 
 static void set_color_figure(WINDOW *w, int color_index) {
   switch (color_index) {
@@ -42,6 +44,12 @@ static void set_color_figure(WINDOW *w, int color_index) {
   }
 }
 
+/**
+ * @brief Draws the game field on the screen.
+ * @param[in] field A pointer to the game field's matrix.
+ * @param[in] w A pointer to the ncurses window where the game field will be
+ * drawn.
+ */
 void draw_field(int **field, WINDOW *w) {
   box(w, 0, 0);
   for (size_t i = 0; i < HEIGHT; i++) {
@@ -56,6 +64,13 @@ void draw_field(int **field, WINDOW *w) {
   wrefresh(w);
 }
 
+/**
+ * @brief Draws the next tetromino on the screen.
+ *
+ * @param[in] next A pointer to the game field's matrix.
+ * @param[in] w A pointer to the ncurses window where the game field will be
+ * drawn.
+ */
 void draw_next(int **next, WINDOW *w) {
   box(w, 0, 0);
   int center_x = (NEXT_WIDTH - strlen("NEXT")) / 2;
@@ -85,6 +100,13 @@ void draw_next(int **next, WINDOW *w) {
   wrefresh(w);
 }
 
+/**
+ * @brief Draws the score window on the screen
+ *
+ * @param[in] score Current game score
+ * @param[in] w A pointer to the ncurses window where the game field will be
+ * drawn.
+ */
 void draw_score(int score, WINDOW *w) {
   box(w, 0, 0);
   int center_x_1 = (SCORE_WIDTH - strlen("SCORE")) / 2;
@@ -100,6 +122,13 @@ void draw_score(int score, WINDOW *w) {
   wrefresh(w);
 }
 
+/**
+ * @brief Draws the level window on the screen
+ *
+ * @param[in] level Current game level
+ * @param[in] w A pointer to the ncurses window where the game field will be
+ * drawn.
+ */
 void draw_level(int level, WINDOW *w) {
   box(w, 0, 0);
   int center_x_1 = (LEVEL_WIDTH - strlen("LEVEL")) / 2;
@@ -114,6 +143,13 @@ void draw_level(int level, WINDOW *w) {
   wrefresh(w);
 }
 
+/**
+ * @brief Draws the high score window on the screen
+ *
+ * @param[in] high_score Current game high score
+ * @param[in] w A pointer to the ncurses window where the game field will be
+ * drawn.
+ */
 void draw_high_score(int high_score, WINDOW *w) {
   box(w, 0, 0);
   int center_x_1 = (LEVEL_WIDTH - strlen("HIGH SCORE")) / 2;
@@ -128,15 +164,19 @@ void draw_high_score(int high_score, WINDOW *w) {
   wrefresh(w);
 }
 
+/**
+ * @brief Draws start window on the screen
+ *
+ * @param[in] w A pointer to the ncurses window where the game field will be
+ * drawn.
+ */
 void draw_start_screen(WINDOW *w) {
   box(w, 0, 0);
   wattron(w, A_BOLD | COLOR_PAIR(4));
-  mvwprintw(w, 1, 3, "  _______ ______ _______ _____  _____  _____ ");
-  mvwprintw(w, 2, 3, " |__   __|  ____|__   __|  __ \\|_   _|/ ____|");
-  mvwprintw(w, 3, 3, "    | |  | |__     | |  | |__) | | | | (___  ");
-  mvwprintw(w, 4, 3, "    | |  |  __|    | |  |  _  /  | |  \\___ \\ ");
-  mvwprintw(w, 5, 3, "    | |  | |____   | |  | | \\ \\ _| |_ ____) |");
-  mvwprintw(w, 6, 3, "    |_|  |______|  |_|  |_|  \\_\\_____|_____/ ");
+  mvwprintw(w, 1, 5, "   ___      _     __   _____  ");
+  mvwprintw(w, 2, 5, "  / _ )____(_)___/ /__/ ___/__ ___ _  ___");
+  mvwprintw(w, 3, 5, " / _  / __/ / __/  '_/ (_ / _ `/  ' \\/ -_)");
+  mvwprintw(w, 4, 5, "/____/_/ /_/\\__/_/\\_\\\\___/\\_,_/_/_/_/\\__/");
 
   wstandend(w);
 
@@ -157,6 +197,12 @@ void draw_start_screen(WINDOW *w) {
   wrefresh(w);
 }
 
+/**
+ * @brief Draws info window on the screen
+ *
+ * @param[in] w A pointer to the ncurses window where the game field will be
+ * drawn.
+ */
 void draw_info(WINDOW *w) {
   box(w, 0, 0);
   int center_x_1 = (INFO_WIDTH - strlen("INFO")) / 2;
@@ -180,6 +226,10 @@ void draw_info(WINDOW *w) {
   wrefresh(w);
 }
 
+/**
+ * @brief Draws pause on the screen
+ *
+ */
 void draw_pause() {
   attron(A_BOLD | A_BLINK | COLOR_PAIR(5));
 
@@ -199,6 +249,14 @@ void draw_pause() {
   standend();
 }
 
+/**
+ * @brief Draws game over window on the screen
+ *
+ * @param[in] w A pointer to the ncurses window where the game field will be
+ * drawn.
+ * @param[in] score Game score
+ * @param[in] high_score Game high score
+ */
 void draw_game_over(WINDOW *w, int score, int high_score) {
   box(w, 0, 0);
   wattron(w, A_BOLD | COLOR_PAIR(4));
@@ -224,4 +282,37 @@ void draw_game_over(WINDOW *w, int score, int high_score) {
   wstandend(w);
 
   wrefresh(w);
+}
+
+/**
+ * @brief Updates the windows for the game.
+ *
+ * @details
+ *
+ * This function takes a pointer to a pointer to a `windows` struct and two
+ * pointers to integers representing the current number of lines and columns on
+ * the screen. It checks if the current number of lines and columns is different
+ * from the number of lines and columns that were used to initialize the
+ * windows. If the number of lines and columns has changed, the function
+ * destroys the current windows using the `destroy_windows()` function, clears
+ * the screen using the `clear()` function from the ncurses library, and
+ * initializes new windows using the `init_windows()` function. The function
+ * then updates the values of the pointers to the current number of lines and
+ * columns.
+ *
+ * @param[in, out] wins - A pointer to a pointer to the `windows` struct to be
+ * updated.
+ * @param[in, out] lines - A pointer to an integer representing the current
+ * number of lines on the screen.
+ * @param[in, out] cols - A pointer to an integer representing the current
+ * number of columns on the screen.
+ */
+void resize_windows(View_t *view, int *lines, int *cols) {
+  if (*lines != LINES || *cols != COLS) {
+    destroy_view(view);
+    clear();
+    init_view(view);
+    *lines = LINES;
+    *cols = COLS;
+  }
 }
