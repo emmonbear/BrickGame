@@ -55,10 +55,16 @@ void draw_field(int **field, WINDOW *w) {
   for (size_t i = 0; i < HEIGHT; i++) {
     wmove(w, i + 1, 1);
     for (size_t j = 0; j < WIDTH; j++) {
-      set_color_figure(w, field[i][j]);
-      waddch(w, '[');
-      waddch(w, ']');
-      wstandend(w);
+      if (field[i][j] == 0) {
+        waddch(w, ' ');
+        waddch(w, ' ');
+        wstandend(w);
+      } else {
+        set_color_figure(w, field[i][j]);
+        waddch(w, '[');
+        waddch(w, ']');
+        wstandend(w);
+      }
     }
   }
   wrefresh(w);
@@ -92,9 +98,15 @@ void draw_next(int **next, WINDOW *w) {
     wmove(w, i + 3, 2);
     for (int j = 0; j < TETROMINO_SIZE; j++) {
       set_color_figure(w, next[i][j]);
-      waddch(w, '[');
-      waddch(w, ']');
-      wstandend(w);
+      if (next[i][j] == 0) {
+        waddch(w, ' ');
+        waddch(w, ' ');
+        wstandend(w);
+      } else {
+        waddch(w, '[');
+        waddch(w, ']');
+        wstandend(w);
+      }
     }
   }
   wrefresh(w);
