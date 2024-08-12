@@ -22,5 +22,6 @@
 
 void generate_new_figure(Model_t *model);
 void copy_next_to_current(Model_t *model);
+type_t generate_random(type_t current_type);
 
 #endif  // MODULES_FIGURE_GENERATOR

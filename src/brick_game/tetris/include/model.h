@@ -50,6 +50,7 @@ typedef enum {
           ///< block.
   TET_O,  ///< The "O" shaped tetromino, consisting of four blocks arranged in a
           ///< 2x2 square.
+  NONE
 } type_t;
 
 /**
