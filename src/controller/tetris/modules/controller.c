@@ -20,10 +20,8 @@ static void shifting_stage(Controller_t *controller);
 static void pause_stage(Controller_t *controller);
 static void attaching_stage(Controller_t *controller);
 static void game_over_stage(Controller_t *controller);
-static void run_state(Controller_t *controller);
 static void get_user_input(Controller_t *controller);
 static void draw_game(View_t *wins, const Model_t *model, const stage_t stage);
-static int get_current_time();
 
 Controller_t *init_controller() {
   Controller_t *controller = (Controller_t *)malloc(sizeof(Controller_t));
@@ -66,6 +64,8 @@ static void start_stage(Controller_t *controller) {
 static void spawn_stage(Controller_t *controller) {
   copy_next_to_current(&controller->model);
   put_figure(&controller->model);
+  controller->model.figure.next_type =
+      generate_random(controller->model.figure.current_type);
   generate_new_figure(&controller->model);
   controller->stage = SHIFTING;
 }
@@ -101,11 +101,7 @@ static void moving_stage(Controller_t *controller) {
 
 static void shifting_stage(Controller_t *controller) {
   int current_time = get_current_time();
-  int wait_time = 1000 - (controller->model.game_info.level * 100);
-
-  if (wait_time < 100) {
-    wait_time = 100;
-  }
+  int wait_time = 1100 - (controller->model.game_info.level * 100);
 
   if (can_move_down(&controller->model)) {
     if (current_time - controller->timer >= wait_time) {
@@ -168,6 +164,8 @@ static void game_over_stage(Controller_t *controller) {
     case Start:
       reset_field(&controller->model);
       reset_game_info(&controller->model);
+      controller->model.figure.next_type =
+          generate_random(controller->model.figure.current_type);
       generate_new_figure(&controller->model);
       controller->stage = SPAWN;
       controller->game_over = 0;
@@ -180,7 +178,7 @@ static void game_over_stage(Controller_t *controller) {
   }
 }
 
-static void run_state(Controller_t *controller) {
+void run_state(Controller_t *controller) {
   static func_ptr state_funcs[NUM_STAGES] = {
       start_stage, spawn_stage,     shifting_stage, moving_stage,
       pause_stage, attaching_stage, game_over_stage};
@@ -214,7 +212,7 @@ static void get_user_input(Controller_t *controller) {
       controller->action = Terminate;
       break;
     default:
-      controller->action = -1;
+      controller->action = None;
       break;
   }
 }
@@ -248,6 +246,8 @@ void game_loop(Controller_t *controller) {
   int cols = COLS;
 
   reset_game_info(&controller->model);
+  controller->model.figure.next_type =
+      generate_random(controller->model.figure.current_type);
   generate_new_figure(&controller->model);
 
   while (!controller->game_over) {
@@ -258,4 +258,4 @@ void game_loop(Controller_t *controller) {
   }
 }
 
-static int get_current_time() { return (int)(clock() * 1000 / CLOCKS_PER_SEC); }
+int get_current_time() { return (int)(clock() * 1000 / CLOCKS_PER_SEC); }

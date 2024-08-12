@@ -74,9 +74,10 @@ typedef struct {
 } Controller_t;
 
 typedef void (*func_ptr)(Controller_t *controller);
-
+void run_state(Controller_t *controller);
 Controller_t *init_controller();
 void game_loop(Controller_t *controller);
 void destroy_controller(Controller_t *controller);
+int get_current_time();
 
 #endif  // TETRIS_CONTROLLER_H
