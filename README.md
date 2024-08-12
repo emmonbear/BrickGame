@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="docs/images/logo.png" alt="Logo">
+    <img src="misc/images/logo.png" alt="Logo">
   </a>
 
   <h3 align="center">BrickGame</h3>
