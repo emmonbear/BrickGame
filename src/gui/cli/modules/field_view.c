@@ -15,6 +15,8 @@
 
 #include "../include/init_view.h"
 
+static void set_color_figure(WINDOW *w, int color_index);
+
 /**
  * @brief Draws the game field on the specified window.
  *
