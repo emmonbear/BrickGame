@@ -4,6 +4,7 @@ PROJECT_NAME          := brick_game
 #================================== FILENAMES ==================================
 CLI                   := $(PROJECT_NAME)_cli
 MAX_SCORE_FILE        := $(PROJECT_NAME)/tetris/max_score.txt
+DIST_ARCHIVE          := $(DIST_DIR)/$(PROJECT_NAME).tar.gz
 
 #================================== COMPILER =================================== 
 CC                    := gcc
@@ -52,7 +53,7 @@ VIEW_O_COV            := $(VIEW_C:$(VIEW_DIR)/modules/%.c=$(OBJ_DIR_COV)/tetris/
 MODEL_C               := $(shell find $(MODEL_DIR) -type f -name "*.c")
 MODEL_H               := $(shell find $(MODEL_DIR) -type f -name "*.h")
 MODEL_O               := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR)/tetris/model/%.o)
-MODEL_O_COV            := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR_COV)/tetris/model/%.o)
+MODEL_O_COV           := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR_COV)/tetris/model/%.o)
 
 #============================== TETRIS CONTROLLER ==============================
 CONTROLLER_C          := $(shell find $(CONTROLLER_DIR) -type f -name "*.c")
@@ -99,10 +100,9 @@ $(OBJ_DIR_COV)/tests/%.o: $(TESTS_DIR)/modules/%.cc
 
 #=================================== TARGETS ===================================
 .PHONY: all install run clean $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB) \
-				preferences $(GCOV) $(TEST) $(DVI)
+				preferences $(GCOV) $(TEST) $(DVI) $(DIST)
 
 all: install run
-
 
 install: $(BIN_DIR) $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB)
 	$(CXX) $(CXXFLAGS) $(MAIN) $(CONTROLLER_LIB) $(MODEL_LIB) $(VIEW_LIB) $(LDGUI) -o $(BIN_DIR)/$(CLI)
@@ -111,6 +111,8 @@ uninstall: clean
 	rm -f $(MAX_SCORE_FILE)
 	rm -rf $(BIN_DIR)
 	rm -rf $(DOCS_DIR)
+	rm -rf $(DIST_DIR)
+	rm -rf $(REPORT_DIR)
 
 run:
 	$(BIN_DIR)/$(CLI)
@@ -145,12 +147,11 @@ preferences:
 
 clean:
 	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR_COV)
 	rm -f $(VIEW_LIB)
 	rm -f $(MODEL_LIB)
 	rm -f $(CONTROLLER_LIB)
 	rm -f $(TEST)
-	rm -rf $(REPORT_DIR)
-	rm -rf $(OBJ_DIR_COV)
 
 #================================= GCOV REPORT =================================
 GCOVR_EXCLUDES := --exclude='.*gui/cli/.*|.*tests/.*'
@@ -179,8 +180,12 @@ clang_check:
 cpplint:
 	cpplint $(CC_FILES)
 
+#================================= DIST TARGET =================================
+dist: clean $(DIST_DIR)
+	tar -czf $(DIST_ARCHIVE) -C ../ .
+
 #=========================== GENERATE DOCUMENTATION ============================
-$(DVI):
+$(DVI): 
 	rm -rf $(DOCS_DIR)
 	doxygen Doxyfile
 
