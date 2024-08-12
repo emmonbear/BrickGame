@@ -1,7 +1,7 @@
 /**
  * @file field_gui.h
  * @author emmonbea (moskaleviluak@icloud.com)
- * @brief
+ * @brief Field view module
  * @version 1.0
  * @date 2024-05-11
  *

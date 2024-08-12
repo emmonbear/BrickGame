@@ -1,7 +1,7 @@
 /**
  * @file init_gui.h
  * @author emmonbea (moskaleviluak@icloud.com)
- * @brief
+ * @brief Initialize view header
  * @version 1.0
  * @date 2024-05-11
  *

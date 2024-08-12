@@ -16,24 +16,23 @@
 static void init_window(window_t *w, int height, int width, int y, int x);
 
 /**
- * @brief Initializes the screen and sets up the colors for the game.
+ * @brief Initializes the terminal screen for the game.
  *
- * @details
- * This function initializes the screen using the initscr() function from the
- * ncurses library. It also sets up the screen to be in raw mode, to not delay
- * input, to not echo input, and to enable the keypad. The function sets the
- * cursor to be invisible and starts the color system using the start_color()
- * function from the ncurses library. Finally, the function initializes the
- * color pairs using the init_pair() function from the ncurses library.
+ * @details This function sets up the terminal for the game by initializing
+ * ncurses mode, configuring input settings, and setting up color pairs for
+ * different game elements. It ensures that the terminal is in raw mode,
+ * disables echoing of typed characters, and makes the cursor invisible.
  */
 void init_screen() {
-  initscr();
-  raw();
-  nodelay(stdscr, TRUE);
-  noecho();
-  keypad(stdscr, TRUE);
-  curs_set(0);
-  start_color();
+  initscr();              // Initialize ncurses mode
+  raw();                  // Disable line buffering
+  nodelay(stdscr, TRUE);  // Set non-blocking input
+  noecho();               // Disable echoing of typed characters
+  keypad(stdscr, TRUE);   // Enable special keys to be read
+  curs_set(0);            // Hide the cursor
+  start_color();          // Enable color functionality
+
+  // Initialize color pairs
   init_pair(0, COLOR_WHITE, COLOR_BLACK);
   init_pair(1, COLOR_BLUE, COLOR_BLACK);
   init_pair(2, COLOR_CYAN, COLOR_BLACK);
@@ -45,16 +44,15 @@ void init_screen() {
 }
 
 /**
- * @brief Initializes the View_t for the game.
+ * @brief Initializes the view components for the game.
  *
- * @details
- * This function allocates memory for a `View_t` struct using the `malloc()`
- * function from the C standard library. It then initializes each window in the
- * struct using the `init_window()` function. The View_t include the game
- * field, the next tetromino, the score, the high score, the level, the start
- * window, the info window, and the game over window.
+ * @details This function sets up the windows for different game elements
+ * (field, next, score, high score, level, start screen, info, and game over) by
+ * calling `init_window` for each component with the appropriate dimensions and
+ * positions.
  *
- * @return View_t* A pointer to the initialized `View_t` struct.
+ * @param view A pointer to the View_t structure that contains all the windows
+ * to be initialized.
  */
 void init_view(View_t *view) {
   if (view) {
@@ -78,15 +76,13 @@ void init_view(View_t *view) {
 }
 
 /**
- * @brief Destroys the windows for the game.
+ * @brief Destroys the view components of the game.
  *
- * @details
- * This function takes a pointer to a pointer to a `windows` struct and destroys
- * each window in the struct using the `delwin()` function from the ncurses
- * library. It then frees the memory allocated for the struct using the `free()`
- * function from the C standard library.
+ * @details This function deletes all the windows created for the different game
+ * elements (field, next, score, high score, level, start screen, info, and game
+ * over) by calling `delwin` for each window.
  *
- * @param[in,out] view - A pointer to a pointer to the `windows` struct to be
+ * @param view A pointer to the View_t structure containing the windows to be
  * destroyed.
  */
 void destroy_view(View_t *view) {

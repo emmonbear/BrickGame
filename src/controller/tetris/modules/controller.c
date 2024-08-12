@@ -22,7 +22,18 @@ static void attaching_stage(Controller_t *controller);
 static void game_over_stage(Controller_t *controller);
 static void get_user_input(Controller_t *controller);
 static void draw_game(View_t *wins, const Model_t *model, const stage_t stage);
+static int get_current_time();
 
+/**
+ * @brief Initializes a new controller structure.
+ *
+ * @details Allocates memory for the `Controller_t` structure, initializes
+ * the model and view components, and sets default values for the action,
+ * stage, timer, and game_over fields. The function will handle memory
+ * allocation errors and initialize the controller to a default state.
+ *
+ * @return A pointer to the newly created `Controller_t` structure.
+ */
 Controller_t *init_controller() {
   Controller_t *controller = (Controller_t *)malloc(sizeof(Controller_t));
 
@@ -40,11 +51,78 @@ Controller_t *init_controller() {
   return controller;
 }
 
+/**
+ * @brief Frees the resources allocated for the controller.
+ *
+ * @details This function deallocates the memory used by the `Controller_t`
+ * structure, including its model and view components. It first destroys the
+ * view and model associated with the controller before freeing the controller's
+ * own memory. The function handles the case where the controller pointer is
+ * NULL.
+ *
+ * @param controller A pointer to the `Controller_t` structure to be destroyed.
+ */
 void destroy_controller(Controller_t *controller) {
   if (controller) {
     destroy_view(&controller->view);
     destroy_model(&controller->model);
     free(controller);
+  }
+}
+
+/**
+ * @brief Executes the function corresponding to the current stage of the game.
+ *
+ * @details This function uses an array of function pointers, `state_funcs`,
+ * where each function corresponds to a specific stage of the game. It calls the
+ * function associated with the current stage of the game, as indicated by the
+ * `stage` field in the `Controller_t` structure. The `Controller_t` pointer is
+ * passed to the stage function, allowing it to modify the game's state as
+ * needed.
+ *
+ * @param controller A pointer to the `Controller_t` structure that holds the
+ *                   current state of the game.
+ */
+void run_state(Controller_t *controller) {
+  static func_ptr state_funcs[NUM_STAGES] = {
+      start_stage, spawn_stage,     shifting_stage, moving_stage,
+      pause_stage, attaching_stage, game_over_stage};
+
+  state_funcs[controller->stage](controller);
+}
+
+/**
+ * @brief Runs the main game loop, handling game state updates and rendering.
+ *
+ * @details This function initializes the game state by resetting game
+ * information, generating a new tetromino figure, and then enters a loop that
+ * continues until the game is over. Within the loop, it performs the following
+ * actions:
+ * - Adjusts the window size if needed.
+ * - Executes the function associated with the current game stage.
+ * - Captures user input to determine the next action.
+ * - Renders the current game state to the view.
+ *
+ * The loop will break when the `game_over` flag in the `Controller_t` structure
+ * is set to true.
+ *
+ * @param controller A pointer to the `Controller_t` structure that manages the
+ * game's state, view, and user actions.
+ */
+void game_loop(Controller_t *controller) {
+  int lines = LINES;
+  int cols = COLS;
+
+  reset_game_info(&controller->model);
+  controller->model.figure.next_type =
+      generate_random(controller->model.figure.current_type);
+  generate_new_figure(&controller->model);
+
+  while (!controller->game_over) {
+    resize_windows(&controller->view, &lines, &cols);
+    run_state(controller);
+    get_user_input(controller);
+    draw_game(&controller->view, &controller->model, controller->stage);
   }
 }
 
@@ -178,14 +256,6 @@ static void game_over_stage(Controller_t *controller) {
   }
 }
 
-void run_state(Controller_t *controller) {
-  static func_ptr state_funcs[NUM_STAGES] = {
-      start_stage, spawn_stage,     shifting_stage, moving_stage,
-      pause_stage, attaching_stage, game_over_stage};
-
-  state_funcs[controller->stage](controller);
-}
-
 static void get_user_input(Controller_t *controller) {
   switch (getch()) {
     case KEY_LEFT:
@@ -241,21 +311,4 @@ static void draw_game(View_t *wins, const Model_t *model, const stage_t stage) {
   }
 }
 
-void game_loop(Controller_t *controller) {
-  int lines = LINES;
-  int cols = COLS;
-
-  reset_game_info(&controller->model);
-  controller->model.figure.next_type =
-      generate_random(controller->model.figure.current_type);
-  generate_new_figure(&controller->model);
-
-  while (!controller->game_over) {
-    resize_windows(&controller->view, &lines, &cols);
-    run_state(controller);
-    get_user_input(controller);
-    draw_game(&controller->view, &controller->model, controller->stage);
-  }
-}
-
-int get_current_time() { return (int)(clock() * 1000 / CLOCKS_PER_SEC); }
+static int get_current_time() { return (int)(clock() * 1000 / CLOCKS_PER_SEC); }

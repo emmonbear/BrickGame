@@ -15,40 +15,16 @@
 
 #include "../include/init_view.h"
 
-static void set_color_figure(WINDOW *w, int color_index) {
-  switch (color_index) {
-    case 0:
-      wattron(w, COLOR_PAIR(0) | A_DIM);
-      break;
-    case 1:
-      wattron(w, COLOR_PAIR(1) | A_BOLD);
-      break;
-    case 2:
-      wattron(w, COLOR_PAIR(2) | A_BOLD);
-      break;
-    case 3:
-      wattron(w, COLOR_PAIR(3) | A_BOLD);
-      break;
-    case 4:
-      wattron(w, COLOR_PAIR(4) | A_BOLD);
-      break;
-    case 5:
-      wattron(w, COLOR_PAIR(5) | A_BOLD);
-      break;
-    case 6:
-      wattron(w, COLOR_PAIR(6) | A_BOLD);
-      break;
-    case 7:
-      wattron(w, COLOR_PAIR(7) | A_BOLD);
-      break;
-  }
-}
-
 /**
- * @brief Draws the game field on the screen.
- * @param[in] field A pointer to the game field's matrix.
- * @param[in] w A pointer to the ncurses window where the game field will be
- * drawn.
+ * @brief Draws the game field on the specified window.
+ *
+ * @details This function renders the game field by drawing a border around the
+ * window, then iterating over each cell in the field. It prints empty spaces
+ * for cells with a value of 0, and colored brackets for non-zero values, using
+ * the specified colors for different figures.
+ *
+ * @param field A 2D array representing the game field.
+ * @param w The window where the field will be drawn.
  */
 void draw_field(int **field, WINDOW *w) {
   box(w, 0, 0);
@@ -71,11 +47,16 @@ void draw_field(int **field, WINDOW *w) {
 }
 
 /**
- * @brief Draws the next tetromino on the screen.
+ * @brief Draws the next tetromino on the specified window.
  *
- * @param[in] next A pointer to the game field's matrix.
- * @param[in] w A pointer to the ncurses window where the game field will be
- * drawn.
+ * @details This function renders the "NEXT" section of the game UI. It first
+ * draws a border around the window and then prints the "NEXT" label at the top.
+ * It then displays the next tetromino figure within the window, using colored
+ * brackets for non-zero values and spaces for zero values. The figure is drawn
+ * in a fixed-size grid.
+ *
+ * @param next A 2D array representing the next tetromino figure.
+ * @param w The window where the next tetromino will be drawn.
  */
 void draw_next(int **next, WINDOW *w) {
   box(w, 0, 0);
@@ -113,11 +94,15 @@ void draw_next(int **next, WINDOW *w) {
 }
 
 /**
- * @brief Draws the score window on the screen
+ * @brief Draws the current score on the specified window.
  *
- * @param[in] score Current game score
- * @param[in] w A pointer to the ncurses window where the game field will be
- * drawn.
+ * @details This function renders the "SCORE" section of the game UI. It first
+ * draws a border around the window and then prints the "SCORE" label at the
+ * top. The current score is displayed below the label, centered within the
+ * window. The score is formatted as a string and displayed in bold text.
+ *
+ * @param score The current score to be displayed.
+ * @param w The window where the score will be drawn.
  */
 void draw_score(int score, WINDOW *w) {
   box(w, 0, 0);
@@ -135,11 +120,15 @@ void draw_score(int score, WINDOW *w) {
 }
 
 /**
- * @brief Draws the level window on the screen
+ * @brief Draws the current game level on the specified window.
  *
- * @param[in] level Current game level
- * @param[in] w A pointer to the ncurses window where the game field will be
- * drawn.
+ * @details This function renders the "LEVEL" section of the game UI. It first
+ * draws a border around the window and then prints the "LEVEL" label at the
+ * top. The current level is displayed below the label, centered within the
+ * window. The level is formatted as a string and displayed in bold text.
+ *
+ * @param level The current game level to be displayed.
+ * @param w The window where the level will be drawn.
  */
 void draw_level(int level, WINDOW *w) {
   box(w, 0, 0);
@@ -156,11 +145,16 @@ void draw_level(int level, WINDOW *w) {
 }
 
 /**
- * @brief Draws the high score window on the screen
+ * @brief Draws the high score on the specified window.
  *
- * @param[in] high_score Current game high score
- * @param[in] w A pointer to the ncurses window where the game field will be
- * drawn.
+ * @details This function renders the "HIGH SCORE" section of the game UI. It
+ * draws a border around the window and then prints the "HIGH SCORE" label at
+ * the top. The current high score is displayed below the label, centered within
+ * the window. The high score is formatted as a string and displayed in bold
+ * text.
+ *
+ * @param high_score The current high score to be displayed.
+ * @param w The window where the high score will be drawn.
  */
 void draw_high_score(int high_score, WINDOW *w) {
   box(w, 0, 0);
@@ -177,10 +171,15 @@ void draw_high_score(int high_score, WINDOW *w) {
 }
 
 /**
- * @brief Draws start window on the screen
+ * @brief Draws the start screen of the game on the specified window.
  *
- * @param[in] w A pointer to the ncurses window where the game field will be
- * drawn.
+ * @details This function renders the initial screen displayed when the game
+ * starts. It includes a stylized text logo, instructions to press "ENTER" to
+ * begin, and a credit line for the designer. The logo and text are displayed
+ * with various attributes such as bold and blinking text to attract attention.
+ * The credit line is also displayed in bold.
+ *
+ * @param w The window where the start screen will be drawn.
  */
 void draw_start_screen(WINDOW *w) {
   box(w, 0, 0);
@@ -210,10 +209,15 @@ void draw_start_screen(WINDOW *w) {
 }
 
 /**
- * @brief Draws info window on the screen
+ * @brief Draws the game information panel on the specified window.
  *
- * @param[in] w A pointer to the ncurses window where the game field will be
- * drawn.
+ * @details This function displays a panel with instructions and controls for
+ * the game. It includes labels for various actions such as moving left, right,
+ * down, pausing the game, performing an action, and exiting the game. The
+ * instructions are accompanied by corresponding symbols or characters to
+ * visually represent each control.
+ *
+ * @param w The window where the information panel will be drawn.
  */
 void draw_info(WINDOW *w) {
   box(w, 0, 0);
@@ -239,8 +243,12 @@ void draw_info(WINDOW *w) {
 }
 
 /**
- * @brief Draws pause on the screen
+ * @brief Draws the pause screen on the terminal.
  *
+ * @details This function displays a bold, blinking "PAUSE" message in the
+ * center of the terminal to indicate that the game is currently paused. The
+ * message is displayed using ASCII art to give a prominent visual cue to the
+ * player.
  */
 void draw_pause() {
   attron(A_BOLD | A_BLINK | COLOR_PAIR(5));
@@ -262,12 +270,15 @@ void draw_pause() {
 }
 
 /**
- * @brief Draws game over window on the screen
+ * @brief Draws the game over screen on the terminal.
  *
- * @param[in] w A pointer to the ncurses window where the game field will be
- * drawn.
- * @param[in] score Game score
- * @param[in] high_score Game high score
+ * @details This function displays a "GAME OVER" message in bold with an ASCII
+ * art representation indicating that the game has ended. It also shows the
+ * final score and high score.
+ *
+ * @param w The window to draw on.
+ * @param score The final score of the game.
+ * @param high_score The highest score achieved.
  */
 void draw_game_over(WINDOW *w, int score, int high_score) {
   box(w, 0, 0);
@@ -297,27 +308,17 @@ void draw_game_over(WINDOW *w, int score, int high_score) {
 }
 
 /**
- * @brief Updates the windows for the game.
+ * @brief Resizes the game windows if the terminal size has changed.
  *
- * @details
+ * @details This function checks if the dimensions of the terminal have changed.
+ * If they have, it destroys the existing view windows, clears the screen, and
+ * reinitializes the view with the new terminal size.
  *
- * This function takes a pointer to a pointer to a `windows` struct and two
- * pointers to integers representing the current number of lines and columns on
- * the screen. It checks if the current number of lines and columns is different
- * from the number of lines and columns that were used to initialize the
- * windows. If the number of lines and columns has changed, the function
- * destroys the current windows using the `destroy_windows()` function, clears
- * the screen using the `clear()` function from the ncurses library, and
- * initializes new windows using the `init_windows()` function. The function
- * then updates the values of the pointers to the current number of lines and
+ * @param view Pointer to the view structure containing game windows.
+ * @param lines Pointer to the variable holding the current number of terminal
+ * lines.
+ * @param cols Pointer to the variable holding the current number of terminal
  * columns.
- *
- * @param[in, out] wins - A pointer to a pointer to the `windows` struct to be
- * updated.
- * @param[in, out] lines - A pointer to an integer representing the current
- * number of lines on the screen.
- * @param[in, out] cols - A pointer to an integer representing the current
- * number of columns on the screen.
  */
 void resize_windows(View_t *view, int *lines, int *cols) {
   if (*lines != LINES || *cols != COLS) {
@@ -326,5 +327,34 @@ void resize_windows(View_t *view, int *lines, int *cols) {
     init_view(view);
     *lines = LINES;
     *cols = COLS;
+  }
+}
+
+static void set_color_figure(WINDOW *w, int color_index) {
+  switch (color_index) {
+    case 0:
+      wattron(w, COLOR_PAIR(0) | A_DIM);
+      break;
+    case 1:
+      wattron(w, COLOR_PAIR(1) | A_BOLD);
+      break;
+    case 2:
+      wattron(w, COLOR_PAIR(2) | A_BOLD);
+      break;
+    case 3:
+      wattron(w, COLOR_PAIR(3) | A_BOLD);
+      break;
+    case 4:
+      wattron(w, COLOR_PAIR(4) | A_BOLD);
+      break;
+    case 5:
+      wattron(w, COLOR_PAIR(5) | A_BOLD);
+      break;
+    case 6:
+      wattron(w, COLOR_PAIR(6) | A_BOLD);
+      break;
+    case 7:
+      wattron(w, COLOR_PAIR(7) | A_BOLD);
+      break;
   }
 }

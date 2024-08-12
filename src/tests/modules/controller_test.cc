@@ -1,8 +1,22 @@
+/**
+ * @file controller_test.cc
+ * @author emmonbea (moskaleviluak@icloud.com)
+ * @brief Controller tests
+ * @version 1.0
+ * @date 2024-08-12
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include "../main_test.h"
 
 class ControllerTest : public ::testing::Test {
  protected:
-  void SetUp() override { controller = init_controller(); }
+  void SetUp() override {
+    controller = init_controller();
+    reset_game_info(&controller->model);
+  }
 
   void TearDown() override { destroy_controller(controller); }
 

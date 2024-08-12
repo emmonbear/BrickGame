@@ -50,16 +50,16 @@ typedef enum {
           ///< block.
   TET_O,  ///< The "O" shaped tetromino, consisting of four blocks arranged in a
           ///< 2x2 square.
-  NONE
+  NONE    ///< Represents the absence of tetrominoes, used to initialise a piece
+          ///< in the initial game state
 } type_t;
 
 /**
- * @brief Struct representing a tetromino figure in the game.
+ * @brief Represents the state and attributes of a tetromino figure in the game.
  *
- * This structure contains information about the current and next tetromino
- * shapes, their types, colors, coordinates of the current figure and
- * two-dimensional arrays representing the inverted figure and the current
- * figure
+ * This structure stores the details about the current and next tetromino
+ * figures, including their types, positions, colors, and shapes. It also holds
+ * the shape of the current figure after rotation.
  */
 typedef struct {
   type_t next_type;      ///< The type of the next tetromino figure.
@@ -74,6 +74,14 @@ typedef struct {
                          ///< tetromino figure after rotation.
 } figure_t;
 
+/**
+ * @brief Represents the model of the game, containing game information and the
+ * current figure.
+ *
+ * This structure holds the core data required to manage the game's state,
+ * including the game's overall information and the details of the current
+ * figure being manipulated.
+ */
 typedef struct {
   GameInfo_t game_info;  ///< Pointer to the game's information
   figure_t figure;       ///< Information about figures

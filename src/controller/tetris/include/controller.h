@@ -42,7 +42,7 @@ typedef enum {
   Up,         ///< is not used in this project
   Down,       ///< Move the current tetromino down
   Action,     ///< rotate the current tetromino
-  None
+  None        ///< No action
 } UserAction_t;
 
 /// @brief Enumeration of states of a Finite-state machine
@@ -64,13 +64,21 @@ typedef enum {
   GAME_OVER,  ///< the state that characterizes the end of the game
 } stage_t;
 
+/**
+ * @brief The controller structure for managing game state and user
+ * interactions.
+ *
+ * @details This structure integrates the game model, view, and user actions to
+ * control the game flow and update the game state. It also handles the game
+ * stage and timing, as well as tracking whether the game has ended.
+ */
 typedef struct {
-  Model_t model;
-  View_t view;
-  UserAction_t action;
-  stage_t stage;
-  int timer;
-  bool game_over;
+  Model_t model;  ///< The game model, containing game data and logic
+  View_t view;    ///< The game view, responsible for rendering the game state
+  UserAction_t action;  ///< The current user action (e.g., start, pause, move)
+  stage_t stage;        ///< The current stage or level of the game
+  int timer;            ///< The game timer for managing game speed or intervals
+  bool game_over;       ///< Flag indicating whether the game is over
 } Controller_t;
 
 typedef void (*func_ptr)(Controller_t *controller);
@@ -78,6 +86,5 @@ void run_state(Controller_t *controller);
 Controller_t *init_controller();
 void game_loop(Controller_t *controller);
 void destroy_controller(Controller_t *controller);
-int get_current_time();
 
 #endif  // TETRIS_CONTROLLER_H

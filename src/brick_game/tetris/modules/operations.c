@@ -16,17 +16,17 @@
 static void reset_position(Model_t *model);
 
 /**
- * @brief Puts the current tetromino on the game field.
+ * @brief Places the current tetromino figure onto the game field.
  *
  * @details
  *
- * This function iterates over the cells of the current tetromino and, if a cell
- * is occupied, sets the corresponding cell of the game field to the color of
- * the current tetromino. The function does not check if the current tetromino
- * collides with other tetrominoes or the boundaries of the game field.
+ * This function iterates over the cells of the current tetromino figure and
+ * updates the corresponding cells in the game field with the color of the
+ * current tetromino. The position on the game field is determined by the
+ * current coordinates of the tetromino figure.
  *
- * @param[in, out] s A pointer to the Model_t object that contains the
- * game's state and information.
+ * @param model A pointer to the game model containing the current tetromino
+ * figure and the game field.
  */
 void put_figure(Model_t *model) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
@@ -40,17 +40,17 @@ void put_figure(Model_t *model) {
 }
 
 /**
- * @brief Moves the current figure down by one unit.
+ * @brief Moves the current tetromino figure down by one row.
  *
  * @details
  *
- * This function removes the current figure from the game field, increments the
- * vertical coordinate of the figure by one, and then puts the figure back on
- * the game field.
+ * This function removes the current tetromino figure from its current position
+ * on the game field, updates its vertical position to move it one row down, and
+ * then places the tetromino figure back onto the game field at the new
+ * position.
  *
- * @param[in, out] s A pointer to the Model_t object that contains the
- game's state and information.
-
+ * @param model A pointer to the game model containing the current tetromino
+ * figure and the game field.
  */
 void move_down(Model_t *model) {
   remove_figure(model);
@@ -59,13 +59,17 @@ void move_down(Model_t *model) {
 }
 
 /**
- * @brief Removes the current figure from the game field.
+ * @brief Removes the current tetromino figure from the game field.
  *
- * This function iterates over the cells of the current figure and, if a cell is
- * occupied, sets the corresponding cell in the game field to 0 (empty).
+ * @details
  *
- * @param[in, out] s A pointer to the Model_t object that contains the
- * game's state and information.
+ * This function iterates over the cells of the current tetromino figure and
+ * clears the corresponding cells in the game field by setting them to 0. This
+ * effectively removes the tetromino from the game field, allowing for a new
+ * position to be calculated or a new tetromino to be placed.
+ *
+ * @param model A pointer to the game model containing the current tetromino
+ * figure and the game field.
  */
 void remove_figure(Model_t *model) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
@@ -78,18 +82,18 @@ void remove_figure(Model_t *model) {
 }
 
 /**
- * @brief Moves the current figure one unit to the left.
+ * @brief Moves the current tetromino figure left by one column.
  *
  * @details
  *
- * This function first checks if the figure can be moved to the left using the
- * can_move_left() function. If the function returns true, the function removes
- * the figure from the game field using the remove_figure() function, decrements
- * the x-coordinate of the figure by one, and then puts the figure back on the
- * game field using the put_figure() function.
+ * This function first checks if the current tetromino figure can move left by
+ * verifying that there is no collision with the game field boundaries or other
+ * figures. If the move is possible, the function removes the tetromino from its
+ * current position, updates its horizontal position to move it one column left,
+ * and then places the tetromino back onto the game field at the new position.
  *
- * @param[in, out] s A pointer to the Model_t object that contains the
- * game's state and information.
+ * @param model A pointer to the game model containing the current tetromino
+ * figure and the game field.
  */
 void move_left(Model_t *model) {
   if (can_move_left(model)) {
@@ -100,18 +104,19 @@ void move_left(Model_t *model) {
 }
 
 /**
- * @brief Moves the current figure one unit to the right.
+ * @brief Moves the current tetromino figure right by one column.
  *
  * @details
  *
- * This function first checks if the figure can be moved to the right using the
- * can_move_right() function. If the function returns true, the function removes
- * the figure from the game field using the remove_figure() function, increments
- * the x-coordinate of the figure by one, and then puts the figure back on the
- * game field using the put_figure() function.
+ * This function first checks if the current tetromino figure can move right by
+ * verifying that there is no collision with the game field boundaries or other
+ * figures. If the move is possible, the function removes the tetromino from its
+ * current position, updates its horizontal position to move it one column
+ * right, and then places the tetromino back onto the game field at the new
+ * position.
  *
- * @param[in, out] s A pointer to the Model_t object that contains the
- * game's state and information.
+ * @param model A pointer to the game model containing the current tetromino
+ * figure and the game field.
  */
 void move_right(Model_t *model) {
   if (can_move_right(model)) {
@@ -122,17 +127,19 @@ void move_right(Model_t *model) {
 }
 
 /**
- * @brief Rotates the current figure on the game field.
+ * @brief Rotates the current tetromino figure and places it on the game field.
  *
  * @details
  *
- * This function first copies the current figure's rotation state into the
- * current figure's matrix using a nested loop. Then, it removes the current
- * figure from the game field using the remove_figure() function, and puts the
- * rotated figure back on the game field using the put_figure() function.
+ * This function updates the `current_figure` of the model to match the
+ * `rotated_figure` which represents the new orientation of the tetromino. It
+ * first copies the contents of `rotated_figure` into `current_figure` and
+ * clears the `rotated_figure`. After updating the figure's orientation, the
+ * function places the updated figure onto the game field at its current
+ * position.
  *
- * @param[in, out] s A pointer to the Model_t object that contains the
- * game's state and information.
+ * @param model A pointer to the game model containing the tetromino figure and
+ * the game field.
  */
 void rotate_figure(Model_t *model) {
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
@@ -145,21 +152,19 @@ void rotate_figure(Model_t *model) {
 }
 
 /**
- * @brief Generates a rotated version of the current figure.
+ * @brief Computes the rotated version of the current tetromino figure.
  *
  * @details
  *
- * This function first transposes the current figure's matrix using a nested
- * loop and a temporary matrix. Then, it reverses the columns of the transposed
- * matrix using another nested loop and stores the result in the current
- * figure's rotated matrix. Finally, it shifts the resulting shape relative to
- * the top left block
+ * This function calculates the rotated version of the `current_figure` and
+ * stores it in `rotated_figure`. It first transposes the `current_figure`
+ * matrix and then reverses the columns to achieve a 90-degree clockwise
+ * rotation. After calculating the rotated figure, it resets the position of the
+ * tetromino.
  *
- * @param[in, out] s A pointer to the Model_t object that contains the
- * game's state and information.
+ * @param model A pointer to the game model containing the tetromino figure.
  */
 void get_rotated_figure(Model_t *model) {
-  // Transpose matrix
   int tmp[TETROMINO_SIZE][TETROMINO_SIZE];
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
@@ -167,13 +172,32 @@ void get_rotated_figure(Model_t *model) {
     }
   }
 
-  // Reversing columns
   for (size_t i = 0; i < TETROMINO_SIZE; i++) {
     for (size_t j = 0; j < TETROMINO_SIZE; j++) {
       model->figure.rotated_figure[i][j] = tmp[i][TETROMINO_SIZE - 1 - j];
     }
   }
   reset_position(model);
+}
+
+/**
+ * @brief Resets the game field to its initial state.
+ *
+ * @details
+ *
+ * This function sets all cells in the game field to zero, effectively clearing
+ * the entire game board. It iterates through every cell in the field and
+ * assigns a value of zero to indicate that no tetrominoes are present on the
+ * board.
+ *
+ * @param model A pointer to the game model containing the game field.
+ */
+void reset_field(Model_t *model) {
+  for (size_t i = 0; i < HEIGHT; i++) {
+    for (size_t j = 0; j < WIDTH; j++) {
+      model->game_info.field[i][j] = 0;
+    }
+  }
 }
 
 static void reset_position(Model_t *model) {
@@ -200,24 +224,6 @@ static void reset_position(Model_t *model) {
             model->figure.rotated_figure[i][j];
         model->figure.rotated_figure[i][j] = 0;
       }
-    }
-  }
-}
-
-/**
- * @brief Resets the game field to its initial state.
- *
- * @details
- * This function iterates over the cells of the game field using a nested loop
- * and sets each cell to 0 (empty).
- *
- * @param[in, out] s A pointer to the Model_t object that contains the
- * game's state and information
- */
-void reset_field(Model_t *model) {
-  for (size_t i = 0; i < HEIGHT; i++) {
-    for (size_t j = 0; j < WIDTH; j++) {
-      model->game_info.field[i][j] = 0;
     }
   }
 }

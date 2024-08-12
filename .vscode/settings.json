@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "common_module.h": "c",
-    "checks.h": "c"
+    "checks.h": "c",
+    "random": "c"
   }
 }

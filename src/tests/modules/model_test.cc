@@ -1,3 +1,14 @@
+/**
+ * @file model_test.cc
+ * @author emmonbea (moskaleviluak@icloud.com)
+ * @brief Model tests
+ * @version 1.0
+ * @date 2024-08-12
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include "../main_test.h"
 
 class ModelTest : public ::testing::Test {
@@ -5,6 +16,7 @@ class ModelTest : public ::testing::Test {
   void SetUp() override {
     model = new Model_t;
     init_model(model);
+    reset_game_info(model);
   }
 
   void TearDown() override {
