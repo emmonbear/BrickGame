@@ -107,6 +107,12 @@ all: install run
 install: $(BIN_DIR) $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB)
 	$(CXX) $(CXXFLAGS) $(MAIN) $(CONTROLLER_LIB) $(MODEL_LIB) $(VIEW_LIB) $(LDGUI) -o $(BIN_DIR)/$(CLI)
 
+install_desk:
+	rm -rf ./gui/desktop/build
+	mkdir -p ./gui/desktop/build
+	cd ./gui/desktop/build && cmake ..
+	cd ./gui/desktop/build && cmake --build .
+
 uninstall: clean
 	rm -f $(MAX_SCORE_FILE)
 	rm -rf $(BIN_DIR)
@@ -152,6 +158,7 @@ clean:
 	rm -f $(MODEL_LIB)
 	rm -f $(CONTROLLER_LIB)
 	rm -f $(TEST)
+	rm -rf ./gui/desktop/build
 
 #================================= GCOV REPORT =================================
 GCOVR_EXCLUDES := --exclude='.*gui/cli/.*|.*tests/.*'
