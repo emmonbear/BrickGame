@@ -102,6 +102,9 @@ $(OBJ_DIR_COV)/tests/%.o: $(TESTS_DIR)/modules/%.cc
 .PHONY: all install run clean $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB) \
 				preferences $(GCOV) $(TEST) $(DVI) $(DIST)
 
+m: install_desk
+	./gui/desktop/Desktop/build/Desktop
+
 all: install run
 
 install: $(BIN_DIR) $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB)
@@ -109,9 +112,9 @@ install: $(BIN_DIR) $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB)
 
 install_desk:
 	rm -rf ./gui/desktop/build
-	mkdir -p ./gui/desktop/build
-	cd ./gui/desktop/build && cmake ..
-	cd ./gui/desktop/build && cmake --build .
+	mkdir -p ./gui/desktop/Desktop/build
+	cd ./gui/desktop/Desktop/build && qmake ..
+	cd ./gui/desktop/Desktop/build && make
 
 uninstall: clean
 	rm -f $(MAX_SCORE_FILE)
@@ -158,7 +161,7 @@ clean:
 	rm -f $(MODEL_LIB)
 	rm -f $(CONTROLLER_LIB)
 	rm -f $(TEST)
-	rm -rf ./gui/desktop/build
+	rm -rf ./gui/desktop/BrickGame/build
 
 #================================= GCOV REPORT =================================
 GCOVR_EXCLUDES := --exclude='.*gui/cli/.*|.*tests/.*'
