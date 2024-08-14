@@ -53,5 +53,6 @@
     "cinttypes": "cpp",
     "typeinfo": "cpp",
     "variant": "cpp"
-  }
+  },
+  "cmake.sourceDirectory": "/home/emmonbea/2_Github/BrickGame/src/gui/desktop"
 }
