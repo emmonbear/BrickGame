@@ -17,7 +17,6 @@
 #include <time.h>
 
 static void clear_next(Model_t *model);
-static void set_figure_position(figure_t *figure);
 static void update_next_figure(Model_t *model, type_t type);
 
 /**
@@ -42,7 +41,7 @@ type_t generate_random(type_t current_type) {
   return tmp;
 }
 
-static void set_figure_position(figure_t *figure) {
+void set_figure_position(figure_t *figure) {
   figure->x = 3;
   figure->y = 0;
 }

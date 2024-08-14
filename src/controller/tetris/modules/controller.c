@@ -225,8 +225,7 @@ static void pause_stage(Controller_t *controller) {
 
 static void attaching_stage(Controller_t *controller) {
   check_full_lines(&controller->model);
-  controller->model.figure.x = 3;
-  controller->model.figure.y = 0;
+  set_figure_position(&controller->model.figure);
 
   if (can_put_new_line(&controller->model)) {
     controller->stage = SPAWN;
