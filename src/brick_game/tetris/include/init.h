@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "./figures.h"
 #include "./model.h"
 
 /// @brief Path to the file with high_score

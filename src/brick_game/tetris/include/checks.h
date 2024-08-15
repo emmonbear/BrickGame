@@ -12,8 +12,6 @@
 #ifndef MODULES_CHECKS_H
 #define MODULES_CHECKS_H
 
-#include <stdbool.h>
-
 #include "./model.h"
 
 bool can_move_down(Model_t *model);

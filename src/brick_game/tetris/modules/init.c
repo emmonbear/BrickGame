@@ -43,6 +43,10 @@ void reset_game_info(Model_t *model) {
   model->figure.next_type = NONE;
   model->figure.current_type = NONE;
   model->figure.current_color = -1;
+  model->action = None;
+  model->stage = START;
+  model->timer = 0;
+  model->game_over = false;
 }
 
 /**
@@ -97,6 +101,9 @@ void init_model(Model_t *model) {
                     TETROMINO_SIZE);
   allocate_2d_array(&(model->figure.rotated_figure), TETROMINO_SIZE,
                     TETROMINO_SIZE);
+  reset_game_info(model);
+  model->figure.next_type = generate_random(model->figure.current_type);
+  generate_new_figure(model);
 }
 
 /**

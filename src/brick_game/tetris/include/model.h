@@ -12,6 +12,8 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <stdbool.h>
+
 #include "../../common.h"
 
 /// @brief Number of lines on Field
@@ -75,6 +77,49 @@ typedef struct {
 } figure_t;
 
 /**
+ * @brief Enumeration of user actions
+ *
+ * @details
+ *
+ * This enumeration represents all possible actions that a user can take while
+ * playing the game. These actions include starting the game, pausing the game,
+ * terminating the game, moving the current block left, moving the current block
+ * right, rotating the current block clockwise, moving the current block down,
+ * and performing an "action" (such as triggering a hard drop or activating a
+ * special ability).
+ */
+typedef enum {
+  Start,      ///< Start the game
+  Pause,      ///< Pause the game
+  Terminate,  ///< Terminate the game
+  Left,       ///< Move the current tetromino to the left
+  Right,      ///< Move the current tetromino to the right
+  Up,         ///< is not used in this project
+  Down,       ///< Move the current tetromino down
+  Action,     ///< rotate the current tetromino
+  None        ///< No action
+} UserAction_t;
+
+/// @brief Enumeration of states of a Finite-state machine
+typedef enum {
+  START,  ///< the state in which the game waits for the player to press the
+          ///< ready to play button
+  SPAWN,  ///< the state the game switches to when creating the next block and
+          ///< selecting the next block to be spawned
+  SHIFTING,   ///< the state to which the game switches after the timer expires.
+              ///< In this state the current block moves down one level
+  MOVING,     ///< basic game state with user input processing - rotating
+              ///< blocks/moving blocks horizontally
+  PAUSE,      ///< the state in which the game is paused
+  ATTACHING,  ///< the state the game goes to after the current block "touches"
+              ///< the already fallen blocks or the ground. If a filled line is
+              ///< formed, it is destroyed and the remaining blocks are shifted
+              ///< down. If a block is stopped in the topmost row, the game goes
+              ///< to the state "game over"
+  GAME_OVER,  ///< the state that characterizes the end of the game
+} stage_t;
+
+/**
  * @brief Represents the model of the game, containing game information and the
  * current figure.
  *
@@ -85,6 +130,10 @@ typedef struct {
 typedef struct {
   GameInfo_t game_info;  ///< Pointer to the game's information
   figure_t figure;       ///< Information about figures
+  int timer;            ///< The game timer for managing game speed or intervals
+  bool game_over;       ///< Flag indicating whether the game is over
+  UserAction_t action;  ///< The current user action (e.g., start, pause, move)
+  stage_t stage;        ///< The current stage or level of the game
 } Model_t;
 
 #endif  // MODEL_H
