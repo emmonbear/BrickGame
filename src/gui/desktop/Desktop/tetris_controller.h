@@ -23,6 +23,7 @@ public:
 
 private:
     Model_t *model_;
+    
 
 };
 

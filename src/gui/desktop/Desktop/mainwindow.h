@@ -12,10 +12,16 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    static constexpr int kHeight = 800;
+    static constexpr int kWidth = 700;
+
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
+
+    void on_startTetris_clicked();
 
 private:
     Ui::MainWindow *ui;

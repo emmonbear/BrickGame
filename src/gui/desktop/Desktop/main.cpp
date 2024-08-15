@@ -7,12 +7,8 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    TetrisController controller;
-
-    TetrisView view(&controller);
-    view.setFixedSize(400, 800); // Устанавливаем фиксированный размер окна
-    view.show();
-//    MainWindow w;
-//    w.show();
+    MainWindow w;
+    w.resize(MainWindow::kHeight, MainWindow::kWidth);
+    w.show();
     return a.exec();
 }
