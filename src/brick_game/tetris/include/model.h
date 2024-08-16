@@ -14,7 +14,7 @@
 
 #include <stdbool.h>
 
-#include "../../common.h"
+#include "../../../common/include/common.h"
 
 /// @brief Number of lines on Field
 #define HEIGHT 20

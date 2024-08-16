@@ -15,26 +15,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../../../common/include/common.h"
 #include "./figures.h"
 #include "./model.h"
 
 /// @brief Path to the file with high_score
 #define PATH "/brick_game/tetris/max_score.txt"
-
-/**
- * @brief Macro that prints an error message and exits the program with a
- * non-zero status code
- *
- * @details
- *
- * This macro is used to handle errors that occur during memory allocation. It
- * prints an error message to the standard error stream and then exits the
- * program with a non-zero status code.
- *
- */
-#define MEM_ALLOC_ERROR                         \
-  fprintf(stderr, "Memory allocation error\n"); \
-  exit(1)
 
 void init_model(Model_t *model);
 void destroy_model(Model_t *model);

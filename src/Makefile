@@ -22,6 +22,7 @@ VALGRIND              := --tool=memcheck --leak-check=yes
 MODEL_LIB             := model.a
 VIEW_LIB              := view.a
 CONTROLLER_LIB        := controller.a
+COMMON_LIB            := common.a
 TEST                  := test
 GCOV                  := gcov_report
 DVI                   := dvi
@@ -30,6 +31,7 @@ DVI                   := dvi
 MODEL_DIR             := ./brick_game/tetris
 VIEW_DIR              := ./gui/cli
 CONTROLLER_DIR        := ./controller/tetris
+COMMON_DIR            := ./common
 OBJ_DIR               := ./obj
 OBJ_DIR_COV           := ./obj_cov
 REPORT_DIR            := ./report
@@ -40,8 +42,12 @@ DIST_DIR              := ../dist
 
 #================================== FILE LIST ==================================
 MAIN                  := $(PROJECT_NAME).cc
-COMMON_MODEL_H        := $(PROJECT_NAME)/common.h
 MAIN_TEST             := $(TESTS_DIR)/main_test.cc
+
+#=================================== COMMON ====================================
+COMMON_C              := $(shell find $(COMMON_DIR) -type f -name "*.c")
+COMMON_H              := $(shell find $(COMMON_DIR) -type f -name "*.h")
+COMMON_O              := $(COMMON_C:$(COMMON_DIR)/modules/%.c=$(OBJ_DIR)/common/%.o)
 
 #=============================== TETRIS CLI VIEW ===============================
 VIEW_C                := $(shell find $(VIEW_DIR) -type f -name "*.c")
@@ -68,13 +74,13 @@ TEST_O                := $(TEST_CC:$(TESTS_DIR)/modules/%.cc=$(OBJ_DIR)/tests/%.
 TEST_O_COV            := $(TEST_CC:$(TESTS_DIR)/modules/%.cc=$(OBJ_DIR_COV)/tests/%.o)
 
 #======================= LIST OF FILES FOR STYLE CHECKS ========================
-C_FILES               := $(VIEW_C) $(MODEL_C) $(CONTROLLER_C)
-H_FILES               := $(VIEW_H) $(MODEL_H) $(CONTROLLER_H)
+C_FILES               := $(VIEW_C) $(MODEL_C) $(CONTROLLER_C) $(COMMON_O)
+H_FILES               := $(VIEW_H) $(MODEL_H) $(CONTROLLER_H) $(COMMON_H)
 CC_FILES              := $(MAIN) $(MAIN_TEST) $(TEST_CC)
 ALL_FILES             := $(C_FILES) $(H_FILES) $(CC_FILES) $(TEST_H)
 
 #============================== OBJECTIVE TARGETS ==============================
-$(OBJ_DIR)/tetris/model/%.o: $(MODEL_DIR)/modules/%.c $(MODEL_H) $(COMMON_MODEL_H)
+$(OBJ_DIR)/tetris/model/%.o: $(MODEL_DIR)/modules/%.c $(MODEL_H) $(COMMON_H)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)/tetris/view/%.o: $(VIEW_DIR)/modules/%.c $(VIEW_H)
@@ -86,7 +92,10 @@ $(OBJ_DIR)/tetris/controller/%.o: $(CONTROLLER_DIR)/modules/%.c $(CONTROLLER_H)
 $(OBJ_DIR)/tests/%.o: $(TESTS_DIR)/modules/%.cc
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(OBJ_DIR_COV)/tetris/model/%.o: $(MODEL_DIR)/modules/%.c $(MODEL_H) $(COMMON_MODEL_H)
+$(OBJ_DIR)/common/%.o: $(COMMON_DIR)/modules/%.c $(COMMON_H)
+	$(CC) $(CFLAGS) -c -o $@ $<
+ 
+$(OBJ_DIR_COV)/tetris/model/%.o: $(MODEL_DIR)/modules/%.c $(MODEL_H) $(COMMON_H)
 	$(CC) $(CFLAGS) $(COVERAGE_FLAGS) -c -o $@ $<
 
 $(OBJ_DIR_COV)/tetris/view/%.o: $(VIEW_DIR)/modules/%.c $(VIEW_H)
@@ -107,8 +116,8 @@ m: install_desk
 
 all: install run
 
-install: $(BIN_DIR) $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB)
-	$(CXX) $(CXXFLAGS) $(MAIN) $(CONTROLLER_LIB) $(MODEL_LIB) $(VIEW_LIB) $(LDGUI) -o $(BIN_DIR)/$(CLI)
+install: $(BIN_DIR) $(COMMON_LIB) $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB)
+	$(CXX) $(CXXFLAGS) $(MAIN) $(CONTROLLER_LIB) $(MODEL_LIB) $(COMMON_LIB) $(VIEW_LIB) $(LDGUI) -o $(BIN_DIR)/$(CLI)
 
 install_desk:
 	rm -rf ./gui/desktop/build
@@ -140,9 +149,13 @@ $(CONTROLLER_LIB): $(OBJ_DIR) $(CONTROLLER_O)
 	ar rcs $@ $(CONTROLLER_O)
 	ranlib $@
 
+$(COMMON_LIB): $(OBJ_DIR) $(COMMON_O)
+	ar rcs $@ $(COMMON_O)
+	ranlib $@
+
 #================================= TESTS START =================================
-$(TEST): $(OBJ_DIR) $(MODEL_O) $(VIEW_O) $(CONTROLLER_O) $(TEST_O)
-	$(CXX) $(MAIN_TEST) $(TEST_O) $(MODEL_O) $(VIEW_O) $(CONTROLLER_O) $(LDFLAGS) $(LDGUI) -o $@
+$(TEST): $(OBJ_DIR) $(COMMON_O) $(MODEL_O) $(VIEW_O) $(CONTROLLER_O) $(TEST_O)
+	$(CXX) $(MAIN_TEST) $(TEST_O) $(COMMON_O) $(MODEL_O) $(VIEW_O) $(CONTROLLER_O) $(LDFLAGS) $(LDGUI) -o $@
 	./$@
 
 val:
@@ -208,6 +221,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)/tetris/view
 	mkdir -p $(OBJ_DIR)/tetris/controller
 	mkdir -p $(OBJ_DIR)/tests
+	mkdir -p $(OBJ_DIR)/common
 
 $(OBJ_DIR_COV):
 	mkdir -p $(OBJ_DIR_COV)/tetris/model
