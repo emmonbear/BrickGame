@@ -23,6 +23,6 @@ void draw_start_screen(WINDOW *w);
 void draw_info(WINDOW *w);
 void draw_pause();
 void draw_game_over(WINDOW *w, int score, int high_score);
-void resize_windows(View_t *view, int *lines, int *cols);
+void update(View_t *view);
 
 #endif  // GUI_FIELD_H

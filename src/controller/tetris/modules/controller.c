@@ -13,9 +13,164 @@
 
 #include <time.h>
 
-static void get_user_input(Controller_t *controller);
-static void draw_game(View_t *wins, const Model_t *model, const stage_t stage);
+static void start_stage(Model_t *Model_t);
+static void spawn_stage(Model_t *Model_t);
+static void moving_stage(Model_t *Model_t);
+static void shifting_stage(Model_t *Model_t);
+static void pause_stage(Model_t *Model_t);
+static void attaching_stage(Model_t *Model_t);
+static void game_over_stage(Model_t *Model_t);
+static int get_current_time();
 
+/**
+ * @brief Executes the function corresponding to the current stage of the game.
+ *
+ * @details This function uses an array of function pointers, `state_funcs`,
+ * where each function corresponds to a specific stage of the game. It calls the
+ * function associated with the current stage of the game, as indicated by the
+ * `stage` field in the `Model_t` structure. The `Model_t` pointer is
+ * passed to the stage function, allowing it to modify the game's state as
+ * needed.
+ *
+ * @param model A pointer to the `Model_t` structure that holds the
+ *                   current state of the game.
+ */
+void run_state(Model_t *model) {
+  static func_ptr state_funcs[NUM_STAGES] = {
+      start_stage, spawn_stage,     shifting_stage, moving_stage,
+      pause_stage, attaching_stage, game_over_stage};
+
+  state_funcs[model->stage](model);
+}
+
+static void start_stage(Model_t *model) {
+  switch (model->action) {
+    case Start:
+      model->stage = SPAWN;
+      break;
+    case Terminate:
+      model->stage = GAME_OVER;
+      break;
+    default:
+      break;
+  }
+}
+
+static void spawn_stage(Model_t *model) {
+  copy_next_to_current(model);
+  put_figure(model);
+  model->figure.next_type = generate_random(model->figure.current_type);
+  generate_new_figure(model);
+  model->stage = SHIFTING;
+}
+
+static void moving_stage(Model_t *model) {
+  model->stage = SHIFTING;
+
+  switch (model->action) {
+    case Left:
+      move_left(model);
+      break;
+
+    case Right:
+      move_right(model);
+      break;
+
+    case Down:
+      if (can_move_down(model)) {
+        move_down(model);
+      }
+      break;
+    case Action:
+      get_rotated_figure(model);
+
+      if (can_rotate(model)) {
+        rotate_figure(model);
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+static void shifting_stage(Model_t *model) {
+  int current_time = get_current_time();
+  int wait_time = 1100 - (model->game_info.level * 100);
+
+  if (can_move_down(model)) {
+    if (current_time - model->timer >= wait_time) {
+      move_down(model);
+      model->timer = current_time;
+    }
+  } else {
+    if ((current_time - model->timer >= wait_time)) {
+      model->stage = ATTACHING;
+    }
+  }
+
+  switch (model->action) {
+    case Left:
+    case Right:
+    case Down:
+    case Action:
+      moving_stage(model);
+      break;
+    case Terminate:
+      model->stage = GAME_OVER;
+      break;
+    case Pause:
+      model->stage = PAUSE;
+      break;
+    default:
+      break;
+  }
+}
+
+static void pause_stage(Model_t *model) {
+  switch (model->action) {
+    case Pause:
+      model->stage = SHIFTING;
+      break;
+    case Terminate:
+      model->stage = GAME_OVER;
+      break;
+    default:
+      break;
+  }
+}
+
+static void attaching_stage(Model_t *model) {
+  check_full_lines(model);
+  set_figure_position(&model->figure);
+
+  if (can_put_new_line(model)) {
+    model->stage = SPAWN;
+  } else {
+    model->stage = GAME_OVER;
+  }
+}
+
+static void game_over_stage(Model_t *model) {
+  write_high_score(model);
+
+  switch (model->action) {
+    case Start:
+      reset_field(model);
+      reset_game_info(model);
+      model->figure.next_type = generate_random(model->figure.current_type);
+      generate_new_figure(model);
+      model->stage = SPAWN;
+      model->game_over = 0;
+      break;
+    case Terminate:
+      model->game_over = true;
+      break;
+    default:
+      break;
+  }
+}
+
+static int get_current_time() { return (int)(clock() * 1000 / CLOCKS_PER_SEC); }
 /**
  * @brief Initializes a new controller structure.
  *
@@ -24,19 +179,14 @@ static void draw_game(View_t *wins, const Model_t *model, const stage_t stage);
  * stage, timer, and game_over fields. The function will handle memory
  * allocation errors and initialize the controller to a default state.
  *
- * @return A pointer to the newly created `Controller_t` structure.
+ * @param controller pointer to the newly created `Controller_t` structure.
  */
-Controller_t *init_controller() {
-  Controller_t *controller = (Controller_t *)malloc(sizeof(Controller_t));
-
+void init_controller(Controller_t *controller) {
   if (!controller) {
     MEM_ALLOC_ERROR;
   }
 
   init_model(&controller->model);
-  init_view(&controller->view);
-
-  return controller;
 }
 
 /**
@@ -52,93 +202,6 @@ Controller_t *init_controller() {
  */
 void destroy_controller(Controller_t *controller) {
   if (controller) {
-    destroy_view(&controller->view);
     destroy_model(&controller->model);
-    free(controller);
-  }
-}
-
-/**
- * @brief Runs the main game loop, handling game state updates and rendering.
- *
- * @details This function initializes the game state by resetting game
- * information, generating a new tetromino figure, and then enters a loop that
- * continues until the game is over. Within the loop, it performs the following
- * actions:
- * - Adjusts the window size if needed.
- * - Executes the function associated with the current game stage.
- * - Captures user input to determine the next action.
- * - Renders the current game state to the view.
- *
- * The loop will break when the `game_over` flag in the `Controller_t` structure
- * is set to true.
- *
- * @param controller A pointer to the `Controller_t` structure that manages the
- * game's state, view, and user actions.
- */
-void game_loop(Controller_t *controller) {
-  int lines = LINES;
-  int cols = COLS;
-
-  while (!controller->model.game_over) {
-    resize_windows(&controller->view, &lines, &cols);
-    run_state(&controller->model);
-    get_user_input(controller);
-    draw_game(&controller->view, &controller->model, controller->model.stage);
-  }
-}
-
-static void get_user_input(Controller_t *controller) {
-  switch (getch()) {
-    case KEY_LEFT:
-      controller->model.action = Left;
-      break;
-    case KEY_RIGHT:
-      controller->model.action = Right;
-      break;
-    case KEY_DOWN:
-      controller->model.action = Down;
-      break;
-    case ' ':
-      controller->model.action = Action;
-      break;
-    case '\n':
-      controller->model.action = Start;
-      break;
-    case 'p':
-    case 'P':
-      controller->model.action = Pause;
-      break;
-    case 'q':
-    case 'Q':
-      controller->model.action = Terminate;
-      break;
-    default:
-      controller->model.action = None;
-      break;
-  }
-}
-
-static void draw_game(View_t *wins, const Model_t *model, const stage_t stage) {
-  refresh();
-  switch (stage) {
-    case START:
-      draw_start_screen(wins->start.w);
-      break;
-    case PAUSE:
-      draw_pause();
-      break;
-    case GAME_OVER:
-      draw_game_over(wins->game_over.w, model->game_info.score,
-                     model->game_info.high_score);
-      break;
-    default:
-      draw_field(model->game_info.field, wins->field.w);
-      draw_next(model->game_info.next, wins->next.w);
-      draw_score(model->game_info.score, wins->score.w);
-      draw_level(model->game_info.level, wins->level.w);
-      draw_high_score(model->game_info.high_score, wins->high_score.w);
-      draw_info(wins->info.w);
-      break;
   }
 }

@@ -10,23 +10,21 @@
  */
 
 extern "C" {
-#include "./brick_game/tetris/include/model.h"
-#include "./controller/tetris/include/controller.h"
 #include "./gui/cli/include/view.h"
 }
 
 int main() {
   init_screen();
-  Controller_t *controller = init_controller();
+  View_t *view = init_view();
 
-  if (!controller) {
+  if (!view) {
     endwin();
     MEM_ALLOC_ERROR;
     return 1;
   }
 
-  game_loop(controller);
-  destroy_controller(controller);
+  game_loop(view);
+  destroy_view(view);
   endwin();
 
   return 0;

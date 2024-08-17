@@ -117,7 +117,7 @@ m: install_desk
 all: install run
 
 install: $(BIN_DIR) $(COMMON_LIB) $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB)
-	$(CXX) $(CXXFLAGS) $(MAIN) $(CONTROLLER_LIB) $(MODEL_LIB) $(COMMON_LIB) $(VIEW_LIB) $(LDGUI) -o $(BIN_DIR)/$(CLI)
+	$(CXX) $(CXXFLAGS) $(MAIN) $(VIEW_LIB) $(CONTROLLER_LIB) $(MODEL_LIB) $(COMMON_LIB) $(LDGUI) -o $(BIN_DIR)/$(CLI)
 
 install_desk:
 	rm -rf ./gui/desktop/build
@@ -154,8 +154,8 @@ $(COMMON_LIB): $(OBJ_DIR) $(COMMON_O)
 	ranlib $@
 
 #================================= TESTS START =================================
-$(TEST): $(OBJ_DIR) $(COMMON_O) $(MODEL_O) $(VIEW_O) $(CONTROLLER_O) $(TEST_O)
-	$(CXX) $(MAIN_TEST) $(TEST_O) $(COMMON_O) $(MODEL_O) $(VIEW_O) $(CONTROLLER_O) $(LDFLAGS) $(LDGUI) -o $@
+$(TEST): $(OBJ_DIR) $(COMMON_O) $(MODEL_O) $(CONTROLLER_O) $(VIEW_O) $(TEST_O)
+	$(CXX) $(MAIN_TEST) $(TEST_O) $(COMMON_O) $(MODEL_O) $(CONTROLLER_O) $(VIEW_O)  $(LDFLAGS) $(LDGUI) -o $@
 	./$@
 
 val:

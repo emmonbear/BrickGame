@@ -9,11 +9,9 @@
  *
  */
 
-#include "../include/field_view.h"
+#include "../include/field_renderer.h"
 
 #include <string.h>
-
-#include "../include/init_view.h"
 
 static void set_color_figure(WINDOW *w, int color_index);
 
@@ -309,29 +307,6 @@ void draw_game_over(WINDOW *w, int score, int high_score) {
   wrefresh(w);
 }
 
-/**
- * @brief Resizes the game windows if the terminal size has changed.
- *
- * @details This function checks if the dimensions of the terminal have changed.
- * If they have, it destroys the existing view windows, clears the screen, and
- * reinitializes the view with the new terminal size.
- *
- * @param view Pointer to the view structure containing game windows.
- * @param lines Pointer to the variable holding the current number of terminal
- * lines.
- * @param cols Pointer to the variable holding the current number of terminal
- * columns.
- */
-void resize_windows(View_t *view, int *lines, int *cols) {
-  if (*lines != LINES || *cols != COLS) {
-    destroy_view(view);
-    clear();
-    init_view(view);
-    *lines = LINES;
-    *cols = COLS;
-  }
-}
-
 static void set_color_figure(WINDOW *w, int color_index) {
   switch (color_index) {
     case 0:
@@ -357,6 +332,32 @@ static void set_color_figure(WINDOW *w, int color_index) {
       break;
     case 7:
       wattron(w, COLOR_PAIR(7) | A_BOLD);
+      break;
+  }
+}
+
+void update(View_t *view) {
+  refresh();
+  switch (view->controller.model.stage) {
+    case START:
+      draw_start_screen(view->windows.start.w);
+      break;
+    case PAUSE:
+      draw_pause();
+      break;
+    case GAME_OVER:
+      draw_game_over(view->windows.game_over.w,
+                     view->controller.model.game_info.score,
+                     view->controller.model.game_info.high_score);
+      break;
+    default:
+      draw_field(view->controller.model.game_info.field, view->windows.field.w);
+      draw_next(view->controller.model.game_info.next, view->windows.next.w);
+      draw_score(view->controller.model.game_info.score, view->windows.score.w);
+      draw_level(view->controller.model.game_info.level, view->windows.level.w);
+      draw_high_score(view->controller.model.game_info.high_score,
+                      view->windows.high_score.w);
+      draw_info(view->windows.info.w);
       break;
   }
 }
