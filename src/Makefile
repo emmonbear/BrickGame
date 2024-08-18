@@ -20,6 +20,7 @@ VALGRIND              := --tool=memcheck --leak-check=yes
 
 #=============================== TARGET NAMES =================================
 MODEL_LIB             := model.a
+SNAKE_MODEL_LIB       := snake_model.a
 VIEW_LIB              := view.a
 CONTROLLER_LIB        := controller.a
 COMMON_LIB            := common.a
@@ -29,6 +30,7 @@ DVI                   := dvi
 
 #=============================== DIRECTORY NAMES ===============================
 MODEL_DIR             := ./brick_game/tetris
+SNAKE_MODEL_DIR       := ./brick_game/snake
 VIEW_DIR              := ./gui/cli
 CONTROLLER_DIR        := ./controller/tetris
 COMMON_DIR            := ./common
@@ -60,6 +62,12 @@ MODEL_C               := $(shell find $(MODEL_DIR) -type f -name "*.c")
 MODEL_H               := $(shell find $(MODEL_DIR) -type f -name "*.h")
 MODEL_O               := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR)/tetris/model/%.o)
 MODEL_O_COV           := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR_COV)/tetris/model/%.o)
+
+#================================= SNAKE MODEL =================================
+SNAKE_MODEL_C         := $(shell find $(SNAKE_MODEL_DIR) -type f -name "*.cc")
+SNAKE_MODEL_H         := $(shell find $(SNAKE_MODEL_DIR) -type f -name "*.h")
+SNAKE_MODEL_O         := $(SNAKE_MODEL_C:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_DIR)/snake/model/%.o)
+SNAKE_MODEL_O_COV     := $(SNAKE_MODEL_C:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_DIR_COV)/snake/model/%.o)
 
 #============================== TETRIS CONTROLLER ==============================
 CONTROLLER_C          := $(shell find $(CONTROLLER_DIR) -type f -name "*.c")
@@ -107,6 +115,10 @@ $(OBJ_DIR_COV)/tetris/controller/%.o: $(CONTROLLER_DIR)/modules/%.c $(CONTROLLER
 $(OBJ_DIR_COV)/tests/%.o: $(TESTS_DIR)/modules/%.cc
 	$(CXX) $(CXXFLAGS) $(COVERAGE_FLAGS) -c -o $@ $<
 
+#=========================== SNAKE OBJECTIVE TARGETS ===========================
+$(OBJ_DIR)/snake/model/%.o: $(SNAKE_MODEL_DIR)/modules/%.cc $(SNAKE_MODEL_H) $(COMMON_H)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
 #=================================== TARGETS ===================================
 .PHONY: all install run clean $(MODEL_LIB) $(VIEW_LIB) $(CONTROLLER_LIB) \
 				preferences $(GCOV) $(TEST) $(DVI) $(DIST)
@@ -153,9 +165,14 @@ $(COMMON_LIB): $(OBJ_DIR) $(COMMON_O)
 	ar rcs $@ $(COMMON_O)
 	ranlib $@
 
+#======================== SNAKE STATIC LIBRARY BUILDING ========================
+$(SNAKE_MODEL_LIB): $(OBJ_DIR) $(SNAKE_MODEL_O)
+	ar rcs $@ $(SNAKE_MODEL_O)
+	ranlib $@
+
 #================================= TESTS START =================================
-$(TEST): $(OBJ_DIR) $(COMMON_O) $(MODEL_O) $(CONTROLLER_O) $(VIEW_O) $(TEST_O)
-	$(CXX) $(MAIN_TEST) $(TEST_O) $(COMMON_O) $(MODEL_O) $(CONTROLLER_O) $(VIEW_O)  $(LDFLAGS) $(LDGUI) -o $@
+$(TEST): $(OBJ_DIR) $(COMMON_O) $(MODEL_O) $(CONTROLLER_O) $(SNAKE_MODEL_O) $(TEST_O)
+	$(CXX) $(MAIN_TEST) $(TEST_O) $(COMMON_O) $(MODEL_O) $(CONTROLLER_O) $(SNAKE_MODEL_O) $(LDFLAGS) $(LDGUI) -o $@
 	./$@
 
 val:
@@ -175,6 +192,7 @@ clean:
 	rm -f $(CONTROLLER_LIB)
 	rm -f $(COMMON_LIB)
 	rm -f $(TEST)
+	rm -f $(SNAKE_MODEL_LIB)
 	rm -rf ./gui/desktop/BrickGame/build
 
 #================================= GCOV REPORT =================================
@@ -223,12 +241,14 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)/tetris/controller
 	mkdir -p $(OBJ_DIR)/tests
 	mkdir -p $(OBJ_DIR)/common
+	mkdir -p $(OBJ_DIR)/snake/model
 
 $(OBJ_DIR_COV):
 	mkdir -p $(OBJ_DIR_COV)/tetris/model
 	mkdir -p $(OBJ_DIR_COV)/tetris/view
 	mkdir -p $(OBJ_DIR_COV)/tetris/controller
 	mkdir -p $(OBJ_DIR_COV)/tests
+	mkdir -p $(OBJ_DIR_COV)/snake/model
 
 
 $(REPORT_DIR):
