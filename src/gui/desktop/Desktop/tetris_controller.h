@@ -2,7 +2,12 @@
 #define TETRISCONTROLLER_H
 
 #include <QObject>
-#include <QTimer>
+#include <QWidget>
+#include <QPainter>
+#include <QKeyEvent>
+#include <QApplication>
+
+class TetrisView;
 
 extern "C" {
 #include "../../../brick_game/tetris/include/model.h"
@@ -10,6 +15,7 @@ extern "C" {
 #include "../../../brick_game/tetris/include/figures.h"
 #include "../../../brick_game/tetris/include/checks.h"
 #include "../../../brick_game/tetris/include/operations.h"
+#include "../../../brick_game/tetris/include/fsm.h"
 }
 
 class TetrisController : public QObject
@@ -20,11 +26,19 @@ public:
     ~TetrisController();
 
     Model_t *get_model() const;
-
+    void gameLoop();
+    void moveLeft();
+    void moveRight();
+    void moveUp();
+    void moveDown();
+    void action();
+    void terminate();
+    void start();
+    void pause();
+    void none();
 private:
     Model_t *model_;
-    
-
+    TetrisView *view_;
 };
 
 #endif // TETRISCONTROLLER_H
