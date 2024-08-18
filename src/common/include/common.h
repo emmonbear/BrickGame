@@ -14,6 +14,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+/// @brief Number of lines on Field
+#define HEIGHT 20
+
+/// @brief Number of columns on Field
+#define WIDTH 10
 
 typedef struct {
   int **field;  ///< 2D array representing the game field, where each element
@@ -47,7 +55,12 @@ typedef struct {
   fprintf(stderr, "Memory allocation error\n"); \
   exit(1)
 
+/// @brief Path to the file with high_score
+#define PATH "/brick_game/tetris/max_score.txt"
+
 void allocate_2d_array(int ***array, size_t rows, size_t cols);
 void destroy_2d_array(int ***array, size_t rows);
+void write_high_score(GameInfo_t *info);
+int load_max_score();
 
 #endif  // SRC_COMMON_INCLUDE_COMMON_H_

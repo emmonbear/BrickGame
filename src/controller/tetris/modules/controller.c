@@ -151,7 +151,7 @@ static void attaching_stage(Model_t *model) {
 }
 
 static void game_over_stage(Model_t *model) {
-  write_high_score(model);
+  write_high_score(&model->game_info);
 
   switch (model->action) {
     case Start:

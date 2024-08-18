@@ -12,11 +12,8 @@
 #include "../include/init.h"
 
 #include <locale.h>
-#include <string.h>
 #include <time.h>
 #include <unistd.h>
-
-static int load_max_score();
 
 /**
  * @brief Resets the game information to its initial state.
@@ -102,52 +99,4 @@ void init_model(Model_t *model) {
   reset_game_info(model);
   model->figure.next_type = generate_random(model->figure.current_type);
   generate_new_figure(model);
-}
-
-/**
- * @brief Writes the current high score to a file.
- *
- * @details
- *
- * This function retrieves the current working directory and appends a
- * predefined path to it. It then opens a file in write mode at the resulting
- * path and writes the current high score from the game model to the file. If
- * the file is successfully opened, it writes the high score as an integer and
- * then closes the file.
- *
- * @param model A pointer to the game model containing the high score to be
- * written.
- */
-void write_high_score(Model_t *model) {
-  char cwd[200];
-
-  if (getcwd(cwd, sizeof(cwd))) {
-    strcat(cwd, PATH);
-    FILE *f = fopen(cwd, "w");
-
-    if (f) {
-      fprintf(f, "%d", model->game_info.high_score);
-      fclose(f);
-    }
-  }
-}
-
-static int load_max_score() {
-  char cwd[200];
-  int max_score = 0;
-
-  if (getcwd(cwd, sizeof(cwd))) {
-    strcat(cwd, PATH);
-
-    FILE *f = fopen(cwd, "r");
-
-    if (f) {
-      if (fscanf(f, "%d", &max_score) != 1) {
-        perror("fscanf error");
-      }
-      fclose(f);
-    }
-  }
-
-  return max_score;
 }
