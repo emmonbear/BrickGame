@@ -16,12 +16,6 @@
 
 #include "../../../common/include/common.h"
 
-/// @brief Number of lines on Field
-#define HEIGHT 20
-
-/// @brief Number of columns on Field
-#define WIDTH 10
-
 /// @brief The size of the tetromino
 #define TETROMINO_SIZE 4
 

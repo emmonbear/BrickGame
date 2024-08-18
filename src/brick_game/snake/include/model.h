@@ -12,14 +12,17 @@
 #ifndef SRC_BRICK_GAME_SNAKE_INCLUDE_MODEL_H_
 #define SRC_BRICK_GAME_SNAKE_INCLUDE_MODEL_H_
 
-#include "../../common.h"
+extern "C" {
+#include "../../../common/include/common.h"
+}
 
 namespace s21 {
   class SnakeModel {
    public:
     SnakeModel();
-   private:
+    ~SnakeModel();
     GameInfo_t info_;
+   private:
   };
 }
 
