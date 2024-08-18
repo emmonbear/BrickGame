@@ -173,6 +173,7 @@ clean:
 	rm -f $(VIEW_LIB)
 	rm -f $(MODEL_LIB)
 	rm -f $(CONTROLLER_LIB)
+	rm -f $(COMMON_LIB)
 	rm -f $(TEST)
 	rm -rf ./gui/desktop/BrickGame/build
 
