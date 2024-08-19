@@ -64,10 +64,10 @@ MODEL_O               := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR)/tetris/mo
 MODEL_O_COV           := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR_COV)/tetris/model/%.o)
 
 #================================= SNAKE MODEL =================================
-SNAKE_MODEL_C         := $(shell find $(SNAKE_MODEL_DIR) -type f -name "*.cc")
+SNAKE_MODEL_CC         := $(shell find $(SNAKE_MODEL_DIR) -type f -name "*.cc")
 SNAKE_MODEL_H         := $(shell find $(SNAKE_MODEL_DIR) -type f -name "*.h")
-SNAKE_MODEL_O         := $(SNAKE_MODEL_C:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_DIR)/snake/model/%.o)
-SNAKE_MODEL_O_COV     := $(SNAKE_MODEL_C:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_DIR_COV)/snake/model/%.o)
+SNAKE_MODEL_O         := $(SNAKE_MODEL_CC:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_DIR)/snake/model/%.o)
+SNAKE_MODEL_O_COV     := $(SNAKE_MODEL_CC:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_DIR_COV)/snake/model/%.o)
 
 #============================== TETRIS CONTROLLER ==============================
 CONTROLLER_C          := $(shell find $(CONTROLLER_DIR) -type f -name "*.c")
@@ -83,8 +83,8 @@ TEST_O_COV            := $(TEST_CC:$(TESTS_DIR)/modules/%.cc=$(OBJ_DIR_COV)/test
 
 #======================= LIST OF FILES FOR STYLE CHECKS ========================
 C_FILES               := $(VIEW_C) $(MODEL_C) $(CONTROLLER_C) $(COMMON_O)
-H_FILES               := $(VIEW_H) $(MODEL_H) $(CONTROLLER_H) $(COMMON_H)
-CC_FILES              := $(MAIN) $(MAIN_TEST) $(TEST_CC)
+H_FILES               := $(VIEW_H) $(MODEL_H) $(CONTROLLER_H) $(COMMON_H) $(SNAKE_MODEL_H)
+CC_FILES              := $(MAIN) $(MAIN_TEST) $(TEST_CC) $(SNAKE_MODEL_CC)
 ALL_FILES             := $(C_FILES) $(H_FILES) $(CC_FILES) $(TEST_H)
 
 #============================== OBJECTIVE TARGETS ==============================
