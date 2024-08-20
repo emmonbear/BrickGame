@@ -20,12 +20,23 @@ extern "C" {
 
 namespace s21 {
 class SnakeModel {
-  friend class SnakeModelTest;
  public:
   SnakeModel();
   ~SnakeModel();
 
+  void StartGame();
   void InitializeGame();
+  inline const GameInfo_t &get_info() const {
+    return info_;
+  }
+
+  inline const std::vector<std::pair<int, int>> &get_snake() const {
+    return snake_;
+  }
+
+  inline const std::pair<int, int> &get_food() const {
+    return food_;
+  }
 
  private:
   GameInfo_t info_;
@@ -37,8 +48,6 @@ class SnakeModel {
   void ClearField();
   void PlaceSnakeOnField();
   void PlaceFoodOnField();
-
-
 };
 }  // namespace s21
 
