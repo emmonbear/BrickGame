@@ -10,3 +10,16 @@
  */
 
 #include "./model.h"
+
+namespace s21 {
+TetrisModel::TetrisModel() { init_model(model); }
+
+TetrisModel::~TetrisModel() { destroy_model(model); }
+
+GameInfo_t TetrisModel::updateCurrentState() { return model->game_info; }
+
+void TetrisModel::userInput(UserAction_t action, bool hold) {
+  // return userInput(UserAction_t action, bool hold);
+}
+
+}  // namespace s21
