@@ -41,6 +41,8 @@ TESTS_DIR             := ./tests
 DOCS_DIR              := ../docs
 BIN_DIR               := ../bin
 DIST_DIR              := ../dist
+INTERFACES_DIR        := ./interfaces
+WRAPPERS_DIR          := ./wrappers
 
 #================================== FILE LIST ==================================
 MAIN                  := $(PROJECT_NAME).cc
@@ -64,7 +66,7 @@ MODEL_O               := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR)/tetris/mo
 MODEL_O_COV           := $(MODEL_C:$(MODEL_DIR)/modules/%.c=$(OBJ_DIR_COV)/tetris/model/%.o)
 
 #================================= SNAKE MODEL =================================
-SNAKE_MODEL_CC         := $(shell find $(SNAKE_MODEL_DIR) -type f -name "*.cc")
+SNAKE_MODEL_CC        := $(shell find $(SNAKE_MODEL_DIR) -type f -name "*.cc")
 SNAKE_MODEL_H         := $(shell find $(SNAKE_MODEL_DIR) -type f -name "*.h")
 SNAKE_MODEL_O         := $(SNAKE_MODEL_CC:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_DIR)/snake/model/%.o)
 SNAKE_MODEL_O_COV     := $(SNAKE_MODEL_CC:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_DIR_COV)/snake/model/%.o)
@@ -81,10 +83,18 @@ TEST_H                := $(shell find $(TESTS_DIR) -type f -name "*.h")
 TEST_O                := $(TEST_CC:$(TESTS_DIR)/modules/%.cc=$(OBJ_DIR)/tests/%.o)
 TEST_O_COV            := $(TEST_CC:$(TESTS_DIR)/modules/%.cc=$(OBJ_DIR_COV)/tests/%.o)
 
+#=============================== INTERFACE FILES ===============================
+INTERFACE_H           := $(shell find $(INTERFACES_DIR) -type f -name "*.h")
+
+#=============================== WRAPPERS_FILES ================================
+WRAPPERS_CC           := $(shell find $(WRAPPERS_DIR) -type f -name "*.h")
+WRAPPERS_H           := $(shell find $(WRAPPERS_DIR) -type f -name "*.cc")
+
 #======================= LIST OF FILES FOR STYLE CHECKS ========================
-C_FILES               := $(VIEW_C) $(MODEL_C) $(CONTROLLER_C) $(COMMON_O)
-H_FILES               := $(VIEW_H) $(MODEL_H) $(CONTROLLER_H) $(COMMON_H) $(SNAKE_MODEL_H)
-CC_FILES              := $(MAIN) $(MAIN_TEST) $(TEST_CC) $(SNAKE_MODEL_CC)
+C_FILES               := $(VIEW_C) $(MODEL_C) $(CONTROLLER_C) $(COMMON_C)
+H_FILES               := $(VIEW_H) $(MODEL_H) $(CONTROLLER_H) $(COMMON_H) $(SNAKE_MODEL_H) \
+                         $(INTERFACE_H) $(WRAPPERS_H)
+CC_FILES              := $(MAIN) $(MAIN_TEST) $(TEST_CC) $(SNAKE_MODEL_CC) $(WRAPPERS_CC)
 ALL_FILES             := $(C_FILES) $(H_FILES) $(CC_FILES) $(TEST_H)
 
 #============================== OBJECTIVE TARGETS ==============================
