@@ -17,13 +17,13 @@
 
 static Model_t *model = NULL;
 
-static void start_stage(Model_t *Model_t);
-static void spawn_stage(Model_t *Model_t);
-static void moving_stage(Model_t *Model_t);
-static void shifting_stage(Model_t *Model_t);
-static void pause_stage(Model_t *Model_t);
-static void attaching_stage(Model_t *Model_t);
-static void game_over_stage(Model_t *Model_t);
+static void start_stage();
+static void spawn_stage();
+static void moving_stage();
+static void shifting_stage();
+static void pause_stage();
+static void attaching_stage();
+static void game_over_stage();
 static int get_current_time();
 
 /**
@@ -114,8 +114,33 @@ void reset_game_info() {
   model->timer = 0;
   model->game_over = false;
 }
+/// @todo Не используется action. Возможно следует action убрать из Model_t.
+void userInput(UserAction_t action, bool hold) {
+  switch (model->stage) {
+    case START:
+      start_stage();
+      break;
+    case SPAWN:
+      spawn_stage();
+      break;
+    case MOVING:
+      moving_stage();
+      break;
+    case SHIFTING:
+      shifting_stage();
+      break;
+    case PAUSE:
+      pause_stage();
+      break;
+    case ATTACHING:
+      attaching_stage();
+      break;
+    case GAME_OVER:
+      game_over_stage();
+  }
+}
 
-static void start_stage(Model_t *model) {
+static void start_stage() {
   switch (model->action) {
     case Start:
       model->stage = SPAWN;
@@ -128,7 +153,7 @@ static void start_stage(Model_t *model) {
   }
 }
 
-static void spawn_stage(Model_t *model) {
+static void spawn_stage() {
   copy_next_to_current(model);
   put_figure(model);
   model->figure.next_type = generate_random(model->figure.current_type);
@@ -136,7 +161,7 @@ static void spawn_stage(Model_t *model) {
   model->stage = SHIFTING;
 }
 
-static void moving_stage(Model_t *model) {
+static void moving_stage() {
   model->stage = SHIFTING;
 
   switch (model->action) {
@@ -165,7 +190,7 @@ static void moving_stage(Model_t *model) {
   }
 }
 
-static void shifting_stage(Model_t *model) {
+static void shifting_stage() {
   int current_time = get_current_time();
   int wait_time = 1100 - (model->game_info.level * 100);
 
@@ -198,7 +223,7 @@ static void shifting_stage(Model_t *model) {
   }
 }
 
-static void pause_stage(Model_t *model) {
+static void pause_stage() {
   switch (model->action) {
     case Pause:
       model->stage = SHIFTING;
@@ -211,7 +236,7 @@ static void pause_stage(Model_t *model) {
   }
 }
 
-static void attaching_stage(Model_t *model) {
+static void attaching_stage() {
   check_full_lines(model);
   set_figure_position(&model->figure);
 
@@ -222,7 +247,7 @@ static void attaching_stage(Model_t *model) {
   }
 }
 
-static void game_over_stage(Model_t *model) {
+static void game_over_stage() {
   write_high_score(&model->game_info);
 
   switch (model->action) {
@@ -241,7 +266,3 @@ static void game_over_stage(Model_t *model) {
       break;
   }
 }
-
-// void userInput(UserAction_t action, bool hold) {
-//   switch()
-// }
