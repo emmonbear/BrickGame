@@ -32,7 +32,7 @@ DVI                   := dvi
 MODEL_DIR             := ./brick_game/tetris
 SNAKE_MODEL_DIR       := ./brick_game/snake
 VIEW_DIR              := ./gui/cli
-CONTROLLER_DIR        := ./controller/tetris
+CONTROLLER_DIR        := ./controller
 COMMON_DIR            := ./common
 OBJ_DIR               := ./obj
 OBJ_DIR_COV           := ./obj_cov
@@ -72,10 +72,10 @@ SNAKE_MODEL_O         := $(SNAKE_MODEL_CC:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_
 SNAKE_MODEL_O_COV     := $(SNAKE_MODEL_CC:$(SNAKE_MODEL_DIR)/modules/%.cc=$(OBJ_DIR_COV)/snake/model/%.o)
 
 #============================== TETRIS CONTROLLER ==============================
-CONTROLLER_C          := $(shell find $(CONTROLLER_DIR) -type f -name "*.c")
+CONTROLLER_CC          := $(shell find $(CONTROLLER_DIR) -type f -name "*.cc")
 CONTROLLER_H          := $(shell find $(CONTROLLER_DIR) -type f -name "*.h")
-CONTROLLER_O          := $(CONTROLLER_C:$(CONTROLLER_DIR)/modules/%.c=$(OBJ_DIR)/tetris/controller/%.o)
-CONTROLLER_O_COV      := $(CONTROLLER_C:$(CONTROLLER_DIR)/modules/%.c=$(OBJ_DIR_COV)/tetris/controller/%.o)
+CONTROLLER_O          := $(CONTROLLER_CC:$(CONTROLLER_DIR)/modules/%.cc=$(OBJ_DIR)/controller/%.o)
+CONTROLLER_O_COV      := $(CONTROLLER_CC:$(CONTROLLER_DIR)/modules/%.cc=$(OBJ_DIR_COV)/controller/%.o)
 
 #================================= TESTS FILES =================================
 TEST_CC               := $(shell find $(TESTS_DIR)/modules -type f -name "*.cc")
@@ -91,10 +91,11 @@ WRAPPERS_CC           := $(shell find $(WRAPPERS_DIR) -type f -name "*.h")
 WRAPPERS_H           := $(shell find $(WRAPPERS_DIR) -type f -name "*.cc")
 
 #======================= LIST OF FILES FOR STYLE CHECKS ========================
-C_FILES               := $(VIEW_C) $(MODEL_C) $(CONTROLLER_C) $(COMMON_C)
+C_FILES               := $(VIEW_C) $(MODEL_C) $(COMMON_C)
 H_FILES               := $(VIEW_H) $(MODEL_H) $(CONTROLLER_H) $(COMMON_H) $(SNAKE_MODEL_H) \
                          $(INTERFACE_H) $(WRAPPERS_H)
-CC_FILES              := $(MAIN) $(MAIN_TEST) $(TEST_CC) $(SNAKE_MODEL_CC) $(WRAPPERS_CC)
+CC_FILES              := $(MAIN) $(MAIN_TEST) $(TEST_CC) $(SNAKE_MODEL_CC) $(WRAPPERS_CC) \
+												 $(CONTROLLER_CC)
 ALL_FILES             := $(C_FILES) $(H_FILES) $(CC_FILES) $(TEST_H)
 
 #============================== OBJECTIVE TARGETS ==============================
