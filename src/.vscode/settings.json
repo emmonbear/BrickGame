@@ -52,7 +52,16 @@
     "streambuf": "cpp",
     "cinttypes": "cpp",
     "typeinfo": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "view.h": "c",
+    "figures.h": "c",
+    "operations.h": "c",
+    "stdlib.h": "c",
+    "stdio.h": "c",
+    "model.h": "c",
+    "checks.h": "c",
+    "common.h": "c"
   },
-  "cmake.sourceDirectory": "/home/emmonbea/2_Github/BrickGame/src/gui/desktop"
+  "cmake.sourceDirectory": "/home/emmonbea/2_Github/BrickGame/src/gui/desktop",
+  "C_Cpp.errorSquiggles": "disabled"
 }
