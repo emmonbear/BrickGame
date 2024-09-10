@@ -1,15 +1,15 @@
 /**
  * @file common.c
  * @author emmonbea (moskaleviluak@icloud.com)
- * @brief 
+ * @brief
  * @version 1.0
- * @date 2024-08-17
- * 
+ * @date 2024-09-09
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
-#include "../include/common.h"
+#include "../include/common/common.h"
 
 void allocate_2d_array(int ***array, size_t rows, size_t cols) {
   *array = (int **)calloc(rows, sizeof(int *));
@@ -35,41 +35,8 @@ void destroy_2d_array(int ***array, size_t rows) {
         (*array)[i] = NULL;
       }
     }
+
     free(*array);
     *array = NULL;
   }
-}
-
-void write_high_score(GameInfo_t *info) {
-  char cwd[200];
-
-  if (getcwd(cwd, sizeof(cwd))) {
-    strcat(cwd, PATH);
-    FILE *f = fopen(cwd, "w");
-
-    if (f) {
-      fprintf(f, "%d", info->high_score);
-      fclose(f);
-    }
-  }
-}
-
-int load_max_score() {
-  char cwd[200];
-  int max_score = 0;
-
-  if (getcwd(cwd, sizeof(cwd))) {
-    strcat(cwd, PATH);
-
-    FILE *f = fopen(cwd, "r");
-
-    if (f) {
-      if (fscanf(f, "%d", &max_score) != 1) {
-        perror("fscanf error");
-      }
-      fclose(f);
-    }
-  }
-
-  return max_score;
 }
