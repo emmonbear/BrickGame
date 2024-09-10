@@ -3,15 +3,18 @@
  * @author emmonbea (moskaleviluak@icloud.com)
  * @brief
  * @version 1.0
- * @date 2024-08-17
+ * @date 2024-09-09
  *
  * @copyright Copyright (c) 2024
  *
  */
 
-#ifndef SRC_GUI_CLI_INCLUDE_SETTINGS_H_
-#define SRC_GUI_CLI_INCLUDE_SETTINGS_H_
+#ifndef SRC_INCLUDE_GUI_CLI_TYPES_H_
+#define SRC_INCLUDE_GUI_CLI_TYPES_H_
 
+#include <ncurses.h>
+#include <stdlib.h>
+#include <string.h>
 /// @brief Number of lines on Field
 #define HEIGHT 20
 
@@ -124,4 +127,30 @@
 /// @brief X coordinate for the "PAUSE"
 #define X_CENTER_PAUSE ((X_CENTER_FIELD) - (INFO_WIDTH))
 
-#endif  // SRC_GUI_CLI_INCLUDE_SETTINGS_H_
+#define MEM_ALLOC_ERROR                                                        \
+  do {                                                                         \
+    fprintf(stderr, "Memory allocation error at %s:%d\n", __FILE__, __LINE__); \
+    exit(EXIT_FAILURE);                                                        \
+  } while (0)
+
+typedef struct {
+  int height;  ///< The height of the window.
+  int width;   ///< The width of the window.
+  int y;       ///< The y-coordinate of the window's position on the screen.
+  int x;       ///< The x-coordinate of the window's position on the screen.
+  WINDOW *w;   ///< A pointer to the `WINDOW` structure used by the ncurses
+               /// library.
+} window_t;
+
+typedef struct {
+  window_t field;       ///< Window for displaying the game field.
+  window_t next;        ///< Window for displaying the next tetromino.
+  window_t score;       ///< Window for displaying the current score.
+  window_t high_score;  ///< Window for displaying the high score.
+  window_t level;       ///< Window for displaying the current level.
+  window_t start;       ///< Window for displaying the start screen.
+  window_t info;        ///< Window for displaying additional game information.
+  window_t game_over;   ///< Window for displaying the game over screen.
+} Windows_t;
+
+#endif  // SRC_INCLUDE_GUI_CLI_TYPES_H_
