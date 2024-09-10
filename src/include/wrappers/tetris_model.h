@@ -9,14 +9,13 @@
  *
  */
 
-#ifndef SRC_WRAPPERS_TETRIS_MODEL_H_
-#define SRC_WRAPPERS_TETRIS_MODEL_H_
+#ifndef SRC_INCLUDE_WRAPPERS_TETRIS_MODEL_H_
+#define SRC_INCLUDE_WRAPPERS_TETRIS_MODEL_H_
 
-#include "../../interfaces/IModel.h"
+#include "../interfaces/IModel.h"
 
 extern "C" {
-#include "../../brick_game/tetris/include/init.h"
-#include "../../brick_game/tetris/include/model.h"
+#include "../tetris/model.h"
 }
 
 namespace s21 {
@@ -26,10 +25,12 @@ class TetrisModel : public IModel {
   ~TetrisModel() override;
   void userInput(UserAction_t action, bool hold) override;
   GameInfo_t updateCurrentState() override;
+  stage_t stage() override;
+  bool game_over() override;
 
  private:
-  Model_t *model;
+  Model_t *model_;
 };
 }  // namespace s21
 
-#endif  // SRC_WRAPPERS_TETRIS_MODEL_H_
+#endif  // SRC_INCLUDE_WRAPPERS_TETRIS_MODEL_H_
