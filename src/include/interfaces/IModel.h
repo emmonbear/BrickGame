@@ -9,11 +9,10 @@
  *
  */
 
-#ifndef SRC_INTERFACES_IMODEL_H_
-#define SRC_INTERFACES_IMODEL_H_
+#ifndef SRC_INCLUDE_INTERFACES_IMODEL_H_
+#define SRC_INCLUDE_INTERFACES_IMODEL_H_
 
-#include "../common/include/enums.h"
-#include "../common/include/types.h"
+#include "../common/game_info.h"
 
 namespace s21 {
 class IModel {
@@ -21,7 +20,9 @@ class IModel {
   virtual ~IModel() = default;
   virtual void userInput(UserAction_t action, bool hold) = 0;
   virtual GameInfo_t updateCurrentState() = 0;
+  virtual stage_t stage() = 0;
+  virtual bool game_over() = 0;
 };
 }  // namespace s21
 
-#endif  // SRC_INTERFACES_IMODEL_H_
+#endif  // SRC_INCLUDE_INTERFACES_IMODEL_H_
