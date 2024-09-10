@@ -41,6 +41,7 @@ BIN_DIR               := ../bin
 #================================== FILE LIST ==================================
 CLI                   := $(APP_DIR)/cli.cc
 BIN_CLI               := $(BIN_DIR)/cli
+TETRIS_SCORE          := $(PROJECT_NAME)/$(TETRIS)/max_score.txt
 
 #================================ TETRIS MODEL =================================
 TETRIS_C              := $(shell find $(TETRIS_DIR) -type f -name "*.c")
@@ -109,6 +110,10 @@ $(OBJ_DIR)/$(SNAKE)/%.o: $(SNAKE_DIR)/%.cc $(SNAKE_H)
 install: $(BIN_DIR) $(COMMON_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(CONTROLLER_LIB) $(CLI_LIB)
 	$(CXX) $(CXXFLAGS) $(CLI) $(CONTROLLER_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(COMMON_LIB) $(CLI_LIB) $(LDGUI) -o $(BIN_CLI)
 	$(BIN_DIR)/cli
+
+uninstall:
+	rm -rf $(BIN_DIR)
+	rm -f $(TETRIS_SCORE)
 
 1:
 	@echo $(CLI_C)
