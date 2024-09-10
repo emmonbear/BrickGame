@@ -9,23 +9,25 @@
  *
  */
 
-#ifndef SRC_CONTROLLER_CONTROLLER_H_
-#define SRC_CONTROLLER_CONTROLLER_H_
+#ifndef SRC_INCLUDE_CONTROLLER_CONTROLLER_H_
+#define SRC_INCLUDE_CONTROLLER_CONTROLLER_H_
 
-#include "../../interfaces/IModel.h"
+#include "../interfaces/IModel.h"
 
 namespace s21 {
 class Controller {
  public:
-  Controller(IModel* model);
+  Controller(IModel *model);
   ~Controller();
 
   void userInput(UserAction_t action, bool hold);
   GameInfo_t updateCurrentState();
+  bool game_over();
+  stage_t stage();
 
  private:
-  IModel* model_;
+  IModel *model_;
 };
 }  // namespace s21
 
-#endif  // SRC_CONTROLLER_CONTROLLER_H_
+#endif  // SRC_INCLUDE_CONTROLLER_CONTROLLER_H_

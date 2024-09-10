@@ -9,7 +9,7 @@
  *
  */
 
-#include "../include/controller.h"
+#include "../include/controller/controller.h"
 
 namespace s21 {
 Controller::Controller(IModel *model) : model_(model) {}
@@ -22,5 +22,8 @@ GameInfo_t Controller::updateCurrentState() {
 void Controller::userInput(UserAction_t action, bool hold) {
   return model_->userInput(action, hold);
 }
+
+bool Controller::game_over() { return model_->game_over(); }
+stage_t Controller::stage() { return model_->stage(); }
 
 }  // namespace s21
