@@ -90,6 +90,9 @@ void get_input(UserAction_t *action) {
     case KEY_DOWN:
       *action = Down;
       break;
+    case KEY_UP:
+      *action = Up;
+      break;
     case ' ':
       *action = Action;
       break;

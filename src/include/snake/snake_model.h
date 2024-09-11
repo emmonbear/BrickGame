@@ -17,6 +17,7 @@ extern "C" {
 #include "../../include/common/game_info.h"
 }
 
+#include <chrono>
 #include <utility>
 #include <vector>
 
@@ -28,6 +29,8 @@ class SnakeModel : public IModel {
  public:
   using Point = std::pair<int, int>;
   using PointVector = std::vector<Point>;
+  using SteadyClock = std::chrono::steady_clock;
+  using Time = std::chrono::time_point<SteadyClock>;
 
   enum class Direction {
     kUp = 0,
@@ -45,25 +48,36 @@ class SnakeModel : public IModel {
   stage_t stage() override;
   bool game_over() override;
 
- private:
+ protected:
   GameInfo_t game_info_;
   PointVector snake_;
   Point food_;
   stage_t stage_;
   bool game_over_;
   Direction current_direction_;
+  Time last_move_time_;
+  int move_delay_;
+  bool can_change_direction_;
 
   void InitGameInfo();
   void InitSnake();
   void PlaceFoodOnField();
   void PlaceSnakeOnField();
+  void ClearField();
+  bool CheckCollision(const Point &new_head) const;
+  void HandleUserDirection(UserAction_t action);
+  bool IsOutOfBounds(const Point &head) const;
+  bool IsSelfCollision(const Point &head) const;
+  bool IsTimeToMove();
+  bool IsSnakeEat(const Point &head) const;
+  void UpdateField();
   void set_direction(Direction new_direction);
   void start_stage(UserAction_t action);
   void spawn_stage();
   void moving_stage(UserAction_t action);
   void shifting_stage(UserAction_t action);
   // void pause_stage(UserAction_t action);
-  // void attaching_stage();
+  void attaching_stage();
   void game_over_stage(UserAction_t action);
 };
 }  // namespace s21
