@@ -10,6 +10,7 @@
  */
 
 #include "../include/wrappers/tetris_model.h"
+#include "../include/snake/snake_model.h"
 #include "../include/wrappers/cli_view.h"
 #include "../include/controller/controller.h"
 
@@ -28,7 +29,11 @@ int main() {
     s21::CliView view(controller);
     view.startEventLoop();
   } else if (choise == 2) {
-    std::cout << "Змейка" << std::endl;
+    model = new s21::SnakeModel();
+    s21::Controller controller(model);
+    s21::CliView view(controller);
+    view.startEventLoop();
+
   }
 
   return 0;
