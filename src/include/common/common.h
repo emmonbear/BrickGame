@@ -21,6 +21,16 @@
     exit(EXIT_FAILURE);                                                        \
   } while (0)
 
+typedef enum {
+  white,
+  blue,
+  cyan,
+  green,
+  red,
+  yellow,
+  magenda,
+} colors;
+
 void allocate_2d_array(int ***array, size_t rows, size_t cols);
 void destroy_2d_array(int ***array, size_t rows);
 
