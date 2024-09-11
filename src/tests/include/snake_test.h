@@ -15,17 +15,11 @@
 #include "../include/main_test.h"
 
 namespace s21 {
-class SnakeTest : public ::testing::Test {
+class SnakeTest : public SnakeModel {
  public:
-  GameInfo_t game_info();
+  inline const PointVector &snake() { return snake_; }
   bool ArrayIsEmpty(int **array, int rows, int cols);
-
- protected:
-  void SetUp() override { game_info_ = model_.updateCurrentState(); }
-
- private:
-  SnakeModel model_;
-  GameInfo_t game_info_;
+  inline void set_stage(stage_t stage) { stage_ = stage; }
 };
 }  // namespace s21
 
