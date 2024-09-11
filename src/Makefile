@@ -20,6 +20,7 @@ VALGRIND              := --tool=memcheck --leak-check=yes
 #================================ TARGET NAMES =================================
 TETRIS_LIB            := $(TETRIS).a
 SNAKE_LIB             := $(SNAKE).a
+SNAKE_GCOVR_LIB       := $(SNAKE)_gcovr.a
 COMMON_LIB            := common.a
 WRAPPERS_LIB          := wrappers.a
 CONTROLLER_LIB        := controller.a
@@ -37,13 +38,17 @@ CLI_DIR               := ./gui/cli
 OBJ_DIR               := ./obj
 OBJ_DIR_COV           := ./obj_cov
 BIN_DIR               := ../bin
-TESTS_DIR             :=./tests
+TESTS_DIR             := ./tests
+REPORT_DIR            := ./report
 
 #================================== FILE LIST ==================================
 CLI                   := $(APP_DIR)/cli.cc
 BIN_CLI               := $(BIN_DIR)/cli
 TETRIS_SCORE          := $(PROJECT_NAME)/$(TETRIS)/max_score.txt
 MAIN_TEST             := $(TESTS_DIR)/main_test.cc
+GCOVR_EXCLUDES        := --exclude='.*tests/.*|.*include/.*'
+GCOVR_HTML            := -r . $(GCOVR_EXCLUDES) --html --html-details -o $(REPORT_DIR)/coverage.html 
+GCOVR_TXT             := -r . $(GCOVR_EXCLUDES) --txt -o $(REPORT_DIR)/coverage.txt 
 
 #================================ TETRIS MODEL =================================
 TETRIS_C              := $(shell find $(TETRIS_DIR) -type f -name "*.c")
@@ -115,6 +120,9 @@ $(OBJ_DIR)/cli/%.o: $(CLI_DIR)/%.c $(CLI_H)
 $(OBJ_DIR)/$(SNAKE)/%.o: $(SNAKE_DIR)/%.cc $(SNAKE_H)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+$(OBJ_DIR_COV)/$(SNAKE)/%.o: $(SNAKE_DIR)/%.cc $(SNAKE_H)
+	$(CXX) $(CXXFLAGS) $(COVERAGE_FLAGS) -c -o $@ $<
+
 $(OBJ_DIR)/tests/modules/%.o: $(TESTS_DIR)/modules/%.cc $(TESTS_H)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
@@ -131,6 +139,17 @@ test: $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB)
 	$(CXX) $(MAIN_TEST) $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB) $(LDFLAGS) -o $@
 	./$@
 
+gcov_report: $(REPORT_DIR) $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_GCOVR_LIB) $(COMMON_LIB)
+	$(CXX) $(MAIN_TEST) $(TESTS_O) $(SNAKE_GCOVR_LIB) $(COMMON_LIB) $(LDFLAGS) $(COVERAGE_FLAGS) -o $(OBJ_DIR_COV)/report
+	./$(OBJ_DIR_COV)/report
+	gcovr $(GCOVR_HTML)
+	gcovr $(GCOVR_TXT)
+	@echo
+	@echo
+	@cat $(REPORT_DIR)/coverage.txt
+
+report_open:
+	xdg-open $(REPORT_DIR)/coverage.html
 m:
 	gdb ../bin/cli
 
@@ -150,6 +169,10 @@ $(TETRIS_LIB): $(OBJ_DIR)/$(TETRIS) $(TETRIS_O)
 
 $(SNAKE_LIB): $(OBJ_DIR)/snake $(SNAKE_O)
 	ar rcs $@ $(SNAKE_O)
+	ranlib $@
+
+$(SNAKE_GCOVR_LIB): $(OBJ_DIR_COV)/snake $(SNAKE_O_COV)
+	ar rcs $@ $(SNAKE_O_COV)
 	ranlib $@
 
 $(COMMON_LIB): $(OBJ_DIR)/common $(COMMON_O)
@@ -177,6 +200,8 @@ clean:
 	rm -f $(CONTROLLER_LIB)
 	rm -f $(CLI_LIB)
 	rm -f $(SNAKE_LIB)
+	rm -rf $(REPORT_DIR)
+	rm -f $(SNAKE_GCOVR_LIB)
 	rm -f test
 
 #=================================== CHECKS ====================================
@@ -231,6 +256,9 @@ $(OBJ_DIR_COV)/cli:
 
 $(OBJ_DIR_COV)/snake:
 	mkdir -p $(OBJ_DIR_COV)/snake
+
+$(REPORT_DIR):
+	mkdir $(REPORT_DIR)
 
 $(BIN_DIR):
 	mkdir $(BIN_DIR)
