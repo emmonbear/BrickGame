@@ -37,11 +37,13 @@ CLI_DIR               := ./gui/cli
 OBJ_DIR               := ./obj
 OBJ_DIR_COV           := ./obj_cov
 BIN_DIR               := ../bin
+TESTS_DIR             :=./tests
 
 #================================== FILE LIST ==================================
 CLI                   := $(APP_DIR)/cli.cc
 BIN_CLI               := $(BIN_DIR)/cli
 TETRIS_SCORE          := $(PROJECT_NAME)/$(TETRIS)/max_score.txt
+MAIN_TEST             := $(TESTS_DIR)/main_test.cc
 
 #================================ TETRIS MODEL =================================
 TETRIS_C              := $(shell find $(TETRIS_DIR) -type f -name "*.c")
@@ -76,6 +78,12 @@ CONTROLLER_H          := $(shell find $(INCLUDE_DIR)/controller -type f -name "*
 CONTROLLER_O          := $(CONTROLLER_CC:$(CONTROLLER_DIR)/%.cc=$(OBJ_DIR)/controller/%.o)
 CONTROLLER_O_COV      := $(CONTROLLER_CC:$(CONTROLLER_DIR)/%.cc=$(OBJ_DIR_COV)/controller/%.o)
 
+#==================================== TESTS ====================================
+TESTS_CC              := $(shell find $(TESTS_DIR)/modules -type f -name "*.cc")
+TESTS_H               := $(shell find $(TESTS_DIR) -type f -name "*.h")
+TESTS_O               := $(TESTS_CC:$(TESTS_DIR)/%.cc=$(OBJ_DIR)/tests/%.o)
+TESTS_O_COV           := $(TESTS_CC:$(TESTS_DIR)/%.cc=$(OBJ_DIR_COV)/tests/%.o)
+
 #=========================== COMMAND LINE INTERFACE ============================
 CLI_C                 := $(shell find $(CLI_DIR) -type f -name "*.c")
 CLI_H                 := $(shell find $(INCLUDE_DIR)/gui/cli -type f -name "*.h")
@@ -84,8 +92,8 @@ CLI_O_COV             := $(CLI_C:$(CLI_DIR)/%.c=$(OBJ_DIR_COV)/cli/%.o)
 
 #======================= LIST OF FILES FOR STYLE CHECKS ========================
 C_FILES               := $(TETRIS_C) $(COMMON_C) $(CLI_C)
-CC_FILES              := $(WRAPPERS_CC) $(CONTROLLER_CC) $(SNAKE_CC)
-HEADERS               := $(shell find $(INCLUDE_DIR) -type f -name "*.h")
+CC_FILES              := $(WRAPPERS_CC) $(CONTROLLER_CC) $(SNAKE_CC) $(TESTS_CC)
+HEADERS               := $(shell find $(INCLUDE_DIR) -type f -name "*.h") $(TESTS_H)
 ALL_FILES             := $(C_FILES) $(CC_FILES) $(HEADERS)
 
 #============================== OBJECTIVE TARGETS ==============================
@@ -107,22 +115,33 @@ $(OBJ_DIR)/cli/%.o: $(CLI_DIR)/%.c $(CLI_H)
 $(OBJ_DIR)/$(SNAKE)/%.o: $(SNAKE_DIR)/%.cc $(SNAKE_H)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-install: $(BIN_DIR) $(COMMON_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(CONTROLLER_LIB) $(CLI_LIB)
-	$(CXX) $(CXXFLAGS) $(CLI) $(CONTROLLER_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(COMMON_LIB) $(CLI_LIB) $(LDGUI) -o $(BIN_CLI)
+$(OBJ_DIR)/tests/modules/%.o: $(TESTS_DIR)/modules/%.cc $(TESTS_H)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+#=================================== TARGETS ===================================
+install: $(BIN_DIR) $(COMMON_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(CONTROLLER_LIB) $(CLI_LIB) $(SNAKE_LIB)
+	$(CXX) $(CXXFLAGS) $(CLI) $(CONTROLLER_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(COMMON_LIB) $(CLI_LIB) $(SNAKE_LIB) $(LDGUI) -o $(BIN_CLI)
 	$(BIN_DIR)/cli
 
 uninstall:
 	rm -rf $(BIN_DIR)
 	rm -f $(TETRIS_SCORE)
 
+test: $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB)
+	$(CXX) $(MAIN_TEST) $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB) $(LDFLAGS) -o $@
+	./$@
+
+m:
+	gdb ../bin/cli
+
 1:
-	@echo $(CLI_C)
+	@echo $(TESTS_CC)
 	@echo
-	@echo $(CLI_H)
+	@echo $(TESTS_H)
 	@echo
-	@echo $(CLI_O)
+	@echo $(TESTS_O)
 	@echo
-	@echo $(CLI_O_COV)
+	@echo $(TESTS_O_COV)
 
 #=========================== STATIC LIBRARY BUILDING ===========================
 $(TETRIS_LIB): $(OBJ_DIR)/$(TETRIS) $(TETRIS_O)
@@ -145,7 +164,6 @@ $(CONTROLLER_LIB): $(OBJ_DIR)/controller $(CONTROLLER_O)
 	ar rcs $@ $(CONTROLLER_O)
 	ranlib $@
 
-
 $(CLI_LIB): $(OBJ_DIR)/cli $(CLI_O)
 	ar rcs $@ $(CLI_O)
 	ranlib $@
@@ -159,6 +177,7 @@ clean:
 	rm -f $(CONTROLLER_LIB)
 	rm -f $(CLI_LIB)
 	rm -f $(SNAKE_LIB)
+	rm -f test
 
 #=================================== CHECKS ====================================
 cpplint:
@@ -169,6 +188,9 @@ clang:
 
 valgrind:
 	valgrind $(VALGRIND) $(BIN_CLI)
+
+valgrind_test:
+	valgrind $(VALGRIND) ./test
 
 #============================= CREATE DIRECTORIES ==============================
 $(OBJ_DIR)/$(TETRIS):
@@ -188,6 +210,9 @@ $(OBJ_DIR)/cli:
 
 $(OBJ_DIR)/snake:
 	mkdir -p $(OBJ_DIR)/snake
+
+$(OBJ_DIR)/tests/modules:
+	mkdir -p $(OBJ_DIR)/tests/modules
 
 $(OBJ_DIR_COV)/$(TETRIS):
 	mkdir -p $(OBJ_DIR_COV)/$(TETRIS)
