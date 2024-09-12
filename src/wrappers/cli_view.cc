@@ -10,6 +10,7 @@
  */
 
 #include "../include/wrappers/cli_view.h"
+#include <unistd.h>
 
 namespace s21 {
 CliView::CliView(Controller &controller) : controller_(controller) {
@@ -24,14 +25,15 @@ void CliView::startEventLoop() {
   int cols = COLS;
   bool hold = false;
   UserAction_t action = None;
+  UserAction_t last_key = None;
   GameInfo_t game_info;
 
   while (!controller_.game_over()) {
     resize_windows(&windows_, &lines, &cols);
     game_info = controller_.updateCurrentState();
+    get_input(&action, &hold, &last_key);
     controller_.userInput(action, hold);
     render(&windows_, game_info, controller_.stage());
-    get_input(&action);
   }
 }
 
