@@ -42,6 +42,49 @@ void remove_figure(Model_t *model, GameInfo_t *game_info) {
   }
 }
 
+bool is_out_of_bounds(int new_x, int new_y) {
+  return (new_x < 0 || new_x >= WIDTH || new_y >= HEIGHT);
+}
+
+bool is_collision(Model_t *model, GameInfo_t *game_info, int new_x, int new_y) {
+  return game_info->field[new_y][new_x] &&
+         !is_inside_figure(model, new_y, new_x);
+}
+
+bool can_move(Model_t *model, GameInfo_t *game_info, int dx, int dy) {
+  bool result = true;
+
+  for (int i = 0; i < TETROMINO_SIZE && result; i++) {
+    for (int j = 0; j < TETROMINO_SIZE && result; j++) {
+      if (!model->figure.current_figure[i][j]) {
+        continue;
+      }
+
+      int new_x = model->figure.x + j + dx;
+      int new_y = model->figure.y + i + dy;
+
+      if (is_out_of_bounds(new_x, new_y) ||
+          is_collision(model, game_info, new_x, new_y)) {
+        result = false;
+      }
+    }
+  }
+
+  return result;
+}
+
+bool can_move_left(Model_t *model, GameInfo_t *game_info) {
+  return can_move(model, game_info, -1, 0);
+}
+
+bool can_move_right(Model_t *model, GameInfo_t *game_info) {
+  return can_move(model, game_info, 1, 0);
+}
+
+bool can_move_down(Model_t *model, GameInfo_t *game_info) {
+  return can_move(model, game_info, 0, 1);
+}
+
 void move_left(Model_t *model, GameInfo_t *game_info) {
   if (can_move_left(model, game_info)) {
     remove_figure(model, game_info);
@@ -105,70 +148,6 @@ bool is_inside_figure(Model_t *model, int y, int x) {
   return res;
 }
 
-bool can_move_down(Model_t *model, GameInfo_t *game_info) {
-  bool res = true;
-
-  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (model->figure.current_figure[i][j]) {
-        if (model->figure.y + i >= HEIGHT - 1) {
-          res = false;
-        } else if (game_info
-                       ->field[model->figure.y + i + 1][model->figure.x + j] &&
-                   !is_inside_figure(model, model->figure.y + i + 1,
-                                     model->figure.x + j)) {
-          res = false;
-        }
-      }
-    }
-  }
-
-  return res;
-}
-
-bool can_move_left(Model_t *model, GameInfo_t *game_info) {
-  bool res = true;
-
-  for (size_t i = 0; i < TETROMINO_SIZE; i++) {
-    for (size_t j = 0; j < TETROMINO_SIZE; j++) {
-      if (model->figure.current_figure[i][j]) {
-        if (model->figure.x + j < 1) {
-          res = false;
-        } else if ((game_info->field[model->figure.y + i]
-                                    [model->figure.x + j - 1]) &&
-                   !is_inside_figure(model, model->figure.y + i,
-                                     model->figure.x + j - 1)) {
-          res = false;
-        }
-      }
-    }
-  }
-
-  return res;
-}
-
-bool can_move_right(Model_t *model, GameInfo_t *game_info) {
-  bool res = true;
-
-  for (int i = 0; i < TETROMINO_SIZE; i++) {
-    for (int j = TETROMINO_SIZE - 1; j > 0; j--) {
-      if (model->figure.current_figure[i][j]) {
-        if (model->figure.x + j > WIDTH - 2) {
-          res = false;
-          break;
-        } else if (game_info
-                       ->field[model->figure.y + i][model->figure.x + j + 1] &&
-                   !is_inside_figure(model, model->figure.y + i,
-                                     model->figure.x + j + 1)) {
-          res = false;
-        }
-      }
-    }
-  }
-
-  return res;
-}
-
 bool can_rotate(Model_t *model, GameInfo_t *game_info) {
   bool res = true;
 
@@ -179,7 +158,8 @@ bool can_rotate(Model_t *model, GameInfo_t *game_info) {
         int new_x = model->figure.x + j;
         int new_y = model->figure.y + i;
 
-        if ((new_x < 0 || new_x >= WIDTH || new_y < 0 || new_y >= HEIGHT || game_info->field[new_y][new_x])) {
+        if ((new_x < 0 || new_x >= WIDTH || new_y < 0 || new_y >= HEIGHT ||
+             game_info->field[new_y][new_x])) {
           res = false;
           put_figure(model, game_info);
         }

@@ -29,34 +29,8 @@ bool can_move_right(Model_t *model, GameInfo_t *game_info);
 bool can_rotate(Model_t *model, GameInfo_t *game_info);
 void check_full_lines(GameInfo_t *game_info);
 bool can_put_new_line(Model_t *model, GameInfo_t *game_info);
-
-// bool can_move(Model_t *model, int dx, int dy) {
-//     for (int i = 0; i < TETROMINO_SIZE; i++) {
-//         for (int j = 0; j < TETROMINO_SIZE; j++) {
-//             if (model->figure.current_figure[i][j]) {
-//                 int new_x = model->figure.x + j + dx;
-//                 int new_y = model->figure.y + i + dy;
-//                 if (new_x < 0 || new_x >= WIDTH || new_y >= HEIGHT ||
-//                     model->game_info.field[new_y][new_x] &&
-//                     !is_inside_figure(model, new_y, new_x)) {
-//                     return false;
-//                 }
-//             }
-//         }
-//     }
-//     return true;
-// }
-
-// bool can_move_left(Model_t *model) {
-//     return can_move(model, -1, 0);
-// }
-
-// bool can_move_right(Model_t *model) {
-//     return can_move(model, 1, 0);
-// }
-
-// bool can_move_down(Model_t *model) {
-//     return can_move(model, 0, 1);
-// }
+bool is_out_of_bounds(int new_x, int new_y);
+bool is_collision(Model_t *model, GameInfo_t *game_info, int new_x, int new_y);
+bool can_move(Model_t *model, GameInfo_t *game_info, int dx, int dy);
 
 #endif  // SRC_INCLUDE_TETRIS_OPERATIONS_H_
