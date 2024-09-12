@@ -79,9 +79,9 @@ void resize_windows(Windows_t *windows, int *lines, int *cols) {
   }
 }
 
-void get_input(UserAction_t *action, bool *hold, UserAction_t *last_key) {
+void get_input(UserAction_t *action, bool *hold) {
   *hold = false;
-  
+
   switch (getch()) {
     case KEY_LEFT:
       *action = Left;
@@ -113,10 +113,6 @@ void get_input(UserAction_t *action, bool *hold, UserAction_t *last_key) {
       *action = None;
       break;
   }
-  if (*action == *last_key) {
-    *hold = true;
-  }
-  *last_key = *action;
 }
 
 static void init_window(window_t *window, int height, int width, int y, int x) {

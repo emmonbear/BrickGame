@@ -19,6 +19,6 @@ void init_screen();
 void init_windows(Windows_t *windows);
 void destroy_windows(Windows_t *windows);
 void resize_windows(Windows_t *windows, int *lines, int *cols);
-void get_input(UserAction_t *action, bool *hold, UserAction_t *last_key);
+void get_input(UserAction_t *action, bool *hold);
 
 #endif  // SRC_INCLUDE_GUI_CLI_VIEW_H_
