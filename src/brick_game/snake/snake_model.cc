@@ -21,11 +21,13 @@ SnakeModel::SnakeModel()
       food_{},
       stage_{START},
       game_over_{false},
-      current_direction_{Direction::kRight},
+      direction_{},
       last_move_time_(std::chrono::steady_clock::now()),
       move_delay_{700} {
   InitGameInfo();
   InitSnake();
+  direction_.push(Direction::kRight);
+  LoadHighScore();
 }
 
 SnakeModel::~SnakeModel() {
@@ -111,9 +113,9 @@ void SnakeModel::PlaceSnakeOnField() {
 }
 
 void SnakeModel::set_direction(Direction new_direction) {
-  if ((static_cast<int>(current_direction_) + 2) % 4 !=
+  if (direction_.size() < 3 && (static_cast<int>(direction_.back()) + 2) % 4 !=
       static_cast<int>(new_direction)) {
-    current_direction_ = new_direction;
+    direction_.push(new_direction);
   }
 }
 
@@ -127,7 +129,7 @@ void SnakeModel::ClearField() {
 
 bool SnakeModel::IsSnakeEat(const Point &head) const { return head == food_; }
 
-bool SnakeModel::IsTimeToMove() {
+bool SnakeModel::IsTimeToMove() const {
   auto now = SteadyClock::now();
   return std::chrono::duration_cast<std::chrono::milliseconds>(now -
                                                                last_move_time_)
@@ -194,9 +196,15 @@ void SnakeModel::HandleUserDirection(UserAction_t action) {
 }
 
 void SnakeModel::moving_stage(UserAction_t action) {
+  if (direction_.size() > 1) {
+    direction_.pop();
+  }
+
+  Direction current_direction = direction_.front();
+  
   Point new_head = snake_.front();
-  // HandleUserDirection(action);
-  switch (current_direction_) {
+
+  switch (current_direction) {
     case Direction::kUp:
       new_head.first -= 1;
       break;
@@ -217,7 +225,7 @@ void SnakeModel::moving_stage(UserAction_t action) {
     snake_.insert(snake_.begin(), new_head);
 
     if (IsSnakeEat(new_head)) {
-      // stage_ = ATTACHING;
+      stage_ = ATTACHING;
     } else {
       snake_.pop_back();
       stage_ = SHIFTING;
@@ -233,6 +241,7 @@ void SnakeModel::UpdateField() {
 
 void SnakeModel::shifting_stage(UserAction_t action) {
   HandleUserDirection(action);
+  
   if (IsTimeToMove()) {
     moving_stage(action);
     last_move_time_ = SteadyClock::now();
@@ -250,9 +259,65 @@ void SnakeModel::shifting_stage(UserAction_t action) {
   }
   UpdateField();
 }
+  
+bool SnakeModel::IsNewLevel() const {
+  return (game_info_.score % 5 == 0) && (game_info_.level < 10);
+}
 
-void SnakeModel::attaching_stage() { return; }
+void SnakeModel::SaveHighScore() const {
+  std::ofstream file(kHighScoreFileName);
 
-void SnakeModel::game_over_stage(UserAction_t action) { game_over_ = true; }
+  if (file.is_open()) {
+    file << game_info_.score;
+    file.close();
+  }
+}
+
+
+void SnakeModel::LoadHighScore() {
+  std::ifstream file(kHighScoreFileName);
+
+  if (file.is_open()) {
+    file >> game_info_.high_score;
+    file.close();
+  } else {
+    game_info_.high_score = 0;
+  }
+}
+
+void SnakeModel::attaching_stage() { 
+  game_info_.score += 1;
+  if (IsNewRecord()) {
+    game_info_.high_score = game_info_.score;
+  }
+
+  if (IsNewLevel()) {
+    game_info_.level += 1;
+    move_delay_ -= 50;
+  }
+
+  GenerateFood();
+  stage_ = SHIFTING;
+}
+
+bool SnakeModel::IsNewRecord() const {
+  return game_info_.score > game_info_.high_score;
+}
+
+void SnakeModel::game_over_stage(UserAction_t action) {
+  SaveHighScore();
+  switch (action) {
+    case Start:
+      ClearField();
+      stage_ = SPAWN;
+      game_over_ = false;
+      break;
+    case Terminate:
+      game_over_ = true;
+      break;
+    default:
+      break;
+  }
+ }
 
 }  // namespace s21

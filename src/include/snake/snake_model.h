@@ -20,8 +20,11 @@ extern "C" {
 #include <chrono>
 #include <utility>
 #include <vector>
+#include <queue>
+#include <fstream>
 
 #include "../interfaces/IModel.h"
+
 
 namespace s21 {
 
@@ -49,15 +52,16 @@ class SnakeModel : public IModel {
   bool game_over() override;
 
  protected:
+  const std::string kHighScoreFileName = "brick_game/snake/high_score.txt";
+
   GameInfo_t game_info_;
   PointVector snake_;
   Point food_;
   stage_t stage_;
   bool game_over_;
-  Direction current_direction_;
+  std::queue<Direction> direction_;
   Time last_move_time_;
   int move_delay_;
-  bool can_change_direction_;
 
   void InitGameInfo();
   void InitSnake();
@@ -68,9 +72,13 @@ class SnakeModel : public IModel {
   void HandleUserDirection(UserAction_t action);
   bool IsOutOfBounds(const Point &head) const;
   bool IsSelfCollision(const Point &head) const;
-  bool IsTimeToMove();
+  bool IsTimeToMove() const;
+  bool IsNewLevel() const;
   bool IsSnakeEat(const Point &head) const;
+  bool IsNewRecord() const;
   void UpdateField();
+  void LoadHighScore();
+  void SaveHighScore() const;
   void set_direction(Direction new_direction);
   void start_stage(UserAction_t action);
   void spawn_stage();
