@@ -179,7 +179,7 @@ bool can_rotate(Model_t *model, GameInfo_t *game_info) {
         int new_x = model->figure.x + j;
         int new_y = model->figure.y + i;
 
-        if ((new_x < 0 || new_x >= WIDTH || game_info->field[new_y][new_x])) {
+        if ((new_x < 0 || new_x >= WIDTH || new_y < 0 || new_y >= HEIGHT || game_info->field[new_y][new_x])) {
           res = false;
           put_figure(model, game_info);
         }

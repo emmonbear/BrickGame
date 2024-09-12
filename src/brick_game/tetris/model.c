@@ -16,7 +16,7 @@
 #include <time.h>    // for time()
 #include <unistd.h>  // for getcwd
 
-#define PATH "/brick_game/tetris/max_score.txt"
+#define PATH "/brick_game/tetris/high_score.txt"
 
 static Model_t model;
 static GameInfo_t game_info;
@@ -26,8 +26,8 @@ static void write_high_score();
 static int get_current_time();
 static void start_stage(UserAction_t action);
 static void spawn_stage();
-static void moving_stage(UserAction_t action);
-static void shifting_stage(UserAction_t action);
+static void moving_stage(UserAction_t action, bool hold);
+static void shifting_stage(UserAction_t action, bool hold);
 static void pause_stage(UserAction_t action);
 static void attaching_stage();
 static void game_over_stage(UserAction_t action);
@@ -77,10 +77,10 @@ void userInput(UserAction_t action, bool hold) {
       spawn_stage();
       break;
     case MOVING:
-      moving_stage(action);
+      moving_stage(action, hold);
       break;
     case SHIFTING:
-      shifting_stage(action);
+      shifting_stage(action, hold);
       break;
     case PAUSE:
       pause_stage(action);
@@ -150,7 +150,7 @@ static void spawn_stage() {
   model.stage = SHIFTING;
 }
 
-static void moving_stage(UserAction_t action) {
+static void moving_stage(UserAction_t action, bool hold) {
   model.stage = SHIFTING;
 
   switch (action) {
@@ -163,7 +163,11 @@ static void moving_stage(UserAction_t action) {
       break;
 
     case Down:
-      if (can_move_down(&model, &game_info)) {
+      if (hold) {
+        while (can_move_down(&model, &game_info)) {
+          move_down(&model, &game_info);
+        }
+      } else if (can_move_down(&model, &game_info)) {
         move_down(&model, &game_info);
       }
       break;
@@ -179,7 +183,7 @@ static void moving_stage(UserAction_t action) {
   }
 }
 
-static void shifting_stage(UserAction_t action) {
+static void shifting_stage(UserAction_t action, bool hold) {
   int current_time = get_current_time();
   int wait_time = 1100 - (game_info.level * 100);
 
@@ -199,7 +203,7 @@ static void shifting_stage(UserAction_t action) {
     case Right:
     case Down:
     case Action:
-      moving_stage(action);
+      moving_stage(action, hold);
       break;
     case Terminate:
       model.stage = GAME_OVER;
