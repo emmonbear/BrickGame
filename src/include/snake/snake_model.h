@@ -12,19 +12,19 @@
 #ifndef SRC_INCLUDE_SNAKE_SNAKE_MODEL_H_
 #define SRC_INCLUDE_SNAKE_SNAKE_MODEL_H_
 
+#include "../interfaces/IModel.h"
+
 extern "C" {
 #include "../../include/common/common.h"
 #include "../../include/common/game_info.h"
 }
 
 #include <chrono>
+#include <fstream>
+#include <queue>
+#include <string>
 #include <utility>
 #include <vector>
-#include <queue>
-#include <fstream>
-
-#include "../interfaces/IModel.h"
-
 
 namespace s21 {
 
@@ -63,6 +63,9 @@ class SnakeModel : public IModel {
   Time last_move_time_;
   int move_delay_;
 
+  static constexpr int kDelay = 700;
+
+  void UpdateDelay();
   void InitGameInfo();
   void InitSnake();
   void PlaceFoodOnField();
@@ -82,9 +85,9 @@ class SnakeModel : public IModel {
   void set_direction(Direction new_direction);
   void start_stage(UserAction_t action);
   void spawn_stage();
-  void moving_stage(UserAction_t action);
+  void moving_stage();
   void shifting_stage(UserAction_t action);
-  // void pause_stage(UserAction_t action);
+  void pause_stage(UserAction_t action);
   void attaching_stage();
   void game_over_stage(UserAction_t action);
 };

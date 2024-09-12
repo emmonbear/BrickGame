@@ -23,7 +23,7 @@ SnakeModel::SnakeModel()
       game_over_{false},
       direction_{},
       last_move_time_(std::chrono::steady_clock::now()),
-      move_delay_{700} {
+      move_delay_{kDelay} {
   InitGameInfo();
   InitSnake();
   direction_.push(Direction::kRight);
@@ -33,14 +33,12 @@ SnakeModel::SnakeModel()
 SnakeModel::~SnakeModel() {
   destroy_2d_array(&game_info_.field, HEIGHT);
   destroy_2d_array(&game_info_.next, 4);
-};
+}
 
 /// @todo Установить локаль
 void SnakeModel::InitGameInfo() {
   allocate_2d_array(&game_info_.field, HEIGHT, WIDTH);
-  /// @todo Приходится Инициализировать поле, дабы не было сеги
   allocate_2d_array(&game_info_.next, 4, 4);
-  /// @todo Реализовать функцию чтения из файла с рекордом
   game_info_.level = 1;
   game_info_.speed = 1;
 }
@@ -51,7 +49,6 @@ void SnakeModel::InitSnake() {
   snake_.push_back({HEIGHT / 2, WIDTH / 2 - 2});
 }
 
-/// @todo Сложность алгоритма можно понизить
 void SnakeModel::GenerateFood() {
   bool valid_position = false;
 
@@ -77,19 +74,32 @@ void SnakeModel::userInput(UserAction_t action, bool hold) {
       spawn_stage();
       break;
     case MOVING:
-      moving_stage(action);
+      moving_stage();
       break;
     case SHIFTING:
       shifting_stage(action);
       break;
-    // case PAUSE:
-    //   pause_stage(action);
-    //   break;
+    case PAUSE:
+      pause_stage(action);
+      break;
     case ATTACHING:
       attaching_stage();
       break;
     case GAME_OVER:
       game_over_stage(action);
+      break;
+  }
+}
+
+void SnakeModel::pause_stage(UserAction_t action) {
+  switch (action) {
+    case Pause:
+      stage_ = SHIFTING;
+      break;
+    case Terminate:
+      stage_ = GAME_OVER;
+      break;
+    default:
       break;
   }
 }
@@ -114,7 +124,7 @@ void SnakeModel::PlaceSnakeOnField() {
 
 void SnakeModel::set_direction(Direction new_direction) {
   if (direction_.size() < 3 && (static_cast<int>(direction_.back()) + 2) % 4 !=
-      static_cast<int>(new_direction)) {
+                                   static_cast<int>(new_direction)) {
     direction_.push(new_direction);
   }
 }
@@ -195,13 +205,13 @@ void SnakeModel::HandleUserDirection(UserAction_t action) {
   }
 }
 
-void SnakeModel::moving_stage(UserAction_t action) {
+void SnakeModel::moving_stage() {
   if (direction_.size() > 1) {
     direction_.pop();
   }
 
   Direction current_direction = direction_.front();
-  
+
   Point new_head = snake_.front();
 
   switch (current_direction) {
@@ -241,9 +251,12 @@ void SnakeModel::UpdateField() {
 
 void SnakeModel::shifting_stage(UserAction_t action) {
   HandleUserDirection(action);
-  
+  UpdateDelay();
+  if (action == Action) {
+    move_delay_ = 100;
+  }
   if (IsTimeToMove()) {
-    moving_stage(action);
+    moving_stage();
     last_move_time_ = SteadyClock::now();
   }
 
@@ -259,7 +272,7 @@ void SnakeModel::shifting_stage(UserAction_t action) {
   }
   UpdateField();
 }
-  
+
 bool SnakeModel::IsNewLevel() const {
   return (game_info_.score % 5 == 0) && (game_info_.level < 10);
 }
@@ -273,7 +286,6 @@ void SnakeModel::SaveHighScore() const {
   }
 }
 
-
 void SnakeModel::LoadHighScore() {
   std::ifstream file(kHighScoreFileName);
 
@@ -285,7 +297,7 @@ void SnakeModel::LoadHighScore() {
   }
 }
 
-void SnakeModel::attaching_stage() { 
+void SnakeModel::attaching_stage() {
   game_info_.score += 1;
   if (IsNewRecord()) {
     game_info_.high_score = game_info_.score;
@@ -304,6 +316,10 @@ bool SnakeModel::IsNewRecord() const {
   return game_info_.score > game_info_.high_score;
 }
 
+void SnakeModel::UpdateDelay() {
+  move_delay_ = kDelay - (game_info_.level * 50);
+}
+
 void SnakeModel::game_over_stage(UserAction_t action) {
   SaveHighScore();
   switch (action) {
@@ -318,6 +334,6 @@ void SnakeModel::game_over_stage(UserAction_t action) {
     default:
       break;
   }
- }
+}
 
 }  // namespace s21
