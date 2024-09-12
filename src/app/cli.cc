@@ -33,7 +33,6 @@ int main() {
     s21::Controller controller(model);
     s21::CliView view(controller);
     view.startEventLoop();
-
   }
 
   return 0;
