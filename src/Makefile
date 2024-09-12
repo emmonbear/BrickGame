@@ -44,7 +44,8 @@ REPORT_DIR            := ./report
 #================================== FILE LIST ==================================
 CLI                   := $(APP_DIR)/cli.cc
 BIN_CLI               := $(BIN_DIR)/cli
-TETRIS_SCORE          := $(PROJECT_NAME)/$(TETRIS)/max_score.txt
+TETRIS_SCORE          := $(PROJECT_NAME)/$(TETRIS)/high_score.txt
+SNAKE_SCORE          := $(PROJECT_NAME)/$(SNAKE)/high_score.txt
 MAIN_TEST             := $(TESTS_DIR)/main_test.cc
 GCOVR_EXCLUDES        := --exclude='.*tests/.*|.*include/.*'
 GCOVR_HTML            := -r . $(GCOVR_EXCLUDES) --html --html-details -o $(REPORT_DIR)/coverage.html 
@@ -134,6 +135,7 @@ install: $(BIN_DIR) $(COMMON_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(CONTROLLER_LIB
 uninstall:
 	rm -rf $(BIN_DIR)
 	rm -f $(TETRIS_SCORE)
+	rm -f $(SNAKE_SCORE)
 
 test: $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB)
 	$(CXX) $(MAIN_TEST) $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB) $(LDFLAGS) -o $@
@@ -144,9 +146,10 @@ gcov_report: $(REPORT_DIR) $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_GCOVR_LIB
 	./$(OBJ_DIR_COV)/report
 	gcovr $(GCOVR_HTML)
 	gcovr $(GCOVR_TXT)
-	@echo
-	@echo
-	@cat $(REPORT_DIR)/coverage.txt
+# @echo
+# @echo
+# @cat $(REPORT_DIR)/coverage.txt
+	make report_open
 
 report_open:
 	xdg-open $(REPORT_DIR)/coverage.html
