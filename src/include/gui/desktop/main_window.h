@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef SRC_INCLUDE_GUI_DESKTOP_DESKTOP_VIEW_H_
-#define SRC_INCLUDE_GUI_DESKTOP_DESKTOP_VIEW_H_
+#ifndef SRC_INCLUDE_GUI_DESKTOP_MAIN_WINDOW_H_
+#define SRC_INCLUDE_GUI_DESKTOP_MAIN_WINDOW_H_
 
 #include <QApplication>
 #include <QMainWindow>
@@ -23,8 +23,16 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
  public:
+  enum class GameType {
+    kNone = 0,
+    kSnake,
+    kTetris,
+  };
+
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
+
+  inline GameType game_type() const { return game_type_; }
 
  private slots:
   void onSnakeButtonClicked();
@@ -32,13 +40,13 @@ class MainWindow : public QMainWindow {
   void onExitButtonClicked();
 
  private:
+  GameType game_type_{None};
+
   QPushButton *snakeButton;
   QPushButton *tetrisButton;
   QPushButton *exitButton;
 
-  s21::Controller *controller_ = nullptr;
-
   void initializeButtons();
   void initializeMainWindow();
 };
-#endif  // SRC_INCLUDE_GUI_DESKTOP_DESKTOP_VIEW_H_
+#endif  // SRC_INCLUDE_GUI_DESKTOP_MAIN_WINDOW_H_

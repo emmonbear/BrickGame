@@ -9,12 +9,10 @@
  *
  */
 
-#include "gui/desktop/desktop_view.h"
+#include "gui/desktop/main_window.h"
 
 #include "snake/snake_model.h"
 #include "wrappers/tetris_model.h"
-
-// #include "./ui_desktop_view.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   initializeMainWindow();
@@ -30,9 +28,9 @@ void MainWindow::initializeMainWindow() {
 }
 
 void MainWindow::initializeButtons() {
-  QPushButton *snakeButton = new QPushButton("Snake", this);
-  QPushButton *tetrisButton = new QPushButton("Tetris", this);
-  QPushButton *exitButton = new QPushButton("Exit", this);
+  snakeButton = new QPushButton("Snake", this);
+  tetrisButton = new QPushButton("Tetris", this);
+  exitButton = new QPushButton("Exit", this);
 
   snakeButton->setFixedSize(400, 50);
   tetrisButton->setFixedSize(400, 50);
@@ -69,12 +67,8 @@ void MainWindow::initializeButtons() {
   snakeButton->setFocus();
 }
 
-void MainWindow::onSnakeButtonClicked() {
-  // if (controller_) {
-  //   delete controller_;
-  //   controller_ = nullptr;
-  // }
-  // s21::IModel *snakeModel = new s21::SnakeModel();
-}
-void MainWindow::onTetrisButtonClicked() {}
+void MainWindow::onSnakeButtonClicked() { game_type_ = GameType::kSnake; }
+
+void MainWindow::onTetrisButtonClicked() { game_type_ = GameType::kTetris; }
+
 void MainWindow::onExitButtonClicked() { QApplication::quit(); }
