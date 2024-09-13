@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${default}",
+                "${workspaceFolder}/**",
+                "/usr/include/x86_64-linux-gnu/qt5/QtWidgets",
+                "/usr/include/x86_64-linux-gnu/qt5"
+            ],
+            "defines": [],
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-clang-x64",
+            "cStandard": "c11"
+        }
+    ],
+    "version": 4
+}

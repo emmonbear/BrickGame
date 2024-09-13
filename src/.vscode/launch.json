@@ -1,25 +1,25 @@
 {
   "version": "0.2.0",
   "configurations": [
-      {
-          "name": "Debug C/C++",
-          "type": "cppdbg",
-          "request": "launch",
-          "program": "${workspaceFolder}/game",
-          "args": [],
-          "stopAtEntry": false,
-          "cwd": "${workspaceFolder}",
-          "environment": [],
-          "externalConsole": false,
-          "MIMode": "gdb",
-          "setupCommands": [
-              {
-                  "description": "Enable pretty-printing for gdb",
-                  "text": "-enable-pretty-printing",
-                  "ignoreFailures": true
-              }
-          ],
-          
-      }
-  ]
+    {
+        "name": "Debug C/C++",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/game",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+        ],
+        "visualizerFile": "/home/emmonbea/.config/Code/User/workspaceStorage/537ecae2ce18ed216ce552b050a4ef6f/tonka3000.qtvsctools/qt.natvis.xml"
+    }
+]
 }
