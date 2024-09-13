@@ -220,6 +220,7 @@ clean:
 	rm -f $(SNAKE_GCOVR_LIB)
 	rm -f test
 	rm -rf build
+	rm -f CMakeLists.txt.user
 
 2:
 	./build/desktop

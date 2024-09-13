@@ -15,10 +15,8 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 set(VIEW
-    ${CMAKE_SOURCE_DIR}/gui/desktop/main_window.cc
-    ${CMAKE_SOURCE_DIR}/include/gui/desktop/main_window.h
     ${CMAKE_SOURCE_DIR}/include/gui/desktop/desktop_view.h
-    ${CMAKE_SOURCE_DIR}/gui/desktop/main_window.ui
+    ${CMAKE_SOURCE_DIR}/gui/desktop/desktop_view.ui
     ${CMAKE_SOURCE_DIR}/gui/desktop/desktop_view.cc
 )
 
