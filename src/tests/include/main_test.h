@@ -9,11 +9,11 @@
  *
  */
 
-#ifndef SRC_TESTS_INLUDE_MAIN_TEST_H_
-#define SRC_TESTS_INLUDE_MAIN_TEST_H_
+#ifndef SRC_TESTS_INCLUDE_MAIN_TEST_H_
+#define SRC_TESTS_INCLUDE_MAIN_TEST_H_
 
 #include <gtest/gtest.h>
 
 #include "../../include/snake/snake_model.h"
 
-#endif  // SRC_TESTS_INLUDE_MAIN_TEST_H_
+#endif  // SRC_TESTS_INCLUDE_MAIN_TEST_H_

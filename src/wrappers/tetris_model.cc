@@ -26,7 +26,7 @@ void TetrisModel::userInput(UserAction_t action, bool hold) {
   return ::userInput(action, hold);
 }
 
-stage_t TetrisModel::stage() { return ::stage(); };
+stage_t TetrisModel::stage() { return ::stage(); }
 
 bool TetrisModel::game_over() { return ::game_over(); }
 

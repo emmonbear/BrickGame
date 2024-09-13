@@ -17,7 +17,7 @@ namespace s21 {
 CliView::CliView(Controller &controller) : controller_(controller) {
   init_screen();
   init_windows(&windows_);
-};
+}
 
 CliView::~CliView() { destroy_windows(&windows_); }
 
