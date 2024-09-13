@@ -10,8 +10,8 @@ CC                    := gcc
 CXX                   := g++
 
 #==================================== FLAGS ====================================
-CFLAGS                := -Wall -Wextra -std=c11 -pedantic -g
-CXXFLAGS              := -Wall -Wextra -std=c++17 -g
+CFLAGS                := -Wall -Wextra  -std=c11 -pedantic -g
+CXXFLAGS              := -Wall -Wextra  -std=c++17 -g
 LDFLAGS               := -lgtest
 COVERAGE_FLAGS        := -fprofile-arcs -ftest-coverage
 LDGUI                 := -lncurses
@@ -35,17 +35,20 @@ COMMON_DIR            := ./common
 WRAPPERS_DIR          := ./wrappers
 CONTROLLER_DIR        := ./controller
 CLI_DIR               := ./gui/cli
+DESKTOP_DIR           := ./gui/desktop
 OBJ_DIR               := ./obj
 OBJ_DIR_COV           := ./obj_cov
 BIN_DIR               := ../bin
 TESTS_DIR             := ./tests
 REPORT_DIR            := ./report
+BUILD_DIR             := ../build
 
 #================================== FILE LIST ==================================
 CLI                   := $(APP_DIR)/cli.cc
+DESKTOP               := $(APP_DIR)/desktop.cc
 BIN_CLI               := $(BIN_DIR)/cli
 TETRIS_SCORE          := $(PROJECT_NAME)/$(TETRIS)/high_score.txt
-SNAKE_SCORE          := $(PROJECT_NAME)/$(SNAKE)/high_score.txt
+SNAKE_SCORE           := $(PROJECT_NAME)/$(SNAKE)/high_score.txt
 MAIN_TEST             := $(TESTS_DIR)/main_test.cc
 GCOVR_EXCLUDES        := --exclude='.*tests/.*|.*include/.*'
 GCOVR_HTML            := -r . $(GCOVR_EXCLUDES) --html --html-details -o $(REPORT_DIR)/coverage.html 
@@ -96,9 +99,14 @@ CLI_H                 := $(shell find $(INCLUDE_DIR)/gui/cli -type f -name "*.h"
 CLI_O                 := $(CLI_C:$(CLI_DIR)/%.c=$(OBJ_DIR)/cli/%.o)
 CLI_O_COV             := $(CLI_C:$(CLI_DIR)/%.c=$(OBJ_DIR_COV)/cli/%.o)
 
+#============================== DESKTOP INTERFACE ==============================
+DESKTOP_CC            := $(shell find $(DESKTOP_DIR) -type f -name "*.cc")
+DESKTOP_H             := $(shell find $(INCLUDE_DIR)/gui/desktop -type f -name "*.h")
+
 #======================= LIST OF FILES FOR STYLE CHECKS ========================
 C_FILES               := $(TETRIS_C) $(COMMON_C) $(CLI_C)
-CC_FILES              := $(WRAPPERS_CC) $(CONTROLLER_CC) $(SNAKE_CC) $(TESTS_CC)
+CC_FILES              := $(WRAPPERS_CC) $(CONTROLLER_CC) $(SNAKE_CC) $(TESTS_CC) \
+                         $(DESKTOP_CC) $(CLI) $(DESKTOP)
 HEADERS               := $(shell find $(INCLUDE_DIR) -type f -name "*.h") $(TESTS_H)
 ALL_FILES             := $(C_FILES) $(CC_FILES) $(HEADERS)
 
@@ -132,10 +140,14 @@ install: $(BIN_DIR) $(COMMON_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(CONTROLLER_LIB
 	$(CXX) $(CXXFLAGS) $(CLI) $(CONTROLLER_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(COMMON_LIB) $(CLI_LIB) $(SNAKE_LIB) $(LDGUI) -o $(BIN_CLI)
 	$(BIN_DIR)/cli
 
-uninstall:
+cmake: $(BUILD_DIR)
+	cd $(BUILD_DIR) && cmake ../src && make
+
+uninstall: clean
 	rm -rf $(BIN_DIR)
 	rm -f $(TETRIS_SCORE)
 	rm -f $(SNAKE_SCORE)
+	rm -rf $(BUILD_DIR)
 
 test: $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB)
 	$(CXX) $(MAIN_TEST) $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB) $(LDFLAGS) -o $@
@@ -153,13 +165,14 @@ gcov_report: $(REPORT_DIR) $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_GCOVR_LIB
 
 report_open:
 	xdg-open $(REPORT_DIR)/coverage.html
+
 m:
 	gdb ../bin/cli
 
 1:
-	@echo $(TESTS_CC)
+	@echo $(DESKTOP_CC)
 	@echo
-	@echo $(TESTS_H)
+	@echo $(DESKTOP_H)
 	@echo
 	@echo $(TESTS_O)
 	@echo
@@ -206,6 +219,10 @@ clean:
 	rm -rf $(REPORT_DIR)
 	rm -f $(SNAKE_GCOVR_LIB)
 	rm -f test
+	rm -rf build
+
+2:
+	./build/desktop
 
 #=================================== CHECKS ====================================
 cpplint:
@@ -265,3 +282,6 @@ $(REPORT_DIR):
 
 $(BIN_DIR):
 	mkdir $(BIN_DIR)
+	
+$(BUILD_DIR):
+	mkdir $(BUILD_DIR)
