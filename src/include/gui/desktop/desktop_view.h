@@ -13,18 +13,11 @@
 #define SRC_INCLUDE_GUI_DESKTOP_DESKTOP_VIEW_H_
 
 #include <QApplication>
-#include <QKeyEvent>
-#include <QKeySequence>
 #include <QMainWindow>
 #include <QPushButton>
-#include <QShortcut>
 #include <QVBoxLayout>
 
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
+#include "controller/controller.h"
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -43,7 +36,7 @@ class MainWindow : public QMainWindow {
   QPushButton *tetrisButton;
   QPushButton *exitButton;
 
-  Ui::MainWindow *ui;
+  s21::Controller *controller_ = nullptr;
 
   void initializeButtons();
   void initializeMainWindow();

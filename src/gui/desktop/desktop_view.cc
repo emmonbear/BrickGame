@@ -11,17 +11,17 @@
 
 #include "gui/desktop/desktop_view.h"
 
-#include "./ui_desktop_view.h"
+#include "snake/snake_model.h"
+#include "wrappers/tetris_model.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
-  ui->setupUi(this);
+// #include "./ui_desktop_view.h"
 
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   initializeMainWindow();
   initializeButtons();
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() {}
 
 void MainWindow::initializeMainWindow() {
   setWindowTitle("BrickGame");
@@ -69,6 +69,12 @@ void MainWindow::initializeButtons() {
   snakeButton->setFocus();
 }
 
-void MainWindow::onSnakeButtonClicked() {}
+void MainWindow::onSnakeButtonClicked() {
+  // if (controller_) {
+  //   delete controller_;
+  //   controller_ = nullptr;
+  // }
+  // s21::IModel *snakeModel = new s21::SnakeModel();
+}
 void MainWindow::onTetrisButtonClicked() {}
 void MainWindow::onExitButtonClicked() { QApplication::quit(); }

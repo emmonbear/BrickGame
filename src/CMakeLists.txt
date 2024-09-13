@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(desktop VERSION 0.1 LANGUAGES CXX)
+project(desktop VERSION 0.1 LANGUAGES CXX C)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -9,49 +9,72 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-set(VIEW
+set(VIEW_SOURCES
     ${CMAKE_SOURCE_DIR}/include/gui/desktop/desktop_view.h
-    ${CMAKE_SOURCE_DIR}/gui/desktop/desktop_view.ui
     ${CMAKE_SOURCE_DIR}/gui/desktop/desktop_view.cc
 )
 
-set(MAIN
-    ${CMAKE_SOURCE_DIR}/app/desktop.cc
+set(TETRIS_C_SOURCES
+    ${CMAKE_SOURCE_DIR}/include/tetris/figures.h
+    ${CMAKE_SOURCE_DIR}/include/tetris/model.h
+    ${CMAKE_SOURCE_DIR}/include/tetris/operations.h
+    ${CMAKE_SOURCE_DIR}/include/tetris/types.h
+    ${CMAKE_SOURCE_DIR}/brick_game/tetris/figures.c
+    ${CMAKE_SOURCE_DIR}/brick_game/tetris/model.c
+    ${CMAKE_SOURCE_DIR}/brick_game/tetris/operations.c
 )
 
-set(PROJECT_SOURCES
-    ${VIEW} ${MAIN}
+set(CONTROLLER_SOURCES
+    ${CMAKE_SOURCE_DIR}/include/controller/controller.h
+    ${CMAKE_SOURCE_DIR}/controller/controller.cc
+)
+
+set(SNAKE_SOURCES
+    ${CMAKE_SOURCE_DIR}/include/snake/snake_model.h
+    ${CMAKE_SOURCE_DIR}/brick_game/snake/snake_model.cc
+)
+
+set(TETRIS_SOURCES
+    ${CMAKE_SOURCE_DIR}/include/wrappers/tetris_model.h
+    ${CMAKE_SOURCE_DIR}/wrappers/tetris_model.cc
+)
+
+set(COMMON_SOURCES
+    ${CMAKE_SOURCE_DIR}/include/common/common.h
+    ${CMAKE_SOURCE_DIR}/include/common/game_info.h 
+    ${CMAKE_SOURCE_DIR}/common/common.c
+)
+
+set(INTERFACES_SOURCES
+    ${CMAKE_SOURCE_DIR}/include/interfaces/IModel.h
+)
+
+set(MAIN_SOURCES
+    ${VIEW_SOURCES} ${CONTROLLER_SOURCES} ${SNAKE_SOURCES} 
+    ${INTERFACES_SOURCES} ${TETRIS_SOURCES} ${TETRIS_C_SOURCES}
+    ${COMMON_SOURCES} ${CMAKE_SOURCE_DIR}/app/desktop.cc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(desktop
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET desktop APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
+    MANUAL_FINALIZATION
+    ${MAIN_SOURCES}
+)
 else()
-    if(ANDROID)
-        add_library(desktop SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(desktop
-            ${PROJECT_SOURCES}
-        )
-    endif()
+    add_executable(desktop
+    ${MAIN_SOURCES}
+)
 endif()
 
-target_link_libraries(desktop PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(desktop PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Core)
 
 set_target_properties(desktop PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
