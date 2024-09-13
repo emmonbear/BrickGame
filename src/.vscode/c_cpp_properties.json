@@ -6,7 +6,8 @@
                 "${default}",
                 "${workspaceFolder}/**",
                 "/usr/include/x86_64-linux-gnu/qt5/QtWidgets",
-                "/usr/include/x86_64-linux-gnu/qt5"
+                "/usr/include/x86_64-linux-gnu/qt5",
+                "${workspaceFolder}/build/desktop_autogen/include"
             ],
             "defines": [],
             "cppStandard": "c++17",
