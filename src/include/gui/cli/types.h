@@ -148,7 +148,6 @@ typedef struct {
   window_t score;       ///< Window for displaying the current score.
   window_t high_score;  ///< Window for displaying the high score.
   window_t level;       ///< Window for displaying the current level.
-  window_t start;       ///< Window for displaying the start screen.
   window_t info;        ///< Window for displaying additional game information.
   window_t game_over;   ///< Window for displaying the game over screen.
 } Windows_t;

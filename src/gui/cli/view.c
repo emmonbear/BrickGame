@@ -47,8 +47,6 @@ void init_windows(Windows_t *windows) {
               Y_CENTER_HIGH_SCORE, X_CENTER_HIGH_SCORE);
   init_window(&windows->level, LEVEL_HEIGHT, LEVEL_WIDTH, Y_CENTER_LEVEL,
               X_CENTER_LEVEL);
-  init_window(&windows->start, START_HEIGHT, START_WIDTH, Y_CENTER_START,
-              X_CENTER_START);
   init_window(&windows->info, INFO_HEIGHT, INFO_WIDTH, Y_CENTER_INFO,
               X_CENTER_INFO);
   init_window(&windows->game_over, START_HEIGHT, START_WIDTH, Y_CENTER_START,
@@ -61,7 +59,6 @@ void destroy_windows(Windows_t *windows) {
     destroy_window(&windows->next);
     destroy_window(&windows->score);
     destroy_window(&windows->high_score);
-    destroy_window(&windows->start);
     destroy_window(&windows->game_over);
     destroy_window(&windows->info);
     destroy_window(&windows->level);
@@ -133,26 +130,40 @@ static void destroy_window(window_t *window) {
   }
 }
 
-void show_menu(int *choice) {
+void draw_start_screen(int *choice) {
+  WINDOW *menu =
+      newwin(START_HEIGHT, START_WIDTH, Y_CENTER_START, X_CENTER_START);
   char *choices[] = {"Snake", "Tetris", "Exit"};
   int n_choices = sizeof(choices) / sizeof(char *);
   int highlight = 0;
-  int input;
+  int input = 0;
 
-  WINDOW *menu_win = newwin(10, 30, 10, 10);
-  keypad(menu_win, TRUE);
-  mvwprintw(menu_win, 1, 1, "Select Game:");
+  box(menu, 0, 0);
+  wattron(menu, A_BOLD | COLOR_PAIR(4));
+  mvwprintw(menu, 1, 5, "   ___      _     __   _____  ");
+  mvwprintw(menu, 2, 5, "  / _ )____(_)___/ /__/ ___/__ ___ _  ___");
+  mvwprintw(menu, 3, 5, " / _  / __/ / __/  '_/ (_ / _ `/  ' \\/ -_)");
+  mvwprintw(menu, 4, 5, "/____/_/ /_/\\__/_/\\_\\\\___/\\_,_/_/_/_/\\__/");
+
+  wstandend(menu);
+  keypad(menu, TRUE);
+
+  mvwprintw(menu, 20, 17, "designed by ");
+  wattron(menu, A_BOLD | COLOR_PAIR(2));
+
+  mvwprintw(menu, 20, 29, "emmonbea");
+  wstandend(menu);
 
   while (1) {
     for (int i = 0; i < n_choices; i++) {
       if (i == highlight) {
-        wattron(menu_win, A_REVERSE);
+        wattron(menu, A_REVERSE);
       }
-      mvwprintw(menu_win, i + 3, 1, choices[i]);
-      wattroff(menu_win, A_REVERSE);
+      mvwprintw(menu, i + 10, 20, "%s", choices[i]);
+      wattroff(menu, A_REVERSE);
     }
 
-    input = wgetch(menu_win);
+    input = wgetch(menu);
 
     switch (input) {
       case KEY_UP:
@@ -168,7 +179,7 @@ void show_menu(int *choice) {
       case 10:
         *choice = highlight;
         if (highlight == 2) {
-          delwin(menu_win);
+          delwin(menu);
           endwin();
           exit(0);
         }
@@ -178,6 +189,6 @@ void show_menu(int *choice) {
     }
   }
 
-  delwin(menu_win);
+  delwin(menu);
   endwin();
 }

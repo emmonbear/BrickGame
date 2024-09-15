@@ -20,7 +20,7 @@ int main() {
   s21::IModel *model = nullptr;
   int choice = 0;
   init_screen();
-  show_menu(&choice);
+  draw_start_screen(&choice);
   endwin();
 
   if (choice == 1) {

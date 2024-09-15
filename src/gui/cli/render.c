@@ -19,7 +19,6 @@ static void draw_next(int **next, WINDOW *w);
 static void draw_score(int score, WINDOW *w);
 static void draw_level(int level, WINDOW *w);
 static void draw_high_score(int high_score, WINDOW *w);
-static void draw_start_screen(WINDOW *w);
 static void draw_info(WINDOW *w);
 static void draw_pause();
 static void draw_game_over(WINDOW *w, int score, int high_score);
@@ -27,9 +26,6 @@ static void draw_game_over(WINDOW *w, int score, int high_score);
 void render(Windows_t *windows, GameInfo_t game_info, stage_t stage) {
   refresh();
   switch (stage) {
-    case START:
-      draw_start_screen(windows->start.w);
-      break;
     case PAUSE:
       draw_pause();
       break;
@@ -71,8 +67,14 @@ static void set_color_figure(WINDOW *w, int color_index) {
     case 6:
       wattron(w, COLOR_PAIR(6) | A_BOLD);
       break;
-    case 7:
-      wattron(w, COLOR_PAIR(7) | A_BOLD);
+    case snake_body:
+      wattron(w, COLOR_PAIR(5) | A_BOLD);
+      break;
+    case snake_head:
+      wattron(w, COLOR_PAIR(4) | A_BOLD);
+      break;
+    case apple:
+      wattron(w, COLOR_PAIR(3) | A_BOLD);
       break;
   }
 }
@@ -172,33 +174,6 @@ static void draw_high_score(int high_score, WINDOW *w) {
   mvwprintw(w, 1, center_x_1, "HIGH SCORE");
   mvwprintw(w, 2, center_x_2, "%s", high_score_str);
   wstandend(w);
-  wrefresh(w);
-}
-
-static void draw_start_screen(WINDOW *w) {
-  box(w, 0, 0);
-  wattron(w, A_BOLD | COLOR_PAIR(4));
-  mvwprintw(w, 1, 5, "   ___      _     __   _____  ");
-  mvwprintw(w, 2, 5, "  / _ )____(_)___/ /__/ ___/__ ___ _  ___");
-  mvwprintw(w, 3, 5, " / _  / __/ / __/  '_/ (_ / _ `/  ' \\/ -_)");
-  mvwprintw(w, 4, 5, "/____/_/ /_/\\__/_/\\_\\\\___/\\_,_/_/_/_/\\__/");
-
-  wstandend(w);
-
-  wattron(w, A_BOLD | A_BLINK);
-  mvwprintw(w, 11, 17, "please, press");
-  wstandend(w);
-
-  wattron(w, A_BOLD | A_BLINK | COLOR_PAIR(5));
-  mvwprintw(w, 11, 31, "ENTER");
-  wstandend(w);
-
-  mvwprintw(w, 20, 17, "designed by ");
-  wattron(w, A_BOLD | COLOR_PAIR(2));
-
-  mvwprintw(w, 20, 29, "emmonbea");
-  wstandend(w);
-
   wrefresh(w);
 }
 
