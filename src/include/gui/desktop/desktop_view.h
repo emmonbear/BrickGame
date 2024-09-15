@@ -39,7 +39,7 @@ class DesktopView : public QWidget {
   ScoreBoard *score_;
   ScoreBoard *level_;
 
-  static constexpr int kWidgetWidth = 800;
+  static constexpr int kWidgetWidth = 600;
   static constexpr int kWidgetHeight = 600;
   static constexpr int kCellSize = 20;
   static constexpr int kOffset = 20;
@@ -48,7 +48,7 @@ class DesktopView : public QWidget {
 
   static constexpr int kFieldHeight = HEIGHT * kCellSize;
   static constexpr int kFieldWidth = WIDTH * kCellSize;
-  static constexpr int kFieldX = (kWidgetWidth - kFieldWidth) / 2;
+  static constexpr int kFieldX = (kWidgetWidth - kFieldWidth) / 2 - 100;
   static constexpr int kFieldY = (kWidgetHeight - kFieldHeight) / 2;
 
   static constexpr int kHighScoreY = kFieldY;

@@ -24,7 +24,7 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::initializeMainWindow() {
   setWindowTitle("BrickGame");
-  setFixedSize(800, 600);
+  setFixedSize(600, 600);
   this->setStyleSheet("background-color: #1c1919");
 }
 
