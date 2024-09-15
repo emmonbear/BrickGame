@@ -17,7 +17,7 @@ COVERAGE_FLAGS        := -fprofile-arcs -ftest-coverage
 LDGUI                 := -lncurses
 VALGRIND              := --tool=memcheck --leak-check=yes
 
-#================================ TARGET NAMES =================================
+#============================== LIBRARY BUILDING ===============================
 TETRIS_LIB            := $(TETRIS).a
 SNAKE_LIB             := $(SNAKE).a
 SNAKE_GCOVR_LIB       := $(SNAKE)_gcovr.a
@@ -41,7 +41,6 @@ OBJ_DIR_COV           := ./obj_cov
 BIN_DIR               := ../bin
 TESTS_DIR             := ./tests
 REPORT_DIR            := ./report
-BUILD_DIR             := ../build
 
 #================================== FILE LIST ==================================
 CLI                   := $(APP_DIR)/cli.cc
@@ -136,12 +135,25 @@ $(OBJ_DIR)/tests/modules/%.o: $(TESTS_DIR)/modules/%.cc $(TESTS_H)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 #=================================== TARGETS ===================================
-install: $(BIN_DIR) $(COMMON_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(CONTROLLER_LIB) $(CLI_LIB) $(SNAKE_LIB)
-	$(CXX) $(CXXFLAGS) $(CLI) $(CONTROLLER_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(COMMON_LIB) $(CLI_LIB) $(SNAKE_LIB) $(LDGUI) -o $(BIN_CLI)
-	$(BIN_DIR)/cli
+install: uninstall cli desktop
 
-cmake: $(BUILD_DIR)
-	cd $(BUILD_DIR) && cmake ../src && make
+cli: $(BIN_DIR) $(COMMON_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(CONTROLLER_LIB) $(CLI_LIB) $(SNAKE_LIB)
+	$(CXX) $(CXXFLAGS) $(CLI) $(CONTROLLER_LIB) $(WRAPPERS_LIB) $(TETRIS_LIB) $(COMMON_LIB) $(CLI_LIB) $(SNAKE_LIB) $(LDGUI) -o $(BIN_CLI)
+
+desktop:
+	rm -rf $(BIN_DIR)/build
+	cd $(BIN_DIR) && \
+	mkdir build && \
+	cd build && \
+	cmake ../../src && \
+	make
+	mv $(BIN_DIR)/build/desktop $(BIN_DIR)
+
+cli_run:
+	./$(BIN_DIR)/cli
+
+desktop_run:
+	./$(BIN_DIR)/desktop
 
 uninstall: clean
 	rm -rf $(BIN_DIR)
@@ -165,18 +177,6 @@ gcov_report: $(REPORT_DIR) $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_GCOVR_LIB
 
 report_open:
 	xdg-open $(REPORT_DIR)/coverage.html
-
-m:
-	gdb ../bin/cli
-
-1:
-	@echo $(DESKTOP_CC)
-	@echo
-	@echo $(DESKTOP_H)
-	@echo
-	@echo $(TESTS_O)
-	@echo
-	@echo $(TESTS_O_COV)
 
 #=========================== STATIC LIBRARY BUILDING ===========================
 $(TETRIS_LIB): $(OBJ_DIR)/$(TETRIS) $(TETRIS_O)
@@ -221,9 +221,6 @@ clean:
 	rm -f test
 	rm -rf build
 	rm -f CMakeLists.txt.user
-
-2:
-	./build/desktop
 
 #=================================== CHECKS ====================================
 cpplint:
@@ -283,6 +280,4 @@ $(REPORT_DIR):
 
 $(BIN_DIR):
 	mkdir $(BIN_DIR)
-	
-$(BUILD_DIR):
-	mkdir $(BUILD_DIR)
+
