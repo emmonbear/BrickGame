@@ -50,4 +50,17 @@ typedef enum {
   GAME_OVER,
 } stage_t;
 
+typedef enum {
+  white,
+  blue,
+  cyan,
+  green,
+  red,
+  yellow,
+  magenda,
+  snake_head,
+  apple,
+  snake_body,
+} colors;
+
 #endif  // SRC_INCLUDE_COMMON_GAME_INFO_H_
