@@ -17,17 +17,18 @@
 #include "../include/wrappers/tetris_model.h"
 
 int main() {
-  std::cout << "Выберите игру: 1 - тетрис, 2 - змейка" << std::endl;
-  int choise = 0;
-  std::cin >> choise;
   s21::IModel *model = nullptr;
+  int choice = 0;
+  init_screen();
+  show_menu(&choice);
+  endwin();
 
-  if (choise == 1) {
+  if (choice == 1) {
     model = new s21::TetrisModel();
     s21::Controller controller(model);
     s21::CliView view(controller);
     view.startEventLoop();
-  } else if (choise == 2) {
+  } else if (choice == 0) {
     model = new s21::SnakeModel();
     s21::Controller controller(model);
     s21::CliView view(controller);

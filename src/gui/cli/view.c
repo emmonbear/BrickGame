@@ -132,3 +132,52 @@ static void destroy_window(window_t *window) {
     window->w = NULL;
   }
 }
+
+void show_menu(int *choice) {
+  char *choices[] = {"Snake", "Tetris", "Exit"};
+  int n_choices = sizeof(choices) / sizeof(char *);
+  int highlight = 0;
+  int input;
+
+  WINDOW *menu_win = newwin(10, 30, 10, 10);
+  keypad(menu_win, TRUE);
+  mvwprintw(menu_win, 1, 1, "Select Game:");
+
+  while (1) {
+    for (int i = 0; i < n_choices; i++) {
+      if (i == highlight) {
+        wattron(menu_win, A_REVERSE);
+      }
+      mvwprintw(menu_win, i + 3, 1, choices[i]);
+      wattroff(menu_win, A_REVERSE);
+    }
+
+    input = wgetch(menu_win);
+
+    switch (input) {
+      case KEY_UP:
+        if (highlight > 0) {
+          highlight--;
+        }
+        break;
+      case KEY_DOWN:
+        if (highlight < n_choices - 1) {
+          highlight++;
+        }
+        break;
+      case 10:
+        *choice = highlight;
+        if (highlight == 2) {
+          delwin(menu_win);
+          endwin();
+          exit(0);
+        }
+        return;
+      default:
+        break;
+    }
+  }
+
+  delwin(menu_win);
+  endwin();
+}
