@@ -85,6 +85,10 @@ void SnakeModel::userInput(UserAction_t action, bool hold) {
     case GAME_OVER:
       game_over_stage(action);
       break;
+    case WIN:
+      game_over_stage(action);
+      break;
+       
   }
 }
 
@@ -292,6 +296,10 @@ void SnakeModel::attaching_stage() {
     move_delay_ -= 50;
   }
 
+  if (game_info_.score == 200) {
+    stage_ = WIN;
+  }
+
   GenerateFood();
   stage_ = SHIFTING;
 }
@@ -307,11 +315,6 @@ void SnakeModel::UpdateDelay() {
 void SnakeModel::game_over_stage(UserAction_t action) {
   SaveHighScore();
   switch (action) {
-    case Start:
-      ClearField();
-      stage_ = SPAWN;
-      game_over_ = false;
-      break;
     case Terminate:
       game_over_ = true;
       break;

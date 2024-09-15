@@ -47,6 +47,7 @@ typedef enum {
   PAUSE,
   ATTACHING,
   GAME_OVER,
+  WIN,
 } stage_t;
 
 typedef enum {

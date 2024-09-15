@@ -87,6 +87,9 @@ void userInput(UserAction_t action, bool hold) {
       break;
     case GAME_OVER:
       game_over_stage(action);
+      break;
+    case WIN:
+      break;
   }
 }
 
