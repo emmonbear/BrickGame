@@ -11,7 +11,7 @@ CXX                   := g++
 
 #==================================== FLAGS ====================================
 CFLAGS                := -Wall -Wextra -Werror -std=c11 -pedantic
-CXXFLAGS              := -Wall -Wextra -Werror -std=c++17
+CXXFLAGS              := -Wall -Wextra -Werror -std=c++17 -pedantic
 LDFLAGS               := -lgtest
 COVERAGE_FLAGS        := -fprofile-arcs -ftest-coverage
 LDGUI                 := -lncurses
@@ -19,6 +19,7 @@ VALGRIND              := --tool=memcheck --leak-check=yes
 
 #============================== LIBRARY BUILDING ===============================
 TETRIS_LIB            := $(TETRIS).a
+TETRIS_GCOVR_LIB      := $(TETRIS)_gcovr.a
 SNAKE_LIB             := $(SNAKE).a
 SNAKE_GCOVR_LIB       := $(SNAKE)_gcovr.a
 COMMON_LIB            := common.a
@@ -41,6 +42,7 @@ OBJ_DIR_COV           := ./obj_cov
 BIN_DIR               := ../bin
 TESTS_DIR             := ./tests
 REPORT_DIR            := ./report
+DOCS_DIR              := ../docs
 
 #================================== FILE LIST ==================================
 CLI                   := $(APP_DIR)/cli.cc
@@ -131,6 +133,9 @@ $(OBJ_DIR)/$(SNAKE)/%.o: $(SNAKE_DIR)/%.cc $(SNAKE_H)
 $(OBJ_DIR_COV)/$(SNAKE)/%.o: $(SNAKE_DIR)/%.cc $(SNAKE_H)
 	$(CXX) $(CXXFLAGS) $(COVERAGE_FLAGS) -c -o $@ $<
 
+$(OBJ_DIR_COV)/$(TETRIS)/%.o: $(TETRIS_DIR)/%.c $(TETRIS_H)
+	$(CC) $(CFLAGS) $(COVERAGE_FLAGS) -c -o $@ $<
+
 $(OBJ_DIR)/tests/modules/%.o: $(TESTS_DIR)/modules/%.cc $(TESTS_H)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
@@ -160,20 +165,20 @@ uninstall: clean
 	rm -f $(TETRIS_SCORE)
 	rm -f $(SNAKE_SCORE)
 	rm -rf $(BUILD_DIR)
+	rm -rf $(DOCS_DIR)
 
-test: $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB)
-	$(CXX) $(MAIN_TEST) $(TESTS_O) $(SNAKE_LIB) $(COMMON_LIB) $(LDFLAGS) -o $@
+test: $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_LIB) $(TETRIS_LIB) $(COMMON_LIB)
+	$(CXX) $(MAIN_TEST) $(TESTS_O) $(TETRIS_LIB) $(SNAKE_LIB) $(COMMON_LIB) $(LDFLAGS) -o $@
 	./$@
 
-gcov_report: $(REPORT_DIR) $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_GCOVR_LIB) $(COMMON_LIB)
-	$(CXX) $(MAIN_TEST) $(TESTS_O) $(SNAKE_GCOVR_LIB) $(COMMON_LIB) $(LDFLAGS) $(COVERAGE_FLAGS) -o $(OBJ_DIR_COV)/report
+gcov_report: $(REPORT_DIR) $(OBJ_DIR)/tests/modules $(TESTS_O) $(SNAKE_GCOVR_LIB) $(TETRIS_GCOVR_LIB) $(COMMON_LIB)
+	$(CXX) $(MAIN_TEST) $(TESTS_O) $(SNAKE_GCOVR_LIB) $(TETRIS_GCOVR_LIB) $(COMMON_LIB) $(LDFLAGS) $(COVERAGE_FLAGS) -o $(OBJ_DIR_COV)/report
 	./$(OBJ_DIR_COV)/report
 	gcovr $(GCOVR_HTML)
 	gcovr $(GCOVR_TXT)
-# @echo
-# @echo
-# @cat $(REPORT_DIR)/coverage.txt
-	make report_open
+	@echo
+	@echo
+	@cat $(REPORT_DIR)/coverage.txt
 
 report_open:
 	xdg-open $(REPORT_DIR)/coverage.html
@@ -183,11 +188,15 @@ $(TETRIS_LIB): $(OBJ_DIR)/$(TETRIS) $(TETRIS_O)
 	ar rcs $@ $(TETRIS_O)
 	ranlib $@
 
-$(SNAKE_LIB): $(OBJ_DIR)/snake $(SNAKE_O)
+$(TETRIS_GCOVR_LIB): $(OBJ_DIR_COV)/$(TETRIS) $(TETRIS_O_COV)
+	ar rcs $@ $(TETRIS_O_COV)
+	ranlib $@
+
+$(SNAKE_LIB): $(OBJ_DIR)/$(SNAKE) $(SNAKE_O)
 	ar rcs $@ $(SNAKE_O)
 	ranlib $@
 
-$(SNAKE_GCOVR_LIB): $(OBJ_DIR_COV)/snake $(SNAKE_O_COV)
+$(SNAKE_GCOVR_LIB): $(OBJ_DIR_COV)/$(SNAKE) $(SNAKE_O_COV)
 	ar rcs $@ $(SNAKE_O_COV)
 	ranlib $@
 
@@ -218,9 +227,24 @@ clean:
 	rm -f $(SNAKE_LIB)
 	rm -rf $(REPORT_DIR)
 	rm -f $(SNAKE_GCOVR_LIB)
+	rm -f $(TETRIS_GCOVR_LIB)
 	rm -f test
 	rm -rf build
 	rm -f CMakeLists.txt.user
+	rm -rf $(PROJECT_NAME).tar.gz
+
+#=========================== GENERATE DOCUMENTATION ============================
+dvi: 
+	rm -rf $(DOCS_DIR)
+	doxygen Doxyfile
+
+dvi_open:
+	xdg-open $(DOCS_DIR)/html/index.html
+
+dist: clean
+	@echo "Creating distribution archive..."
+	tar -czf $(PROJECT_NAME).tar.gz $(PROJECT_NAME) $(COMMON_DIR) $(WRAPPERS_DIR) $(CONTROLLER_DIR) $(CLI_DIR) $(SNAKE_DIR) $(TETRIS_DIR) $(TESTS_DIR) Makefile
+	@echo "Distribution archive created: $(PROJECT_NAME).tar.gz"
 
 #=================================== CHECKS ====================================
 cpplint:
@@ -280,4 +304,9 @@ $(REPORT_DIR):
 
 $(BIN_DIR):
 	mkdir $(BIN_DIR)
+
+$(DOCS_DIR):
+	mkdir $(DOCS_DIR)
+
+.PHONY: install cli desktop cli_run desktop_run uninstall test gcov_report report_open clean cpplint clang valgrind valgrind_test
 

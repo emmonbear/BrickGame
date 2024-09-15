@@ -31,6 +31,14 @@ static void pause_stage(UserAction_t action);
 static void attaching_stage();
 static void game_over_stage(UserAction_t action);
 
+Model_t get_model() { return model; }
+
+void set_model_stage(stage_t stage) { model.stage = stage; }
+
+void set_model(Model_t model_) { model = model_; }
+
+void set_game_info(GameInfo_t game_info_) { game_info = game_info_; }
+
 void init_model() {
   setlocale(LC_ALL, "");
   srand(time(NULL));

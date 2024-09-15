@@ -23,5 +23,9 @@ void userInput(UserAction_t action, bool hold);
 GameInfo_t updateCurrentState();
 stage_t stage();
 bool game_over();
+Model_t get_model();
+void set_model_stage(stage_t stage);
+void set_model(Model_t model_);
+void set_game_info(GameInfo_t game_info_);
 
 #endif  // SRC_INCLUDE_TETRIS_MODEL_H_
