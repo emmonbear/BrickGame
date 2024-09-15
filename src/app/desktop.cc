@@ -12,20 +12,14 @@
 #include <QApplication>
 #include <iostream>
 
+#include "gui/desktop/desktop_view.h"
 #include "gui/desktop/main_window.h"
+#include "snake/snake_model.h"
 
 int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
   MainWindow w;
   w.show();
-
-  MainWindow::GameType game_type = w.game_type();
-
-  if (game_type == MainWindow::GameType::kSnake) {
-    std::cout << "SNAKE" << std::endl;
-  } else if (game_type == MainWindow::GameType::kTetris) {
-    std::cout << "TETRIS" << std::endl;
-  }
 
   return a.exec();
 }
