@@ -10,8 +10,8 @@ CC                    := gcc
 CXX                   := g++
 
 #==================================== FLAGS ====================================
-CFLAGS                := -Wall -Wextra  -std=c11 -pedantic -g
-CXXFLAGS              := -Wall -Wextra  -std=c++17 -g
+CFLAGS                := -Wall -Wextra -Werror -std=c11 -pedantic
+CXXFLAGS              := -Wall -Wextra -Werror -std=c++17
 LDFLAGS               := -lgtest
 COVERAGE_FLAGS        := -fprofile-arcs -ftest-coverage
 LDGUI                 := -lncurses
