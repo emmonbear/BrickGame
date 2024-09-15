@@ -20,8 +20,10 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 set(VIEW_SOURCES
     ${CMAKE_SOURCE_DIR}/include/gui/desktop/main_window.h
     ${CMAKE_SOURCE_DIR}/include/gui/desktop/desktop_view.h
+    ${CMAKE_SOURCE_DIR}/include/gui/desktop/scoreboard.h
     ${CMAKE_SOURCE_DIR}/gui/desktop/main_window.cc
     ${CMAKE_SOURCE_DIR}/gui/desktop/desktop_view.cc
+    ${CMAKE_SOURCE_DIR}/gui/desktop/scoreboard.cc
 )
 
 set(TETRIS_C_SOURCES
@@ -64,6 +66,7 @@ set(MAIN_SOURCES
     ${INTERFACES_SOURCES} ${TETRIS_SOURCES} ${TETRIS_C_SOURCES}
     ${COMMON_SOURCES} ${CMAKE_SOURCE_DIR}/app/desktop.cc
 )
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(desktop
