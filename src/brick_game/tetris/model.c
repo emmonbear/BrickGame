@@ -24,10 +24,9 @@ static GameInfo_t game_info;
 static int load_max_score();
 static void write_high_score();
 static int get_current_time();
-static void start_stage(UserAction_t action);
 static void spawn_stage();
-static void moving_stage(UserAction_t action, bool hold);
-static void shifting_stage(UserAction_t action, bool hold);
+static void moving_stage(UserAction_t action);
+static void shifting_stage(UserAction_t action);
 static void pause_stage(UserAction_t action);
 static void attaching_stage();
 static void game_over_stage(UserAction_t action);
@@ -63,24 +62,22 @@ void init_game_info() {
   model.figure.next_type = NONE;
   model.figure.current_type = NONE;
   model.figure.current_color = -1;
-  model.stage = START;
+  model.stage = SPAWN;
   model.timer = 0;
   model.game_over = false;
 }
 
 void userInput(UserAction_t action, bool hold) {
+  (void)hold;
   switch (model.stage) {
-    case START:
-      start_stage(action);
-      break;
     case SPAWN:
       spawn_stage();
       break;
     case MOVING:
-      moving_stage(action, hold);
+      moving_stage(action);
       break;
     case SHIFTING:
-      shifting_stage(action, hold);
+      shifting_stage(action);
       break;
     case PAUSE:
       pause_stage(action);
@@ -129,19 +126,6 @@ static void write_high_score() {
 
 static int get_current_time() { return (int)(clock() * 1000 / CLOCKS_PER_SEC); }
 
-static void start_stage(UserAction_t action) {
-  switch (action) {
-    case Start:
-      model.stage = SPAWN;
-      break;
-    case Terminate:
-      model.stage = GAME_OVER;
-      break;
-    default:
-      break;
-  }
-}
-
 static void spawn_stage() {
   copy_next_to_current(&model, &game_info);
   put_figure(&model, &game_info);
@@ -150,7 +134,7 @@ static void spawn_stage() {
   model.stage = SHIFTING;
 }
 
-static void moving_stage(UserAction_t action, bool hold) {
+static void moving_stage(UserAction_t action) {
   model.stage = SHIFTING;
 
   switch (action) {
@@ -163,11 +147,7 @@ static void moving_stage(UserAction_t action, bool hold) {
       break;
 
     case Down:
-      if (hold) {
-        while (can_move_down(&model, &game_info)) {
-          move_down(&model, &game_info);
-        }
-      } else if (can_move_down(&model, &game_info)) {
+      if (can_move_down(&model, &game_info)) {
         move_down(&model, &game_info);
       }
       break;
@@ -183,7 +163,7 @@ static void moving_stage(UserAction_t action, bool hold) {
   }
 }
 
-static void shifting_stage(UserAction_t action, bool hold) {
+static void shifting_stage(UserAction_t action) {
   int current_time = get_current_time();
   int wait_time = 1100 - (game_info.level * 100);
 
@@ -203,7 +183,7 @@ static void shifting_stage(UserAction_t action, bool hold) {
     case Right:
     case Down:
     case Action:
-      moving_stage(action, hold);
+      moving_stage(action);
       break;
     case Terminate:
       model.stage = GAME_OVER;

@@ -19,7 +19,7 @@ SnakeModel::SnakeModel()
     : game_info_{},
       snake_{},
       food_{},
-      stage_{START},
+      stage_{SPAWN},
       game_over_{false},
       direction_{},
       last_move_time_(std::chrono::steady_clock::now()),
@@ -65,10 +65,8 @@ void SnakeModel::GenerateFood() {
 }
 
 void SnakeModel::userInput(UserAction_t action, bool hold) {
+  (void)hold;
   switch (stage_) {
-    case START:
-      start_stage(action);
-      break;
     case SPAWN:
       spawn_stage();
       break;
@@ -161,20 +159,6 @@ bool SnakeModel::IsSelfCollision(const Point &head) const {
   }
 
   return false;
-}
-
-void SnakeModel::start_stage(UserAction_t action) {
-  stage_ = SPAWN;
-  switch (action) {
-    case Start:
-      stage_ = SPAWN;
-      break;
-    case Terminate:
-      stage_ = GAME_OVER;
-      break;
-    default:
-      break;
-  }
 }
 
 void SnakeModel::spawn_stage() {

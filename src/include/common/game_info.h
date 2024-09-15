@@ -41,7 +41,6 @@ typedef enum {
 } UserAction_t;
 
 typedef enum {
-  START,
   SPAWN,
   SHIFTING,
   MOVING,

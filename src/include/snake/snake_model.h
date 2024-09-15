@@ -83,7 +83,6 @@ class SnakeModel : public IModel {
   void LoadHighScore();
   void SaveHighScore() const;
   void set_direction(Direction new_direction);
-  void start_stage(UserAction_t action);
   void spawn_stage();
   void moving_stage();
   void shifting_stage(UserAction_t action);
