@@ -17,22 +17,20 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "controller/controller.h"
+#include "gui/desktop/desktop_view.h"
+#include "interfaces/IModel.h"
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
  public:
   enum class GameType {
-    kNone = 0,
-    kSnake,
+    kSnake = 0,
     kTetris,
   };
 
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
-
-  inline GameType game_type() const { return game_type_; }
 
  private slots:
   void onSnakeButtonClicked();
@@ -40,13 +38,13 @@ class MainWindow : public QMainWindow {
   void onExitButtonClicked();
 
  private:
-  GameType game_type_{None};
-
   QPushButton *snakeButton;
   QPushButton *tetrisButton;
   QPushButton *exitButton;
 
   void initializeButtons();
   void initializeMainWindow();
+  void startGame(GameType type);
+  s21::IModel *setGameModel(GameType type);
 };
 #endif  // SRC_INCLUDE_GUI_DESKTOP_MAIN_WINDOW_H_

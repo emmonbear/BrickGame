@@ -11,6 +11,7 @@
 
 #include "gui/desktop/main_window.h"
 
+#include "controller/controller.h"
 #include "snake/snake_model.h"
 #include "wrappers/tetris_model.h"
 
@@ -23,7 +24,7 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::initializeMainWindow() {
   setWindowTitle("BrickGame");
-  resize(800, 800);
+  setFixedSize(800, 600);
   this->setStyleSheet("background-color: #1c1919");
 }
 
@@ -67,8 +68,40 @@ void MainWindow::initializeButtons() {
   snakeButton->setFocus();
 }
 
-void MainWindow::onSnakeButtonClicked() { game_type_ = GameType::kSnake; }
+void MainWindow::onSnakeButtonClicked() {
+  startGame(GameType::kSnake);
+  QApplication::quit();
+}
 
-void MainWindow::onTetrisButtonClicked() { game_type_ = GameType::kTetris; }
+void MainWindow::onTetrisButtonClicked() {
+  startGame(GameType::kTetris);
+  QApplication::quit();
+}
 
 void MainWindow::onExitButtonClicked() { QApplication::quit(); }
+
+void MainWindow::startGame(GameType type) {
+  s21::IModel *model = setGameModel(type);
+  s21::Controller *controller = new s21::Controller(model);
+  s21::DesktopView *view = new s21::DesktopView(*controller);
+
+  QWidget *gameWidget = new QWidget();
+  QVBoxLayout *layout = new QVBoxLayout(gameWidget);
+  layout->addWidget(view);
+  gameWidget->setLayout(layout);
+  setCentralWidget(gameWidget);
+
+  view->setFocus();
+  view->startEventLoop();
+}
+
+s21::IModel *MainWindow::setGameModel(GameType type) {
+  switch (type) {
+    case GameType::kSnake:
+      return new s21::SnakeModel();
+    case GameType::kTetris:
+      return new s21::TetrisModel();
+    default:
+      return nullptr;
+  }
+}
