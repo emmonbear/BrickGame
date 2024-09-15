@@ -35,7 +35,6 @@ SnakeModel::~SnakeModel() {
   destroy_2d_array(&game_info_.next, 4);
 }
 
-/// @todo Установить локаль
 void SnakeModel::InitGameInfo() {
   allocate_2d_array(&game_info_.field, HEIGHT, WIDTH);
   allocate_2d_array(&game_info_.next, 4, 4);
@@ -111,14 +110,14 @@ stage_t SnakeModel::stage() { return stage_; }
 bool SnakeModel::game_over() { return game_over_; }
 
 void SnakeModel::PlaceFoodOnField() {
-  game_info_.field[food_.first][food_.second] = red;
+  game_info_.field[food_.first][food_.second] = apple;
 }
 
 void SnakeModel::PlaceSnakeOnField() {
-  game_info_.field[snake_.front().first][snake_.front().second] = blue;
+  game_info_.field[snake_.front().first][snake_.front().second] = snake_head;
 
   for (size_t i = 1; i < snake_.size(); ++i) {
-    game_info_.field[snake_[i].first][snake_[i].second] = yellow;
+    game_info_.field[snake_[i].first][snake_[i].second] = snake_body;
   }
 }
 
@@ -165,6 +164,7 @@ bool SnakeModel::IsSelfCollision(const Point &head) const {
 }
 
 void SnakeModel::start_stage(UserAction_t action) {
+  stage_ = SPAWN;
   switch (action) {
     case Start:
       stage_ = SPAWN;
