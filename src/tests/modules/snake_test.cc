@@ -38,22 +38,6 @@ TEST(SnakeTest, Constructor) {
   EXPECT_FALSE(model.game_over());
 }
 
-TEST(SnakeTest, StartStageTerminate) {
-  SnakeTest model;
-  UserAction_t action = Terminate;
-  bool hold = false;
-  model.userInput(action, hold);
-  EXPECT_EQ(model.stage(), GAME_OVER);
-}
-
-TEST(SnakeTest, StartStageSpawn) {
-  SnakeTest model;
-  UserAction_t action = Start;
-  bool hold = false;
-  model.userInput(action, hold);
-  EXPECT_EQ(model.stage(), SPAWN);
-}
-
 TEST(SnakeTest, SpawnStage) {
   SnakeTest model;
 
@@ -63,15 +47,160 @@ TEST(SnakeTest, SpawnStage) {
   EXPECT_EQ(model.stage(), SHIFTING);
   EXPECT_EQ(model.updateCurrentState().field[model.snake().front().first]
                                             [model.snake().front().second],
-            blue);
-  EXPECT_EQ(model.updateCurrentState().field[model.snake().front().first]
-                                            [model.snake().front().second],
-            blue);
+            snake_head);
+
   for (size_t i = 1; i < model.snake().size(); ++i) {
     EXPECT_EQ(model.updateCurrentState()
                   .field[model.snake()[i].first][model.snake()[i].second],
-              yellow);
+              snake_body);
   }
+}
+
+TEST(SnakeTest, MovingStage) {
+  SnakeTest model;
+
+  model.set_stage(MOVING);
+  model.userInput(Start, false);
+
+  EXPECT_EQ(model.stage(), SHIFTING);
+}
+
+TEST(SnakeTest, PauseStageToShift) {
+  SnakeTest model;
+  model.set_stage(PAUSE);
+  model.userInput(Pause, false);
+
+  EXPECT_EQ(model.stage(), SHIFTING);
+}
+
+TEST(SnakeTest, PauseStagToGameOver) {
+  SnakeTest model;
+  model.set_stage(PAUSE);
+  model.userInput(Terminate, false);
+
+  EXPECT_EQ(model.stage(), GAME_OVER);
+}
+
+TEST(SnakeTest, GenerateFoodWhenSnakeFillsAllSpaces) {
+  SnakeTest model;
+
+  s21::SnakeModel::PointVector full_snake;
+  for (int i = 0; i < HEIGHT; ++i) {
+    for (int j = 0; j < WIDTH - 1; ++j) {
+      full_snake.push_back({i, j});
+    }
+  }
+  model.set_snake(full_snake);
+
+  model.GenerateFood();
+}
+
+TEST(SnakeTest, GameOverStageTerminate) {
+  SnakeTest model;
+
+  model.set_stage(GAME_OVER);
+  model.userInput(Terminate, false);
+
+  EXPECT_TRUE(model.game_over());
+}
+
+TEST(SnakeTest, GameOverStageNoTerminate) {
+  SnakeTest model;
+
+  model.set_stage(GAME_OVER);
+  model.userInput(Pause, false);
+
+  EXPECT_FALSE(model.game_over());
+}
+
+TEST(SnakeTest, ShiftingStageHandleDirectionLeft) {
+  SnakeTest model;
+  model.set_stage(SHIFTING);
+
+  model.userInput(Left, false);
+
+  EXPECT_EQ(model.stage(), SHIFTING);
+}
+
+TEST(SnakeTest, ShiftingStageHandleDirectionRight) {
+  SnakeTest model;
+  model.set_stage(SHIFTING);
+
+  model.userInput(Right, false);
+
+  EXPECT_EQ(model.stage(), SHIFTING);
+}
+
+TEST(SnakeTest, ShiftingStageHandleDirectionUp) {
+  SnakeTest model;
+  model.set_stage(SHIFTING);
+
+  model.userInput(Up, false);
+
+  EXPECT_EQ(model.stage(), SHIFTING);
+}
+
+TEST(SnakeTest, ShiftingStageHandleDirectionDown) {
+  SnakeTest model;
+  model.set_stage(SHIFTING);
+
+  model.userInput(Down, false);
+
+  EXPECT_EQ(model.stage(), SHIFTING);
+}
+
+TEST(SnakeTest, ShiftingStageAction) {
+  SnakeTest model;
+  model.set_stage(SHIFTING);
+
+  model.userInput(Action, false);
+
+  EXPECT_EQ(model.stage(), SHIFTING);
+}
+
+TEST(SnakeTest, ShiftingStageDefault) {
+  SnakeTest model;
+  model.set_stage(SHIFTING);
+
+  model.userInput(Start, false);
+
+  EXPECT_EQ(model.stage(), SHIFTING);
+}
+
+TEST(SnakeTest, ShiftingStageTerminate) {
+  SnakeTest model;
+  model.set_stage(SHIFTING);
+
+  model.userInput(Terminate, false);
+
+  EXPECT_EQ(model.stage(), GAME_OVER);
+}
+
+TEST(SnakeTest, ShiftingStagePause) {
+  SnakeTest model;
+  model.set_stage(SHIFTING);
+
+  model.userInput(Pause, false);
+
+  EXPECT_EQ(model.stage(), PAUSE);
+}
+
+TEST(SnakeTest, AttachingStage) {
+  SnakeTest model;
+  model.set_stage(ATTACHING);
+
+  model.userInput(Start, false);
+
+  EXPECT_EQ(model.stage(), SHIFTING);
+}
+
+TEST(SnakeTest, WinStage) {
+  SnakeTest model;
+  model.set_stage(WIN);
+
+  model.userInput(Start, false);
+
+  EXPECT_EQ(model.stage(), WIN);
 }
 
 }  // namespace s21

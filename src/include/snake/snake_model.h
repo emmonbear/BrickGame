@@ -89,6 +89,8 @@ class SnakeModel : public IModel {
   void pause_stage(UserAction_t action);
   void attaching_stage();
   void game_over_stage(UserAction_t action);
+  inline void set_snake(const PointVector &snake) { snake_ = snake; }
+  inline void set_food(const Point &food) { food_ = food; }
 };
 }  // namespace s21
 

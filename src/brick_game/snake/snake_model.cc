@@ -52,6 +52,10 @@ void SnakeModel::GenerateFood() {
   bool valid_position = false;
 
   while (!valid_position) {
+    if (snake_.size() == 200) {
+      break;
+      ;
+    }
     food_ = {std::rand() % HEIGHT, std::rand() % WIDTH};
     valid_position = true;
 
@@ -88,7 +92,6 @@ void SnakeModel::userInput(UserAction_t action, bool hold) {
     case WIN:
       game_over_stage(action);
       break;
-       
   }
 }
 
